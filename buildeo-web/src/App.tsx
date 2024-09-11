@@ -13,25 +13,43 @@ import EditPage from "./pages/Profile/Review/edit";
 import PrinciplePage from "./pages/Principle";
 import HomeCompanyPage from "./pages/Craftman/Home";
 import DetailProduct from "./pages/Craftman/Product/detail";
+<<<<<<< HEAD
 
+=======
+>>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
 import CreateProductPage from "./pages/Craftman/Product/create";
 import ProductNewPage from "./pages/Craftman/Product";
 import EditProductPage from "./pages/Craftman/Product/edit";
 import RatingPage from "./pages/Craftman/Home/detailRating";
 import DetailBuyerPage from "./pages/Craftman/Home/detailBuyer";
 
+<<<<<<< HEAD
 import AuthMiddleware from "./utils/AuthMiddleware";
 
+=======
+>>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/menu" element={<MenuPage />} />
+        <Route path="/menu-detail" element={<DetailMenuPage />} />
+        <Route path="/menu-detail/payment" element={<PaymentPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/orders/review" element={<ReviewPage />} />
+        <Route path="/orders/review/result" element={<ResultPage />} />
+        <Route path="/orders/review/edit" element={<EditPage />} />
+        <Route path="/principle" element={<PrinciplePage />} />
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
         {/* Craftman */}
         <Route path="/home/craftman" element={<HomeCompanyPage/>}/>
         <Route path="/home/craftman/product-detail" element={<DetailProduct/>}/>
@@ -40,6 +58,7 @@ export default function App() {
         <Route path="/home/craftman/edit-product" element={<EditProductPage/>}/>
         <Route path="/home/craftman/rating-product" element={<RatingPage/>}/>
         <Route path="/home/craftman/buyer/confirm-product" element={<DetailBuyerPage/>}/>
+<<<<<<< HEAD
 
 
         {/* Protected Routes */}
@@ -142,7 +161,9 @@ export default function App() {
           }
         />
 
+=======
+>>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
       </Routes>
     </Router>
-  );
+  )
 }

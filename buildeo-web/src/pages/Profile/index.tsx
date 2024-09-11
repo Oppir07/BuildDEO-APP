@@ -2,20 +2,17 @@ import NavbarSearch from '../../Components/Ui/headerSearhc'
 import Footer from '../../Components/Ui/footer'
 import cover from '../../../public/cover.png'
 import PaymentMethod from '../../Components/Ui/payment'
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Tab, Tabs } from '@mui/material';
 import media from '../../../public/Media.png'
-import { useNavigate } from 'react-router-dom';
-
-
 
 export default function ProfilePage() {
-  const [value, setValue] = useState('one');
-  const [user, setUser] = useState<any>(null);  // State to hold user data
+  const [value, setValue] = React.useState('one');
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+<<<<<<< HEAD
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -46,36 +43,37 @@ export default function ProfilePage() {
     return <div>Loading...</div>;  // Show loading state while fetching
   }
 
+=======
+>>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
   return (
-    <div className="">
-      <NavbarSearch />
-      <div className="mt-[10px] ml-[80px] mr-[80px] mb-[50px]">
-        <div className="text-[32px] font-bold mb-4">Personal Information</div>
-        <div className="flex flex-wrap mb-10">
-          <div className="mr-[50px]">
-            <img src={cover} alt="" className="rounded-[10px]" />
+    <>
+      <div className="">
+        <NavbarSearch />
+        <div className="mt-[10px] ml-[80px] mr-[80px] mb-[50px]">
+          <div className="text-[32px] font-bold mb-4"> Personal Information</div>
+          <div className="flex flex-wrap mb-10">
+            <div className="mr-[50px]"><img src={cover} alt="" className="rounded-[10px]" /></div>
+            <div className="">
+              <table className='text-[20px]'>
+                <tr >
+                  <td colSpan={2} className=' font-bold'>User Personal Data</td>
+                </tr>
+                <tr>
+                  <td className='w-[120px]'>Name</td>
+                  <td className='w-[450px]'>Marvis Ckugila</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>email@gmail.com</td>
+                </tr>
+                <tr>
+                  <td>Address</td>
+                  <td>No 15 uti street off ovie palace road effurun delta state</td>
+                </tr>
+              </table>
+            </div>
           </div>
-          <div className="">
-            <table className='text-[20px]'>
-              <tr>
-                <td colSpan={2} className=' font-bold'>User Personal Data</td>
-              </tr>
-              <tr>
-                <td className='w-[120px]'>Name</td>
-                <td className='w-[450px]'>{user.firstname} {user.lastname}</td>
-              </tr>
-              <tr>
-                <td>Email</td>
-                <td>{user.email}</td>
-              </tr>
-              <tr>
-                <td>Address</td>
-                <td>{user.street}, {user.post_number}</td>
-              </tr>
-            </table>
-          </div>
-        </div>
-        <Box sx={{ width: '100%' }}>
+          <Box sx={{ width: '100%' }}>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -123,8 +121,10 @@ export default function ProfilePage() {
               </div>
             }
           </Box>
+
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
-  );
+    </>
+  )
 }

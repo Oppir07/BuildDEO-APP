@@ -18,7 +18,7 @@ export default function DetailMenuPage() {
           if (!isLoggedIn) {
                setShowModal(true);
           } else {
-               // 
+               setIsLoggedIn(true)
           }
      };
 
