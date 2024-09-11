@@ -35,7 +35,7 @@ export default function ProfilePage() {
           setUser(data);  // Set user data
         } catch (error) {
           console.error("Error fetching user data:", error);
-        }
+        } 
       }
     };
     

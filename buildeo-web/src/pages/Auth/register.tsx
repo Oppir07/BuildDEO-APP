@@ -88,9 +88,9 @@ export default function RegisterPage() {
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
      e.preventDefault();
- 
+
      const apiData = mapFormDataToAPI(formData); // Prepare the data for API
- 
+
      try {
        const response = await fetch("http://127.0.0.1:8080/users", {
          method: "POST",
@@ -168,7 +168,7 @@ export default function RegisterPage() {
                 </div>
                 <div className="grid grid-cols-2 gap-4 mt-6">
                   <Input
-                    placeholder="city"
+                    placeholder="city"  
                     className="border border-black h-[40px]"
                   />
                   <Input

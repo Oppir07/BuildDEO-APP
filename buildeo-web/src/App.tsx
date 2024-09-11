@@ -13,16 +13,15 @@ import EditPage from "./pages/Profile/Review/edit";
 import PrinciplePage from "./pages/Principle";
 import HomeCompanyPage from "./pages/Craftman/Home";
 import DetailProduct from "./pages/Craftman/Product/detail";
-<<<<<<< HEAD
+
 import CreateProductPage from "./pages/Craftman/Product/create";
 import ProductNewPage from "./pages/Craftman/Product";
 import EditProductPage from "./pages/Craftman/Product/edit";
 import RatingPage from "./pages/Craftman/Home/detailRating";
 import DetailBuyerPage from "./pages/Craftman/Home/detailBuyer";
 
-=======
 import AuthMiddleware from "./utils/AuthMiddleware";
->>>>>>> 254413adcba43a2af6a927e098d230de9a7d113d
+
 
 export default function App() {
   return (
@@ -32,7 +31,7 @@ export default function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-<<<<<<< HEAD
+
         {/* Craftman */}
         <Route path="/home/craftman" element={<HomeCompanyPage/>}/>
         <Route path="/home/craftman/product-detail" element={<DetailProduct/>}/>
@@ -42,7 +41,7 @@ export default function App() {
         <Route path="/home/craftman/rating-product" element={<RatingPage/>}/>
         <Route path="/home/craftman/buyer/confirm-product" element={<DetailBuyerPage/>}/>
 
-=======
+
         {/* Protected Routes */}
         <Route
           path="/home"
@@ -142,7 +141,7 @@ export default function App() {
             </AuthMiddleware>
           }
         />
->>>>>>> 254413adcba43a2af6a927e098d230de9a7d113d
+
       </Routes>
     </Router>
   );

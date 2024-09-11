@@ -25,9 +25,9 @@ export default function OrdersPage() {
                               <div className="font-bold text-[20px] ">Lay LVT: up to 20 m²</div>
                               <div className="flex justify-between text-[#9586A8] "><div className="">Item : 1</div><div className="">Price :  119€</div></div>
                               <div className="text-[#9586A8] mt-[50px]">Total Price</div>
-                              <div className="text-[20px] font-bold">119€</div>
+                              <div className="text-[20px] font-bold  119€"></div>
                          </div>
-                         <div className="md:ml-[100px] flex flex-col items-center justify-center">
+                         <div className=" md:ml-[100px] flex flex-col items-center justify-center">
                          <div className="flex font-bold">
                               <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Give a Review</button>
                               <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'>Re-Order</button>
