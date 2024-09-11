@@ -41,7 +41,7 @@ func (server *Server) setupRouter() {
 
 	// Add CORS middleware
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"http://localhost:5173"}, // Replace with your frontend's origin
+		AllowOrigins:     []string{"https://buildeo.de/"}, 
 		AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
 		AllowCredentials: true,
