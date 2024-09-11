@@ -41,12 +41,12 @@ func (server *Server) setupRouter() {
 
 	// Add CORS middleware
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"https://buildeo.de/"}, 
-		AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
-		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-		AllowCredentials: true,
-		MaxAge:           12 * time.Hour,
-	}))
+        AllowOrigins:     []string{"https://buildeo.de", "http://localhost:5173"}, // Allow production and localhost origins
+        AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+        AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+        AllowCredentials: true,
+        MaxAge:           12 * time.Hour,
+    }))
 
 	//authentication
 	router.POST("/users/login", server.loginUser)
@@ -86,7 +86,7 @@ func (server *Server) setupRouter() {
 
 // Start runs the HTTP server on a specific address.
 func (server *Server) Start(address string) error {
-	return server.router.Run(address)
+	return server.router.RunTLS(address,"server.pem", "server.key")
 }
 
 func errorResponse(err error) gin.H {

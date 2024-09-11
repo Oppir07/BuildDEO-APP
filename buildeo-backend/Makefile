@@ -20,4 +20,7 @@ test:
 server:
 	go run main.go
 
-.PHONY: server migrateup migratedown sqlc test
+build:
+	GOOS=linux GOARCH=amd64 go build -o buildeo-backend	
+
+.PHONY: server migrateup migratedown sqlc test build

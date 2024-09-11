@@ -2,46 +2,80 @@ import NavbarSearch from '../../Components/Ui/headerSearhc'
 import Footer from '../../Components/Ui/footer'
 import cover from '../../../public/cover.png'
 import PaymentMethod from '../../Components/Ui/payment'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Tab, Tabs } from '@mui/material';
 import media from '../../../public/Media.png'
+import API_BASE_URL from "../../api/config"; // Import the API base URL
+
+
 
 export default function ProfilePage() {
-  const [value, setValue] = React.useState('one');
+  const [value, setValue] = useState('one');
+  const [user, setUser] = useState<any>(null);  // State to hold user data
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-  
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("access_token");
+      const userId = JSON.parse(localStorage.getItem("user") || "{}").id;  // Retrieve user ID from localStorage
+      
+      if (token && userId) {
+        try {
+          
+          console.log("user_id:",userId)
+          const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,  // Pass token in headers
+            },
+          });
+          const data = await response.json();
+          setUser(data);  // Set user data
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+    
+    fetchUserData();
+  }, []);
+
+  if (!user) {
+    return <div>Loading...</div>;  // Show loading state while fetching
+  }
+
   return (
-    <>
-      <div className="">
-        <NavbarSearch />
-        <div className="mt-[10px] ml-[80px] mr-[80px] mb-[50px]">
-          <div className="text-[32px] font-bold mb-4"> Personal Information</div>
-          <div className="flex flex-wrap mb-10">
-            <div className="mr-[50px]"><img src={cover} alt="" className="rounded-[10px]" /></div>
-            <div className="">
-              <table className='text-[20px]'>
-                <tr >
-                  <td colSpan={2} className=' font-bold'>User Personal Data</td>
-                </tr>
-                <tr>
-                  <td className='w-[120px]'>Name</td>
-                  <td className='w-[450px]'>Marvis Ckugila</td>
-                </tr>
-                <tr>
-                  <td>Email</td>
-                  <td>email@gmail.com</td>
-                </tr>
-                <tr>
-                  <td>Address</td>
-                  <td>No 15 uti street off ovie palace road effurun delta state</td>
-                </tr>
-              </table>
-            </div>
+    <div className="">
+      <NavbarSearch />
+      <div className="mt-[10px] ml-[80px] mr-[80px] mb-[50px]">
+        <div className="text-[32px] font-bold mb-4">Personal Information</div>
+        <div className="flex flex-wrap mb-10">
+          <div className="mr-[50px]">
+            <img src={cover} alt="" className="rounded-[10px]" />
           </div>
-          <Box sx={{ width: '100%' }}>
+          <div className="">
+            <table className='text-[20px]'>
+              <tr>
+                <td colSpan={2} className=' font-bold'>User Personal Data</td>
+              </tr>
+              <tr>
+                <td className='w-[120px]'>Name</td>
+                <td className='w-[450px]'>{user.firstname} {user.lastname}</td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td>{user.email}</td>
+              </tr>
+              <tr>
+                <td>Address</td>
+                <td>{user.street}, {user.post_number}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+        <Box sx={{ width: '100%' }}>
             <Tabs
               value={value}
               onChange={handleChange}
@@ -89,10 +123,8 @@ export default function ProfilePage() {
               </div>
             }
           </Box>
-
-        </div>
-        <Footer />
       </div>
-    </>
-  )
+      <Footer />
+    </div>
+  );
 }
