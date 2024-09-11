@@ -12,39 +12,7 @@ export default function ProfilePage() {
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
-<<<<<<< HEAD
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const token = localStorage.getItem("access_token");
-      const userId = JSON.parse(localStorage.getItem("user") || "{}").id;  // Retrieve user ID from localStorage
-      
-      if (token && userId) {
-        try {
-          
-          console.log("user_id:",userId)
-          const response = await fetch(`http://127.0.0.1:8080/users/${userId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`,  // Pass token in headers
-            },
-          });
-          const data = await response.json();
-          setUser(data);  // Set user data
-        } catch (error) {
-          console.error("Error fetching user data:", error);
-        } 
-      }
-    };
-    
-    fetchUserData();
-  }, []);
-
-  if (!user) {
-    return <div>Loading...</div>;  // Show loading state while fetching
-  }
-
-=======
->>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
+  
   return (
     <>
       <div className="">
