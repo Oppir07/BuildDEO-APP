@@ -13,7 +13,7 @@ import MessageIcon from '../Icon/MessageIcon';
 export default function NavbarSearch() {
      const [navbar, setNavbar] = useState(false);
 
-     const [isLoggedIn, setIsLoggedIn] = useState(false);
+     const [isLoggedIn] = useState(false);
      return (
           <div className="navbar flex flex-wrap items-center justify-between pl-4 pr-4 text-black  text-[12px] z-[9] bg-[#FFFFFF]">
                <div className="md:flex p-1  md:items w-full">

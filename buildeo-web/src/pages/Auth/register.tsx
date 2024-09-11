@@ -1,24 +1,8 @@
-
-import { useState } from "react";
-import logo from "../../../public/logo.png";
-import { Input } from "../../Components/Ui/input";
-import { useNavigate } from "react-router-dom";
-import Check from "../../../public/Auth/check.png";
-
-// Define an interface for the formData
-interface FormData {
-     email: string;
-     password: string;
-     firstname: string;
-     lastname: string;
-     postNumber: string;
-     street: string;
-     phone: string;
-     role: string;
-     createdBy: number;
-     updatedBy: number;
-   }
-
+import { useState } from 'react';
+import logo from '../../../public/logo.png';
+import { Input } from '../../Components/Ui/input';
+import { useNavigate } from 'react-router-dom';
+import Check from '../../../public/Auth/check.png'
 export default function RegisterPage() {
      const [isCraftman, setIsCraftman] = useState(true);
      const [showAlert, setShowAlert] = useState(false);
@@ -113,24 +97,18 @@ export default function RegisterPage() {
                     </div>
                </div>
 
-      {showAlert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
-            <img src={Check} alt="" className="w-[100px] fade-in" />
-            <p className="mt-2 text-center">
-              Your account has been successfully created
-            </p>
-            <div className="mt-4 ">
-              <button
-                onClick={handleAlertClose}
-                className="bg-[#FF460A] text-white w-[250px] p-2 rounded-[15px]"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-    </>
-  );
+              
+               {showAlert && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                         <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
+                           <img src={Check} alt="" className='w-[100px] fade-in'/>
+                              <p className="mt-2 text-center">Your account  has been successfully created</p>
+                              <div className="mt-4 ">
+                                   <button onClick={handleAlertClose} className="bg-[#FF460A] text-white w-[250px] p-2 rounded-[15px]">Continue</button>
+                              </div>
+                         </div>
+                    </div>
+               )}
+          </>
+     );
 }
