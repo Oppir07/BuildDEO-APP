@@ -21,16 +21,10 @@
     "@radix-ui/react-dropdown-menu": "^2.1.1",
     "@radix-ui/react-menubar": "^1.1.1",
     "@radix-ui/react-slot": "^1.1.0",
-<<<<<<< HEAD
 
     "@types/jest": "^29.5.12",
     "@types/node": "^22.5.4",
 
-=======
-    "axios": "^1.7.7",
-    "@types/jest": "^29.5.12",
-    "@types/node": "^22.5.4",
->>>>>>> 658f7ed5ae302ab70fa3509617ca312d2281a2d4
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.428.0",
