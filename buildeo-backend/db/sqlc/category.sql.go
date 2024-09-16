@@ -8,6 +8,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createCategory = `-- name: CreateCategory :execresult
@@ -66,26 +67,51 @@ func (q *Queries) GetCategory(ctx context.Context, id int64) (Category, error) {
 }
 
 const listCategory = `-- name: ListCategory :many
-SELECT id, name, description, created_at, created_by, updated_at, updated_by 
-FROM categories
-ORDER BY id 
-LIMIT ? OFFSET ?
+SELECT c.id, name, c.description, c.created_at, c.created_by, c.updated_at, c.updated_by, s.id, seller_id, category_id, title, s.description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
+FROM categories c
+INNER JOIN services s
+ON c.id = s.category_id
+INNER JOIN service_photos sp
+ON s.id = sp.service_id
+ORDER BY c.id
 `
 
-type ListCategoryParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+type ListCategoryRow struct {
+	ID            int64          `json:"id"`
+	Name          string         `json:"name"`
+	Description   sql.NullString `json:"description"`
+	CreatedAt     time.Time      `json:"created_at"`
+	CreatedBy     int64          `json:"created_by"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	UpdatedBy     int64          `json:"updated_by"`
+	ID_2          int64          `json:"id_2"`
+	SellerID      int64          `json:"seller_id"`
+	CategoryID    int64          `json:"category_id"`
+	Title         string         `json:"title"`
+	Description_2 sql.NullString `json:"description_2"`
+	Price         int64          `json:"price"`
+	CreatedAt_2   time.Time      `json:"created_at_2"`
+	CreatedBy_2   int64          `json:"created_by_2"`
+	UpdatedAt_2   time.Time      `json:"updated_at_2"`
+	UpdatedBy_2   int64          `json:"updated_by_2"`
+	ID_3          int64          `json:"id_3"`
+	ServiceID     int64          `json:"service_id"`
+	PhotoUrl      string         `json:"photo_url"`
+	CreatedAt_3   time.Time      `json:"created_at_3"`
+	CreatedBy_3   int64          `json:"created_by_3"`
+	UpdatedAt_3   time.Time      `json:"updated_at_3"`
+	UpdatedBy_3   int64          `json:"updated_by_3"`
 }
 
-func (q *Queries) ListCategory(ctx context.Context, arg ListCategoryParams) ([]Category, error) {
-	rows, err := q.db.QueryContext(ctx, listCategory, arg.Limit, arg.Offset)
+func (q *Queries) ListCategory(ctx context.Context) ([]ListCategoryRow, error) {
+	rows, err := q.db.QueryContext(ctx, listCategory)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Category{}
+	items := []ListCategoryRow{}
 	for rows.Next() {
-		var i Category
+		var i ListCategoryRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.Name,
@@ -94,6 +120,23 @@ func (q *Queries) ListCategory(ctx context.Context, arg ListCategoryParams) ([]C
 			&i.CreatedBy,
 			&i.UpdatedAt,
 			&i.UpdatedBy,
+			&i.ID_2,
+			&i.SellerID,
+			&i.CategoryID,
+			&i.Title,
+			&i.Description_2,
+			&i.Price,
+			&i.CreatedAt_2,
+			&i.CreatedBy_2,
+			&i.UpdatedAt_2,
+			&i.UpdatedBy_2,
+			&i.ID_3,
+			&i.ServiceID,
+			&i.PhotoUrl,
+			&i.CreatedAt_3,
+			&i.CreatedBy_3,
+			&i.UpdatedAt_3,
+			&i.UpdatedBy_3,
 		); err != nil {
 			return nil, err
 		}

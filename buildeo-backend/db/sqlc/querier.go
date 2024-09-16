@@ -13,24 +13,31 @@ type Querier interface {
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (sql.Result, error)
 	CreateQuotation(ctx context.Context, arg CreateQuotationParams) (sql.Result, error)
 	CreateService(ctx context.Context, arg CreateServiceParams) (sql.Result, error)
+	CreateServicePhoto(ctx context.Context, arg CreateServicePhotoParams) (sql.Result, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error)
 	DeleteCategory(ctx context.Context, id int64) error
 	DeleteQuotation(ctx context.Context, id int64) error
 	DeleteService(ctx context.Context, id int64) error
+	DeleteServicePhoto(ctx context.Context, id int64) error
 	DeleteUser(ctx context.Context, id int64) error
 	GetCategory(ctx context.Context, id int64) (Category, error)
 	GetQuotation(ctx context.Context, id int64) (Quotation, error)
-	GetServiceByID(ctx context.Context, id int64) (Service, error)
+	GetServiceByCategory(ctx context.Context, categoryID int64) ([]Service, error)
+	GetServiceByID(ctx context.Context, id int64) (GetServiceByIDRow, error)
 	GetServiceBySeller(ctx context.Context, sellerID int64) ([]Service, error)
+	GetServicePhotoByID(ctx context.Context, id int64) (ServicePhoto, error)
+	GetServicePhotosByServiceID(ctx context.Context, serviceID int64) ([]ServicePhoto, error)
 	GetUser(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id int64) (User, error)
-	ListCategory(ctx context.Context, arg ListCategoryParams) ([]Category, error)
-	ListQuotations(ctx context.Context, arg ListQuotationsParams) ([]Quotation, error)
-	ListService(ctx context.Context, arg ListServiceParams) ([]Service, error)
-	ListUsers(ctx context.Context, arg ListUsersParams) ([]User, error)
+	ListCategory(ctx context.Context) ([]ListCategoryRow, error)
+	ListQuotations(ctx context.Context, adminID sql.NullInt64) ([]Quotation, error)
+	ListService(ctx context.Context) ([]ListServiceRow, error)
+	ListServicePhotos(ctx context.Context) ([]ServicePhoto, error)
+	ListUsers(ctx context.Context) ([]User, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (sql.Result, error)
 	UpdateQuotation(ctx context.Context, arg UpdateQuotationParams) (sql.Result, error)
 	UpdateService(ctx context.Context, arg UpdateServiceParams) (sql.Result, error)
+	UpdateServicePhoto(ctx context.Context, arg UpdateServicePhotoParams) (sql.Result, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (sql.Result, error)
 }
 

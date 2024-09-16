@@ -28,7 +28,7 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/home" element={<Home />} />
         <Route path="/menu" element={<MenuPage />} />
-        <Route path="/menu-detail" element={<DetailMenuPage />} />
+        <Route path="/services/:id" element={<DetailMenuPage />} />
         <Route path="/menu-detail/payment" element={<PaymentPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/orders" element={<OrdersPage />} />

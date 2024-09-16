@@ -129,12 +129,7 @@ func TestListUsers(t *testing.T) {
 		createRandomUser(t)
 	}
 
-	arg := ListUsersParams{
-		Limit:  5,
-		Offset: 0,
-	}
-
-	users, err := testQueries.ListUsers(context.Background(), arg)
+	users, err := testQueries.ListUsers(context.Background())
 	require.NoError(t, err)
 	require.Len(t, users, 5)
 

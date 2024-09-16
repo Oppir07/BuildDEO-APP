@@ -21,7 +21,7 @@ type createServiceRequest struct {
 	UpdatedBy   int64  `json:"updated_by" binding:"required"`
 }
 
-// Response structure for service details
+// Response structure for service details with its photos 
 type serviceResponse struct {
 	ID          int64     `json:"id"`
 	SellerID    int64     `json:"seller_id"`
@@ -29,12 +29,27 @@ type serviceResponse struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Price       int64     `json:"price"`
+	Photos      []string  `json:"photos"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+// Response structure for service detail with its photos and category
+type serviceFullResponse struct {
+    ID          int64     `json:"id"`
+    SellerID    int64     `json:"seller_id"`
+    CategoryID  int64     `json:"category_id"`
+    Title       string    `json:"title"`
+    Description string    `json:"description"`
+    Price       int64     `json:"price"`
+    Photos      []string  `json:"photos"`  // Add photos field
+    CreatedAt   time.Time `json:"created_at"`
+    UpdatedAt   time.Time `json:"updated_at"`
+}
+
+
 // Helper function to convert db.Service to serviceResponse
-func newServiceResponse(service db.Service) serviceResponse {
+func newServiceResponse(service db.GetServiceByIDRow) serviceResponse {
 	return serviceResponse{
 		ID:          service.ID,
 		SellerID:    service.SellerID,
@@ -45,6 +60,20 @@ func newServiceResponse(service db.Service) serviceResponse {
 		CreatedAt:   service.CreatedAt,
 		UpdatedAt:   service.UpdatedAt,
 	}
+}
+
+func newServiceFullResponse(service db.GetServiceByIDRow, photos []string) serviceFullResponse {
+    return serviceFullResponse{
+        ID:          service.ID,
+        SellerID:    service.SellerID,
+        CategoryID:  service.CategoryID,
+        Title:       service.Title,
+        Description: service.Description.String,
+        Price:       service.Price,
+        Photos:      photos,
+        CreatedAt:   service.CreatedAt,
+        UpdatedAt:   service.UpdatedAt,
+    }
 }
 
 // Create a new service
@@ -85,27 +114,41 @@ func (server *Server) createService(ctx *gin.Context) {
 
 // Get a service by ID
 func (server *Server) getService(ctx *gin.Context) {
-	idParam := ctx.Param("id")
-	id, err := strconv.ParseInt(idParam, 10, 64)
-	if err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
+    idParam := ctx.Param("id")
+    id, err := strconv.ParseInt(idParam, 10, 64)
+    if err != nil {
+        ctx.JSON(http.StatusBadRequest, errorResponse(err))
+        return
+    }
 
-	service, err := server.store.GetServiceByID(ctx, id)
-	if err != nil {
-		if err == sql.ErrNoRows {
-			ctx.JSON(http.StatusNotFound, errorResponse(err))
-			return
-		}
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
-	}
+    // Fetch the service details
+    service, err := server.store.GetServiceByID(ctx, id)
+    if err != nil {
+        if err == sql.ErrNoRows {
+            ctx.JSON(http.StatusNotFound, errorResponse(err))
+            return
+        }
+        ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+        return
+    }
 
-	rsp := newServiceResponse(service)
-	ctx.JSON(http.StatusOK, rsp)
+    // Collect all photos associated with the service
+    photos, err := server.store.GetServicePhotosByServiceID(ctx, id) // You'll need this function to list photos
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+        return
+    }
+
+    // Map photo URLs into a slice
+    photoUrls := []string{}
+    for _, photo := range photos {
+        photoUrls = append(photoUrls, photo.PhotoUrl)
+    }
+
+    // Respond with the full service details and photos
+    rsp := newServiceFullResponse(service, photoUrls)
+    ctx.JSON(http.StatusOK, rsp)
 }
-
 // Update a service
 type updateServiceRequest struct {
 	Title       string `json:"title,omitempty"`
@@ -179,29 +222,64 @@ func (server *Server) deleteService(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"message": "service deleted successfully"})
 }
 
-// List services with pagination
-type listServiceRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
-}
 
 func (server *Server) listService(ctx *gin.Context) {
-	var req listServiceRequest
-	if err := ctx.ShouldBindQuery(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
-	arg := db.ListServiceParams{
-		Limit:  req.PageSize,
-		Offset: (req.PageID - 1) * req.PageSize,
-	}
-
-	services, err := server.store.ListService(ctx, arg)
+	services, err := server.store.ListService(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
 	ctx.JSON(http.StatusOK, services)
+}
+
+
+// Get all services with their photos
+func (server *Server) getAllServicesWithPhotos(ctx *gin.Context) {
+    // Fetch all services
+    serviceRows, err := server.store.ListService(ctx) // This fetches ListServiceRow data
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching services"})
+        return
+    }
+
+    // Map to hold the grouped services by service ID
+    serviceMap := make(map[int64]*serviceFullResponse)
+
+    // Iterate over each service and group photos by service ID
+    for _, service := range serviceRows {
+        // If the service is already in the map, append the photo to its list
+        if existingService, exists := serviceMap[service.ID]; exists {
+            existingService.Photos = append(existingService.Photos, service.PhotoUrl)
+        } else {
+            // Create a new entry for the service
+            photoUrls := []string{}
+            if service.PhotoUrl != "" {
+                photoUrls = append(photoUrls, service.PhotoUrl)
+            }
+
+            // Manually map ListServiceRow to serviceFullResponse
+            newService := serviceFullResponse{
+                ID:          service.ID,
+                SellerID:    service.SellerID,
+                CategoryID:  service.CategoryID,
+                Title:       service.Title,
+                Description: service.Description.String,
+                Price:       service.Price,
+                Photos:      photoUrls,
+                CreatedAt:   service.CreatedAt,
+                UpdatedAt:   service.UpdatedAt,
+            }
+            serviceMap[service.ID] = &newService
+        }
+    }
+
+    // Convert map to slice for response
+    var servicesResponse []serviceFullResponse
+    for _, service := range serviceMap {
+        servicesResponse = append(servicesResponse, *service)
+    }
+
+    // Return all services with their associated photos
+    ctx.JSON(http.StatusOK, servicesResponse)
 }

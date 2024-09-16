@@ -142,37 +142,36 @@ func (server *Server) getQuotation(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, newQuotationResponse(quotation))
 }
 
-// List Quotations Handler
-type listQuotationsRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
-}
+
 
 func (server *Server) listQuotations(ctx *gin.Context) {
-	var req listQuotationsRequest
-	if err := ctx.ShouldBindQuery(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
+	// Fetch the authenticated user
 	user, err := server.store.GetUser(ctx, authPayload.Username)
-
-	arg := db.ListQuotationsParams{
-		AdminID: sql.NullInt64{user.ID, true},
-		Limit:   req.PageSize,
-		Offset:  (req.PageID - 1) * req.PageSize,
-	}
-
-	quotations, err := server.store.ListQuotations(ctx, arg)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
+	// Construct AdminID if applicable
+	AdminID := sql.NullInt64{
+		Int64: user.ID, // Assign the user ID
+		Valid: true,    // Indicate that this is a valid ID
+	}
+
+	
+	// Fetch quotations based on the parameters
+	quotations, err := server.store.ListQuotations(ctx, AdminID)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	// Return the list of quotations
 	ctx.JSON(http.StatusOK, quotations)
 }
+
 
 // Update Quotation Handler
 type updateQuotationRequest struct {

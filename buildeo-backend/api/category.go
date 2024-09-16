@@ -27,6 +27,16 @@ type categoryResponse struct {
 	UpdatedBy   int64  `json:"updated_by"`
 }
 
+// Response structure for categories detail with its service
+type categoryFullResponse struct {
+	ID          int64                 `json:"id"`
+	Name        string                `json:"name"`
+	Description string                `json:"description"`
+	Services    []serviceFullResponse `json:"services"` // Add services field
+	CreatedAt   time.Time             `json:"created_at"`
+	UpdatedAt   time.Time             `json:"updated_at"`
+}
+
 func newCategoryResponse(category db.Category) categoryResponse {
 	return categoryResponse{
 		ID:          category.ID,
@@ -36,6 +46,17 @@ func newCategoryResponse(category db.Category) categoryResponse {
 		CreatedBy:   category.CreatedBy,
 		UpdatedAt:   category.UpdatedAt.Format(time.RFC3339),
 		UpdatedBy:   category.UpdatedBy,
+	}
+}
+
+func newCategoryFullResponse(category db.ListCategoryRow, services []serviceFullResponse) categoryFullResponse {
+	return categoryFullResponse{
+		ID:          category.ID,
+		Name:        category.Name,
+		Description: category.Description.String,
+		Services:    services,
+		CreatedAt:   category.CreatedAt,
+		UpdatedAt:   category.UpdatedAt,
 	}
 }
 
@@ -96,24 +117,8 @@ func (server *Server) getCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, rsp)
 }
 
-type listCategoryRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
-}
-
 func (server *Server) listCategory(ctx *gin.Context) {
-	var req listCategoryRequest
-	if err := ctx.ShouldBindQuery(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
-
-	arg := db.ListCategoryParams{
-		Limit:  req.PageSize,
-		Offset: (req.PageID - 1) * req.PageSize,
-	}
-
-	categories, err := server.store.ListCategory(ctx, arg)
+	categories, err := server.store.ListCategory(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -144,7 +149,7 @@ func (server *Server) updateCategory(ctx *gin.Context) {
 
 	arg := db.UpdateCategoryParams{
 		ID:          id,
-		Name:        req.Name,	
+		Name:        req.Name,
 		Description: sql.NullString{String: req.Description, Valid: true},
 		UpdatedBy:   req.UpdatedBy,
 	}
@@ -187,4 +192,87 @@ func (server *Server) deleteCategory(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "category deleted successfully"})
+}
+
+func (server *Server) getAllCategoriesWithServices(ctx *gin.Context) {
+    // Fetch all categories
+    categories, err := server.store.ListCategory(ctx)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching categories"})
+        return
+    }
+
+    // Fetch all services and their photos
+    services, err := server.store.ListService(ctx)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, gin.H{"error": "error fetching services"})
+        return
+    }
+
+    // Map to hold services grouped by category ID
+    servicesByCategory := make(map[int64]map[int64]serviceFullResponse)
+
+    // Map to hold photos grouped by service ID
+    photosByService := make(map[int64][]string)
+
+    // Populate the photosByService map
+    for _, service := range services {
+        if _, exists := photosByService[service.ID]; !exists {
+            photosByService[service.ID] = []string{}
+        }
+        // Assuming service.PhotoUrl is the photo URL field; adjust if needed
+        photosByService[service.ID] = append(photosByService[service.ID], service.PhotoUrl)
+    }
+
+    // Populate servicesByCategory map
+    for _, service := range services {
+        serviceResp := serviceFullResponse{
+            ID:          service.ID,
+            SellerID:    service.SellerID,
+            CategoryID:  service.CategoryID,
+            Title:       service.Title,
+            Description: service.Description.String,
+            Price:       service.Price,
+            Photos:      photosByService[service.ID],
+            CreatedAt:   service.CreatedAt,
+            UpdatedAt:   service.UpdatedAt,
+        }
+
+        if _, exists := servicesByCategory[service.CategoryID]; !exists {
+            servicesByCategory[service.CategoryID] = make(map[int64]serviceFullResponse)
+        }
+        servicesByCategory[service.CategoryID][service.ID] = serviceResp
+    }
+
+    // Map to hold the final response
+    categoryResponses := []categoryFullResponse{}
+    addedCategories := make(map[int64]bool)
+
+    // Populate the final response with categories and their services
+    for _, category := range categories {
+        if _, exists := addedCategories[category.ID]; exists {
+            continue
+        }
+
+        servicesForCategory := []serviceFullResponse{}
+        if services, exists := servicesByCategory[category.ID]; exists {
+            for _, service := range services {
+                servicesForCategory = append(servicesForCategory, service)
+            }
+        }
+
+        categoryResponse := categoryFullResponse{
+            ID:          category.ID,
+            Name:        category.Name,
+            Description: category.Description.String,
+            Services:    servicesForCategory,
+            CreatedAt:   category.CreatedAt,
+            UpdatedAt:   category.UpdatedAt,
+        }
+        categoryResponses = append(categoryResponses, categoryResponse)
+        addedCategories[category.ID] = true
+    }
+
+    // Return all categories with their associated services
+    ctx.JSON(http.StatusOK, categoryResponses)
 }

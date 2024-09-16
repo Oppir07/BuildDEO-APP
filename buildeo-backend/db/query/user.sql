@@ -21,8 +21,7 @@ LIMIT 1;
 -- name: ListUsers :many
 SELECT * 
 FROM users
-ORDER BY id 
-LIMIT ? OFFSET ?;
+ORDER BY id;
 
 -- name: UpdateUser :execresult
 UPDATE users
