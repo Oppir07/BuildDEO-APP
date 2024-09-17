@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func createRandomService(t *testing.T) Service {
+func createRandomService(t *testing.T) GetServiceByIDRow {
 	// Create a random user and category
 	user := createRandomUser(t)
 	category := createRandomCategory(t)
@@ -92,13 +92,8 @@ func TestListService(t *testing.T) {
 		createRandomService(t)
 	}
 
-	arg := ListServiceParams{
-		Limit:  5,
-		Offset: 0,
-	}
-
 	// List all services
-	services, err := testQueries.ListService(context.Background(), arg)
+	services, err := testQueries.ListService(context.Background())
 	require.NoError(t, err)
 	require.NotEmpty(t, services)
 

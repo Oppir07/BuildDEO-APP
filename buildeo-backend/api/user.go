@@ -131,24 +131,10 @@ func (server *Server) getUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, rsp)
 }
 
-type listAccountRequest struct {
-	PageID   int32 `form:"page_id" binding:"required,min=1"`
-	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
-}
 
 func (server *Server) listUser(ctx *gin.Context) {
-	var req listAccountRequest
-	if err := ctx.ShouldBindQuery(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
 
-	arg := db.ListUsersParams{
-		Limit:  req.PageSize,
-		Offset: (req.PageID - 1) * req.PageSize,
-	}
-
-	users, err := server.store.ListUsers(ctx, arg)
+	users, err := server.store.ListUsers(ctx)
 
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))

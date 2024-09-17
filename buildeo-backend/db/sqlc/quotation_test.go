@@ -132,13 +132,10 @@ func TestListQuotations(t *testing.T) {
 		lastQuotation = createRandomQuotation(t)
 	}
 
-	arg := ListQuotationsParams{
-		AdminID: lastQuotation.AdminID,
-		Limit:  5,
-		Offset: 0,
-	}
+	AdminID := lastQuotation.AdminID
+	
 
-	quotations, err := testQueries.ListQuotations(context.Background(), arg)
+	quotations, err := testQueries.ListQuotations(context.Background(), AdminID)
 	require.NoError(t, err)
 	require.NotEmpty(t, quotations)
 

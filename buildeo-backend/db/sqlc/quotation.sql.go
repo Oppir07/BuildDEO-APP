@@ -90,18 +90,11 @@ const listQuotations = `-- name: ListQuotations :many
 SELECT id, category_id, name, email, phone, address, document_url, status, admin_id, admin_notes, created_at, created_by, updated_at, updated_by
 FROM quotations
 WHERE admin_id = ?
-ORDER BY id 
-LIMIT ? OFFSET ?
+ORDER BY id
 `
 
-type ListQuotationsParams struct {
-	AdminID sql.NullInt64 `json:"admin_id"`
-	Limit   int32         `json:"limit"`
-	Offset  int32         `json:"offset"`
-}
-
-func (q *Queries) ListQuotations(ctx context.Context, arg ListQuotationsParams) ([]Quotation, error) {
-	rows, err := q.db.QueryContext(ctx, listQuotations, arg.AdminID, arg.Limit, arg.Offset)
+func (q *Queries) ListQuotations(ctx context.Context, adminID sql.NullInt64) ([]Quotation, error) {
+	rows, err := q.db.QueryContext(ctx, listQuotations, adminID)
 	if err != nil {
 		return nil, err
 	}

@@ -8,6 +8,7 @@ package db
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const createService = `-- name: CreateService :execresult
@@ -49,16 +50,78 @@ func (q *Queries) DeleteService(ctx context.Context, id int64) error {
 	return err
 }
 
-const getServiceByID = `-- name: GetServiceByID :one
+const getServiceByCategory = `-- name: GetServiceByCategory :many
 SELECT id, seller_id, category_id, title, description, price, created_at, created_by, updated_at, updated_by 
 FROM services
-WHERE id = ?
+WHERE category_id = ?
+`
+
+func (q *Queries) GetServiceByCategory(ctx context.Context, categoryID int64) ([]Service, error) {
+	rows, err := q.db.QueryContext(ctx, getServiceByCategory, categoryID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []Service{}
+	for rows.Next() {
+		var i Service
+		if err := rows.Scan(
+			&i.ID,
+			&i.SellerID,
+			&i.CategoryID,
+			&i.Title,
+			&i.Description,
+			&i.Price,
+			&i.CreatedAt,
+			&i.CreatedBy,
+			&i.UpdatedAt,
+			&i.UpdatedBy,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getServiceByID = `-- name: GetServiceByID :one
+SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
+FROM services s
+INNER JOIN service_photos sp
+ON s.id = sp.service_id
+WHERE s.id = ?
 LIMIT 1
 `
 
-func (q *Queries) GetServiceByID(ctx context.Context, id int64) (Service, error) {
+type GetServiceByIDRow struct {
+	ID          int64          `json:"id"`
+	SellerID    int64          `json:"seller_id"`
+	CategoryID  int64          `json:"category_id"`
+	Title       string         `json:"title"`
+	Description sql.NullString `json:"description"`
+	Price       int64          `json:"price"`
+	CreatedAt   time.Time      `json:"created_at"`
+	CreatedBy   int64          `json:"created_by"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	UpdatedBy   int64          `json:"updated_by"`
+	ID_2        int64          `json:"id_2"`
+	ServiceID   int64          `json:"service_id"`
+	PhotoUrl    string         `json:"photo_url"`
+	CreatedAt_2 time.Time      `json:"created_at_2"`
+	CreatedBy_2 int64          `json:"created_by_2"`
+	UpdatedAt_2 time.Time      `json:"updated_at_2"`
+	UpdatedBy_2 int64          `json:"updated_by_2"`
+}
+
+func (q *Queries) GetServiceByID(ctx context.Context, id int64) (GetServiceByIDRow, error) {
 	row := q.db.QueryRowContext(ctx, getServiceByID, id)
-	var i Service
+	var i GetServiceByIDRow
 	err := row.Scan(
 		&i.ID,
 		&i.SellerID,
@@ -70,6 +133,13 @@ func (q *Queries) GetServiceByID(ctx context.Context, id int64) (Service, error)
 		&i.CreatedBy,
 		&i.UpdatedAt,
 		&i.UpdatedBy,
+		&i.ID_2,
+		&i.ServiceID,
+		&i.PhotoUrl,
+		&i.CreatedAt_2,
+		&i.CreatedBy_2,
+		&i.UpdatedAt_2,
+		&i.UpdatedBy_2,
 	)
 	return i, err
 }
@@ -115,26 +185,42 @@ func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Ser
 }
 
 const listService = `-- name: ListService :many
-SELECT id, seller_id, category_id, title, description, price, created_at, created_by, updated_at, updated_by 
-FROM services
-ORDER BY id
-LIMIT ? OFFSET ?
+SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by
+FROM services s
+INNER JOIN service_photos sp
+ON s.id = sp.service_id
+ORDER BY s.id
 `
 
-type ListServiceParams struct {
-	Limit  int32 `json:"limit"`
-	Offset int32 `json:"offset"`
+type ListServiceRow struct {
+	ID          int64          `json:"id"`
+	SellerID    int64          `json:"seller_id"`
+	CategoryID  int64          `json:"category_id"`
+	Title       string         `json:"title"`
+	Description sql.NullString `json:"description"`
+	Price       int64          `json:"price"`
+	CreatedAt   time.Time      `json:"created_at"`
+	CreatedBy   int64          `json:"created_by"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	UpdatedBy   int64          `json:"updated_by"`
+	ID_2        int64          `json:"id_2"`
+	ServiceID   int64          `json:"service_id"`
+	PhotoUrl    string         `json:"photo_url"`
+	CreatedAt_2 time.Time      `json:"created_at_2"`
+	CreatedBy_2 int64          `json:"created_by_2"`
+	UpdatedAt_2 time.Time      `json:"updated_at_2"`
+	UpdatedBy_2 int64          `json:"updated_by_2"`
 }
 
-func (q *Queries) ListService(ctx context.Context, arg ListServiceParams) ([]Service, error) {
-	rows, err := q.db.QueryContext(ctx, listService, arg.Limit, arg.Offset)
+func (q *Queries) ListService(ctx context.Context) ([]ListServiceRow, error) {
+	rows, err := q.db.QueryContext(ctx, listService)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Service{}
+	items := []ListServiceRow{}
 	for rows.Next() {
-		var i Service
+		var i ListServiceRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.SellerID,
@@ -146,6 +232,13 @@ func (q *Queries) ListService(ctx context.Context, arg ListServiceParams) ([]Ser
 			&i.CreatedBy,
 			&i.UpdatedAt,
 			&i.UpdatedBy,
+			&i.ID_2,
+			&i.ServiceID,
+			&i.PhotoUrl,
+			&i.CreatedAt_2,
+			&i.CreatedBy_2,
+			&i.UpdatedAt_2,
+			&i.UpdatedBy_2,
 		); err != nil {
 			return nil, err
 		}

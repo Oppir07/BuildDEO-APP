@@ -14,9 +14,12 @@ LIMIT 1;
 
 -- name: ListCategory :many
 SELECT * 
-FROM categories
-ORDER BY id 
-LIMIT ? OFFSET ?;
+FROM categories c
+INNER JOIN services s
+ON c.id = s.category_id
+INNER JOIN service_photos sp
+ON s.id = sp.service_id
+ORDER BY c.id;
 
 -- name: UpdateCategory :execresult
 UPDATE categories

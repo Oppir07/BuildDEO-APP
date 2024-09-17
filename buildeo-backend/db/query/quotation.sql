@@ -15,8 +15,7 @@ LIMIT 1;
 SELECT *
 FROM quotations
 WHERE admin_id = ?
-ORDER BY id 
-LIMIT ? OFFSET ?;
+ORDER BY id;
 
 -- name: UpdateQuotation :execresult
 UPDATE quotations

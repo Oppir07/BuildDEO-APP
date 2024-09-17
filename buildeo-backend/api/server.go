@@ -70,16 +70,23 @@ func (server *Server) setupRouter() {
 	// category management
 	authRoutes.POST("/categories", server.createCategory)
 	router.GET("/categories/:id", server.getCategory)
-	router.GET("/categories", server.listCategory)
+	router.GET("/categories", server.getAllCategoriesWithServices)
 	authRoutes.PUT("/categories/:id", server.updateCategory)
 	authRoutes.DELETE("/categories/:id", server.deleteCategory)
 
 	// service management
 	authRoutes.POST("/services", server.createService)
-	authRoutes.GET("/services/:id", server.getService)
-	authRoutes.GET("/services", server.listService)
+	router.GET("/services/:id", server.getService)
+	router.GET("/services", server.getAllServicesWithPhotos)
 	authRoutes.PUT("/services/:id", server.updateService)
 	authRoutes.DELETE("/services/:id", server.deleteService)
+
+	// service photo management
+	authRoutes.POST("/services/photos", server.createServicePhoto)
+	router.GET("/services/photos/:id", server.getServicePhoto)
+	router.GET("/services/photos", server.listServicePhotos)
+	authRoutes.PUT("/services/photos/:id", server.updateServicePhoto)
+	authRoutes.DELETE("/services/photos/:id", server.deleteServicePhoto)
 
 	server.router = router
 }
@@ -87,6 +94,11 @@ func (server *Server) setupRouter() {
 // Start runs the HTTP server on a specific address.
 func (server *Server) Start(address string) error {
 	return server.router.RunTLS(address,"server.pem", "server.key")
+}
+
+// Start runs the HTTP server on a specific address.
+func (server *Server) TestStart(address string) error {
+	return server.router.Run(address)
 }
 
 func errorResponse(err error) gin.H {

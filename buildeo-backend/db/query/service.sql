@@ -10,17 +10,25 @@ SELECT *
 FROM services
 WHERE seller_id = ?;
 
--- name: GetServiceByID :one
+-- name: GetServiceByCategory :many
 SELECT * 
 FROM services
-WHERE id = ?
+WHERE category_id = ?;
+
+-- name: GetServiceByID :one
+SELECT * 
+FROM services s
+INNER JOIN service_photos sp
+ON s.id = sp.service_id
+WHERE s.id = ?
 LIMIT 1;
 
 -- name: ListService :many
-SELECT * 
-FROM services
-ORDER BY id
-LIMIT ? OFFSET ?;
+SELECT *
+FROM services s
+INNER JOIN service_photos sp
+ON s.id = sp.service_id
+ORDER BY s.id;
 
 -- name: UpdateService :execresult
 UPDATE services
