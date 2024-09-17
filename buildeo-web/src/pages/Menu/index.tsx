@@ -25,8 +25,8 @@ export default function MenuPage() {
      return (
           <>
                <div className="">
-                    <NavbarSearch />
-                    <div className="ml-[80px]">
+                    <NavbarSearch bg="white" text="black" />
+                    <div className="md:ml-[80px] ml-[10px] md:mr-[80px] mr-[10px]">
                          <div className="text-[32px] font-bold">Result</div>
                          <Box sx={{ width: '100%' }}>
                               <Tabs
@@ -54,7 +54,7 @@ export default function MenuPage() {
                               </Tabs>
                               {value === 'one' &&
                                    <div>
-                                        <div className="mt-[20px] flex flex-wrap gap-[20px]">
+                                        <div className="md:mt-[20px] mt-[10px] gap-[17px] flex flex-wrap md:gap-[25px]">
                                              {cardData.map((card, index) => (
                                                   <Card
                                                        key={index}

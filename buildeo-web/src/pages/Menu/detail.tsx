@@ -8,7 +8,7 @@ import Footer from '../../Components/Ui/footer';
 import MessageIcon from '../../Components/Icon/MessageIcon';
 import LoginModals from '../../Components/Ui/login';
 import API_BASE_URL from "../../api/config"; // Import the API base URL
-
+import cover from '../../../public/cover.png'
 export default function DetailMenuPage() {
   const { id } = useParams(); // Get service ID from URL
   const [isLoggedIn, setIsLoggedIn] = useState(false);
