@@ -19,8 +19,6 @@ import EditProductPage from "./pages/Craftman/Product/edit";
 import RatingPage from "./pages/Craftman/Home/detailRating";
 import DetailBuyerPage from "./pages/Craftman/Home/detailBuyer";
 
-import AuthMiddleware from "./utils/AuthMiddleware";
-
 
 export default function App() {
   return (
@@ -38,8 +36,6 @@ export default function App() {
         <Route path="/orders/review/result" element={<ResultPage />} />
         <Route path="/orders/review/edit" element={<EditPage />} />
         <Route path="/principle" element={<PrinciplePage />} />
-
-        {/* Craftman */}
         <Route path="/home/craftman" element={<HomeCompanyPage/>}/>
         <Route path="/home/craftman/product-detail" element={<DetailProduct/>}/>
         <Route path="/home/craftman/create-product" element={<CreateProductPage/>}/>
@@ -47,108 +43,6 @@ export default function App() {
         <Route path="/home/craftman/edit-product" element={<EditProductPage/>}/>
         <Route path="/home/craftman/rating-product" element={<RatingPage/>}/>
         <Route path="/home/craftman/buyer/confirm-product" element={<DetailBuyerPage/>}/>
-
-
-        {/* Protected Routes */}
-        <Route
-          path="/home"
-          element={
-            <AuthMiddleware>
-              <Home />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/menu"
-          element={
-            <AuthMiddleware>
-              <MenuPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/menu-detail"
-          element={
-            <AuthMiddleware>
-              <DetailMenuPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/menu-detail/payment"
-          element={
-            <AuthMiddleware>
-              <PaymentPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            <AuthMiddleware>
-              <ProfilePage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/orders"
-          element={
-            <AuthMiddleware>
-              <OrdersPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/orders/review"
-          element={
-            <AuthMiddleware>
-              <ReviewPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/orders/review/result"
-          element={
-            <AuthMiddleware>
-              <ResultPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/orders/review/edit"
-          element={
-            <AuthMiddleware>
-              <EditPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/principle"
-          element={
-            <AuthMiddleware>
-              <PrinciplePage />
-            </AuthMiddleware>
-          }
-        />
-
-        {/* Craftman Routes */}
-        <Route
-          path="/home/craftman"
-          element={
-            <AuthMiddleware>
-              <HomeCompanyPage />
-            </AuthMiddleware>
-          }
-        />
-        <Route
-          path="/home/craftman/product-detail"
-          element={
-            <AuthMiddleware>
-              <DetailProduct />
-            </AuthMiddleware>
-          }
-        />
-
       </Routes>
     </Router>
   )
