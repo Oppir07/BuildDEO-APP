@@ -1,13 +1,13 @@
-import NavbarSearch from "../../Components/Ui/headerSearhc";
+import NavbarSearch from "../../../Components/Ui/headerSearhc";
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import React from "react";
-import Card from "../../Components/Ui/cardMenu";
-import Footer from "../../Components/Ui/footer";
-import cover from '../../../public/cover.png'
-import media from '../../../public/Media.png'
-import jobs from '../../../public/jobs.png'
+import Card from "../../../Components/Ui/cardMenu";
+import Footer from "../../../Components/Ui/footer";
+import cover from '/cover.png'
+import media from '/Media.png'
+import jobs from '/jobs.png'
 export default function MenuPage() {
      const [value, setValue] = React.useState('one');
 
@@ -62,7 +62,7 @@ export default function MenuPage() {
                                                        company={card.company}
                                                        price={card.price}
                                                        img={cover}
-                                                        link="/menu-detail"
+                                                       link="/services/1"
                                                   />
                                              ))}
                                         </div>
@@ -78,7 +78,7 @@ export default function MenuPage() {
                                                        company={card.company}
                                                        price={card.price}
                                                        img={media}
-                                                        link="/menu-detail"
+                                                       link="/services/1"
                                                   />
                                              ))}
                                         </div>
@@ -94,7 +94,7 @@ export default function MenuPage() {
                                                        company={card.company}
                                                        price={card.price}
                                                        img={jobs}
-                                                        link="/menu-detail"
+                                                       link="/menu-detail"
                                                   />
                                              ))}
                                         </div>
@@ -103,7 +103,7 @@ export default function MenuPage() {
 
                          </Box>
                     </div>
-                    <Footer/>
+                    <Footer />
                </div>
           </>
      )

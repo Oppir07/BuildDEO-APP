@@ -10,7 +10,6 @@ import { Input } from './input';
 import MessageIcon from '../Icon/MessageIcon';
 import logow from "../../../public/Buildeo.png";
 
-
 interface BgProps {
      bg?: string;
      text?:string
@@ -19,6 +18,8 @@ interface BgProps {
 
 export default function NavbarSearch({ bg, text }: BgProps) {
      const [navbar, setNavbar] = useState(false);
+
+   
 
      const [isLoggedIn] = useState(true);
      return (
@@ -76,7 +77,7 @@ export default function NavbarSearch({ bg, text }: BgProps) {
                                    </Link>
                               </div>
                               <div className=" md:mt-5 font-bold">
-                                   <Link to={''}>
+                                   <Link to={'/favorable'}>
                                         Favorable Offer
                                    </Link>
                               </div>
@@ -88,7 +89,7 @@ export default function NavbarSearch({ bg, text }: BgProps) {
                                              </Link>
                                         </div>
                                         <div className="md:mt-5">
-                                             <Link to={''}>
+                                             <Link to={'/profile'}>
                                                   <ProfileIcon width={20} color='black' />
                                              </Link>
                                         </div>
