@@ -5,7 +5,7 @@ export default function RatingPage() {
      return (
           <>
                <div className="">
-                    <NavbarSearch />
+                    <NavbarSearch text='black' />
                     <div className="ml-[80px] mr-[80px]">
                          <div className="grid grid-cols-2 w-full">
                               <div className=""><img src={cover} className='h-[350px] w-[270px] mr-0 pr-0' alt="" /></div>

@@ -3,6 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import media from '/Media.png'
 import NavbarSearch from '../../../Components/Ui/headerSearhc';
+import { Link } from 'react-router-dom';
 export default function OrdersPage() {
      return (
           <>
@@ -29,13 +30,11 @@ export default function OrdersPage() {
                               </div>
                               <div className="mt-3 md:mt-0 text-[16px]  flex flex-col items-center justify-center">
                                    <div className="flex flex-wrap items-center font-bold">
-                                        <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-full md:w-[120px] p-[7px] '>View Detail</button>
-                                        <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-full md:w-[120px] p-[7px] mt-2 md:mt-0 md:ml-2'>Give a Review</button>
+                                        <Link to={'/orders/detail'}><button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-full md:w-[120px] p-[7px] '>View Detail</button></Link>
+                                        <Link to={'/orders/review'}><button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-full md:w-[120px] p-[7px] mt-2 md:mt-0 md:ml-2'>Give a Review</button></Link>
                                         <button className='bg-[#E31E24] text-white rounded-[40px] w-full md:w-[150px] p-[7px] mt-2 md:mt-0 md:ml-2'>Re-Order</button>
                                         <div className="text-[#9586A8] text-center font-medium md:ml-6 mt-2 md:mt-0">Status : <b>Accepted</b></div>
                                    </div>
-                              
-
                               </div>
                          </div>
                     </div>

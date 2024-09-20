@@ -24,6 +24,10 @@ import OfferBuyerPage from "./pages/buyer/Favorable";
 import OfferBuyerEditPage from "./pages/buyer/Favorable/edit";
 import OfferBuyerDetailPage from "./pages/buyer/Favorable/detail";
 import OrderOfferPage from "./pages/buyer/Favorable/order";
+import DetailOrderPage from "./pages/Profile/order/detail";
+import DetailPortfolioPage from "./pages/Craftman/Protfolio/detail";
+import CreatePortfolio from "./pages/Craftman/Protfolio/create";
+import EditPortfolio from "./pages/Craftman/Protfolio/edit";
 
 
 export default function App() {
@@ -41,6 +45,7 @@ export default function App() {
         <Route path="/payment-confirm" element={<ConfirmPayPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/orders" element={<OrdersPage />} />
+        <Route path="/orders/detail" element={<DetailOrderPage />} />
         <Route path="/orders/review" element={<ReviewPage />} />
         <Route path="/orders/review/result" element={<ResultPage />} />
         <Route path="/orders/review/edit" element={<EditPage />} />
@@ -62,6 +67,9 @@ export default function App() {
         <Route path="/home/craftman/edit-product" element={<EditProductPage />} />
         <Route path="/home/craftman/rating-product" element={<RatingPage />} />
         <Route path="/home/craftman/buyer/confirm-product" element={<DetailBuyerPage />} />
+        <Route path="/home/craftman/portfolio/detail" element={<DetailPortfolioPage />} />
+        <Route path="/home/craftman/portfolio/create" element={<CreatePortfolio/>} />
+        <Route path="/home/craftman/portfolio/edit" element={<EditPortfolio/>} />
       </Routes>
     </Router>
   )

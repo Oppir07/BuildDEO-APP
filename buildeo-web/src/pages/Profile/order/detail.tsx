@@ -1,12 +1,13 @@
+import { DownloadIcon } from "lucide-react";
 import Footer from "../../../Components/Ui/footer";
 import NavbarSearch from "../../../Components/Ui/headerSearhc";
-import cover from '../../../../public/cover.png'
-import DownloadIcon from "../../../Components/Icon/DownloadIcon";
 import pdf from '../../../../public/pdf.png'
-export default function DetailBuyerPage() {
+import cover from '/cover.png'
+import { Link } from "react-router-dom";
+export default function DetailOrderPage() {
   return (
-    <>
-          <div className="">
+    <div>
+           <div className="">
                <NavbarSearch text="black"/>
                     <div className="ml-[80px] mr-[80px]">
                          <div className="text-[32px] font-bold">Buyer Offer Information</div>
@@ -35,15 +36,13 @@ export default function DetailBuyerPage() {
                          </div>
                          <div className="flex justify-end mt-6 mb-8">
                                    <div className="flex font-bold">
-                                        <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Back</button>
-                                        <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px] ml-10'>Reject</button>
-                                        <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'>Accept</button>
+                                        <Link to={'/orders'}><button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'>Back</button></Link>
                                    </div>
                               </div>
 
                     </div>
                <Footer/>
           </div>
-    </>
+    </div>
   )
 }

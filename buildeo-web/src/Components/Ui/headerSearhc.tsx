@@ -9,17 +9,18 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { Input } from './input';
 import MessageIcon from '../Icon/MessageIcon';
 import logow from "../../../public/Buildeo.png";
+import { Menubar, MenubarContent, MenubarItem, MenubarMenu, MenubarTrigger } from './menu';
 
 interface BgProps {
      bg?: string;
-     text?:string
+     text?: string
 }
 
 
 export default function NavbarSearch({ bg, text }: BgProps) {
      const [navbar, setNavbar] = useState(false);
 
-   
+
 
      const [isLoggedIn] = useState(true);
      return (
@@ -89,9 +90,31 @@ export default function NavbarSearch({ bg, text }: BgProps) {
                                              </Link>
                                         </div>
                                         <div className="md:mt-5">
-                                             <Link to={'/profile'}>
-                                                  <ProfileIcon width={20} color='black' />
-                                             </Link>
+                                             <Menubar>
+                                                  <MenubarMenu>
+                                                       <MenubarTrigger>
+                                                            {" "}
+                                                            <ProfileIcon width={20} color="black" />
+                                                       </MenubarTrigger>
+                                                       <MenubarContent>
+                                                            <MenubarItem className="text-center">
+                                                                 <div className="">
+                                                                      <div className="font-bold">Edwards</div>
+                                                                      <div className="text-center ml-6">edward@gmail.com</div>
+                                                                 </div>
+                                                            </MenubarItem>
+                                                            <MenubarItem>Personal Information</MenubarItem>
+                                                            <MenubarItem ><Link to={'/orders'}>Orders</Link></MenubarItem>
+                                                            <MenubarItem>Pending Offers</MenubarItem>
+                                                            <MenubarItem>Open Aplication</MenubarItem>
+                                                            <MenubarItem>Inquiry form</MenubarItem>
+                                                            <MenubarItem>Refer friends</MenubarItem>
+                                                            <MenubarItem>My reviews</MenubarItem>
+                                                            <MenubarItem></MenubarItem>
+                                                            <MenubarItem>Sign Out</MenubarItem>
+                                                       </MenubarContent>
+                                                  </MenubarMenu>
+                                             </Menubar>
                                         </div>
                                    </>
                               ) : (

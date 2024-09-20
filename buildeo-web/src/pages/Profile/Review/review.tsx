@@ -2,11 +2,12 @@ import NavbarSearch from '../../../Components/Ui/headerSearhc'
 import Footer from '../../../Components/Ui/footer'
 import cover from '../../../../public/cover.png'
 import DynamicRating from '../../../Components/Ui/rating'
+import { Link } from 'react-router-dom'
 export default function ReviewPage() {
      return (
           <>
                <div className="">
-                    <NavbarSearch />
+                    <NavbarSearch text='black'/>
                     <div className="ml-[80px] mr-[80px] mb-[80px]">
                          <div className="flex ">
                               <div className='w-[1000px] mr-6'><img src={cover} alt="" className='rounded-[10px]' /></div>
@@ -25,13 +26,11 @@ export default function ReviewPage() {
                                         <textarea rows={7} placeholder='your review' name="" id="" className='mt-2 border border-[#E31E24] p-2 rounded-[5px]'>
                                         </textarea>
                                         <div className="flex font-bold justify-end mt-3">
-                                             <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Cancel</button>
-                                             <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'> Send Review</button>
+                                             <Link to={'/orders'}><button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Cancel</button></Link>
+                                             <Link to={'/orders/review/result'}><button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'> Send Review</button></Link>
                                         </div>
                                    </div>
-
                               </form>
-
                          </div>
                     </div>
                     <Footer />
