@@ -7,7 +7,7 @@ export default function EditPage() {
   return (
      <>
        <div className="">
-                    <NavbarSearch />
+                    <NavbarSearch text='black'/>
                     <div className="ml-[80px] mr-[80px] mb-[80px]">
                          <div className="flex ">
                               <div className='w-[1000px] mr-6'><img src={cover} alt="" className='rounded-[10px]' /></div>

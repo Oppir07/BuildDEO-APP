@@ -1,5 +1,6 @@
 import NavbarSearch from '../../../Components/Ui/headerSearhc'
 import Footer from '../../../Components/Ui/footer'
+import { Link } from 'react-router-dom'
 
 export default function EditProductPage() {
 
@@ -37,7 +38,7 @@ export default function EditProductPage() {
                               </div>
                               <div className="flex justify-end mt-6 mb-8">
                                    <div className="flex font-bold">
-                                        <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Cancel</button>
+                                   <Link to={'/home/craftman'}><button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Cancel</button></Link>
                                         <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'>Add service</button>
                                    </div>
                               </div>
