@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../api/config"; // Import the API base URL
 import { Alert, Stack } from "@mui/material";
 export default function LoginPage() {
-  const [isCraftman, setIsCraftman] = useState(true);
+  const [isCraftman, setIsCraftman] = useState(false);
   const [loading, setLoading] =useState(false)
   const navigate = useNavigate();
 
@@ -46,7 +46,7 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/profile");
+        navigate("/home");
       }
     } catch (err) {
       setError("Login failed. Please try again.");
@@ -54,15 +54,15 @@ export default function LoginPage() {
     }
   };
 
-  const handleClick = (event: { preventDefault: () => void }) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setLoading(true); //load page
-
-    requestAnimationFrame(() => {
-      window.location.reload();
+    const newRole = isCraftman ? "buyer" : "seller"; // Toggle role
+    setIsCraftman(!isCraftman);
+    setFormData({
+      ...formData,
+      role: newRole, // Update role in formData
     });
-
-    setIsCraftman(!isCraftman); 
+    console.log("role = " + newRole);
   };
 
   const regist = () => {
@@ -79,7 +79,7 @@ export default function LoginPage() {
               We are looking for builders who want to save money
             </div>
           </div>
-          <div className="mt-9 md:mt-0  md:w-2/3 w-[360px] flex flex-wrap items-center justify-center md:ml-[120px]">
+          <div className="mt-0 md:mt-[75px]  md:w-2/3 w-[360px] flex flex-wrap items-center justify-center md:ml-[120px]">
             <div className="md:hidden ">
               <img src={logo} alt="" className="w-[100px] mb-4" />
             </div>

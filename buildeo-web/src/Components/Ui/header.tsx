@@ -17,7 +17,7 @@ import {
 } from "./menu";
 
 export default function Navbar() {
-  const [navbar, setNavbar] = useState(false);
+  const [navbar, setNavbar] = useState(true);
   return (
     <div className="navbar flex flex-wrap items-center justify-between pl-4 pr-4 text-white  text-[12px] z-[9]">
       <div className="md:flex p-1 justify-between md:items w-full">

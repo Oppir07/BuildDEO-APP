@@ -1,13 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from '../../Components/Ui/footer'
-import Navbar from "../../Components/Ui/header";
+import Navbar from "../../Components/Ui/headerSearhc";
 import { Input } from "../../Components/Ui/input";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import Card from "../../Components/Ui/cardMenu";
 import cover from "../../../public/cover.png";
 import React, { useEffect, useState } from "react";
 import API_BASE_URL from "../../api/config"; // Import the API base URL
-import NavbarSearch from "../../Components/Ui/headerSearhc";
 
 interface Service {
   id: number;
@@ -39,6 +38,11 @@ export default function Home() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
+        const token = localStorage.getItem("access_token");
+        if(token!=null) {
+          console.log(token)
+        }
+
         const response = await fetch(`${API_BASE_URL}/categories`); // API call to fetch categories with services
         const data: Category[] = await response.json(); // Define the type of data
         setCategories(data); // Set categories data
@@ -71,7 +75,7 @@ export default function Home() {
   return (
     <>
       <div className="landing n">
-        <NavbarSearch bg="#FFFFFF00" />
+        <Navbar bg="#FFFFFF00" />
         <div className="text-white text-[28px] font-bold text-center mt-[120px]">
           Einfach günstigeren Handwerker finden
         </div>
