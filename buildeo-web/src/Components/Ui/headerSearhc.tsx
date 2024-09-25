@@ -21,13 +21,13 @@ import LogoutConfirmation from "./LogoutConfirmation";
 interface BgProps {
   bg?: string;
   text?: string;
+  color?: string;
 }
 
-export default function NavbarSearch({ bg, text }: BgProps) {
+export default function NavbarSearch({ bg, text, color }: BgProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access_token")
   );
-  console.log("isLoggedIn =", isLoggedIn); // Console output to check the state
   const [user, setUser] = useState<any>(null); // User data
   const [showLogoutModal, setShowLogoutModal] = useState(false); // State for controlling modal
   const navigate = useNavigate();
@@ -88,13 +88,24 @@ export default function NavbarSearch({ bg, text }: BgProps) {
     >
       <div className="md:flex p-1 md:items w-full">
         <div className="flex mb-4 md:mr-20 items-right justify-end align-items-end">
-          <img
-            src={logow}
-            alt="buildeo.jpg"
-            width={163}
-            height={32}
-            className="p-4 md:mr-35"
-          />
+          {/* Conditionally render the logo based on user role */}
+          {user?.role === "seller" ? (
+            <img
+              src={logo} // Seller logo
+              alt="buildeo.jpg"
+              width={163}
+              height={32}
+              className="p-4 md:mr-35"
+            />
+          ) : (
+            <img
+              src={logow} // Default logo for other users
+              alt="buildeo.jpg"
+              width={163}
+              height={32}
+              className="p-4 md:mr-35"
+            />
+          )}
           <div
             className="md:hidden flex mt-5 justify-end self-end"
             style={{ alignSelf: "flex-start" }}
@@ -105,7 +116,30 @@ export default function NavbarSearch({ bg, text }: BgProps) {
           </div>
         </div>
         <div className="mb-6 flex items-center justify-end self-center ml-[300px]">
-          <div className="flex flex-col ml-[200px] gap-[50px] text-left md:text-right text-[17px] md:flex md:items-center space-x-0 md:space-x-12 md:flex-row">
+          <div className="flex flex-col gap-[50px] text-left md:text-right text-[17px] md:flex md:items-center space-x-0 md:flex-row">
+
+            {isLoggedIn ? (
+              <>
+                <div className="flex justify-center mt-[20px]">
+                  <div className="relative w-[400px]">
+                    <FontAwesomeIcon
+                      icon={faSearch}
+                      className="absolute top-[13px] left-[20px] "
+                      color="black"
+                    />
+                    <Input
+                      placeholder="search"
+                      className="pl-[49px] text-black font-medium rounded-[10px] h-[40px] border border-[#737B7D] border-[1.5px]"
+                    />
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div></div>
+              </>
+            )}
+            
             <div className="md:mt-5">
               <Link to={"/home"}>Home</Link>
             </div>
@@ -114,23 +148,12 @@ export default function NavbarSearch({ bg, text }: BgProps) {
             </div>
             {isLoggedIn ? (
               <>
-                {/* <div className="flex justify-center mt-[20px]">
-                  <div className="relative w-[300px]">
-                    <FontAwesomeIcon
-                      icon={faSearch}
-                      className="absolute top-[13px] left-[20px]"
-                      color="black"
-                    />
-                    <Input
-                      placeholder="search"
-                      className="pl-[49px] text-black font-medium rounded-[10px] h-[40px] border border-[#737B7D] border-[1.5px]"
-                    />
-                  </div>
-                </div> */}
-
                 <div className="md:mt-5">
                   <Link to={""}>
-                    <MessageIcon width={20} color="white" />
+                    <MessageIcon
+                      width={20}
+                      color={`${color ? color : "white"}`}
+                    />
                   </Link>
                 </div>
 
@@ -139,7 +162,10 @@ export default function NavbarSearch({ bg, text }: BgProps) {
                   <Menubar>
                     <MenubarMenu>
                       <MenubarTrigger>
-                        <ProfileIcon width={20} color="white" />
+                        <ProfileIcon
+                          width={20}
+                          color={`${color ? color : "white"}`}
+                        />
                       </MenubarTrigger>
                       <MenubarContent>
                         <MenubarItem>

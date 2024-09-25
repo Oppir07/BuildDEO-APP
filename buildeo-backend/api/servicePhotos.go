@@ -2,7 +2,9 @@ package api
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
@@ -10,7 +12,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Request structure for creating a service photo
+// createServicePhotoRequest is the structure for the request payload
 type createServicePhotoRequest struct {
 	ServiceID int64  `json:"service_id" binding:"required"`
 	PhotoUrl  string `json:"photo_url" binding:"required"`
@@ -38,39 +40,50 @@ func newServicePhotoResponse(photo db.ServicePhoto) servicePhotoResponse {
 	}
 }
 
-// Create a new service photo
+// CreateServicePhoto handles the creation of a new service photo
 func (server *Server) createServicePhoto(ctx *gin.Context) {
-	var req createServicePhotoRequest
-	if err := ctx.ShouldBindJSON(&req); err != nil {
-		ctx.JSON(http.StatusBadRequest, errorResponse(err))
-		return
-	}
+    var req createServicePhotoRequest
+    if err := ctx.ShouldBindJSON(&req); err != nil {
+        ctx.JSON(http.StatusBadRequest, errorResponse(err))
+        return
+    }
 
-	arg := db.CreateServicePhotoParams{
-		ServiceID: req.ServiceID,
-		PhotoUrl:  req.PhotoUrl,
-		CreatedBy: req.CreatedBy,
-		UpdatedBy: req.UpdatedBy,
-	}
+    // Set the default photo URL if none is provided
+    if req.PhotoUrl == "" {
+        req.PhotoUrl = "https://images.unsplash.com/photo-1673865641469-34498379d8af?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+    }
 
-	photo, err := server.store.CreateServicePhoto(ctx, arg)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
-	}
+    // Insert the record into the database
+    arg := db.CreateServicePhotoParams{
+        ServiceID: req.ServiceID,
+        PhotoUrl:  req.PhotoUrl, // Use the provided or default photo URL
+        CreatedBy: req.CreatedBy,
+        UpdatedBy: req.UpdatedBy,
+    }
 
-	photoID, err := photo.LastInsertId()
+    photo, err := server.store.CreateServicePhoto(ctx, arg)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+        return
+    }
 
-	result, err := server.store.GetServicePhotoByID(ctx, photoID)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
-		return
-	}
+    photoID, err := photo.LastInsertId()
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+        return
+    }
 
-	rsp := newServicePhotoResponse(result)
 
-	ctx.JSON(http.StatusOK, rsp)
+    result, err := server.store.GetServicePhotoByID(ctx, photoID)
+    if err != nil {
+        ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+        return
+    }
+
+    rsp := newServicePhotoResponse(result)
+    ctx.JSON(http.StatusOK, rsp)
 }
+
 
 // Get a service photo by ID
 func (server *Server) getServicePhoto(ctx *gin.Context) {
@@ -95,9 +108,8 @@ func (server *Server) getServicePhoto(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, rsp)
 }
 
-
 func (server *Server) listServicePhotos(ctx *gin.Context) {
-	
+
 	photos, err := server.store.ListServicePhotos(ctx)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
@@ -176,4 +188,30 @@ func (server *Server) deleteServicePhoto(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "service photo deleted successfully"})
+}
+
+// uploadServicePhoto handles the uploading of a service photo
+func (server *Server) uploadServicePhoto(ctx *gin.Context) {
+	file, err := ctx.FormFile("image") // Changed to match with the frontend
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+
+	// Define the upload directory
+	uploadPath := "./uploads/"
+	if _, err := os.Stat(uploadPath); os.IsNotExist(err) {
+		os.Mkdir(uploadPath, os.ModePerm)
+	}
+
+	// Save the uploaded file
+	filePath := uploadPath + file.Filename
+	if err := ctx.SaveUploadedFile(file, filePath); err != nil {
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+
+	// Here, you would typically save the image URL to the database and return it
+	imageUrl := fmt.Sprintf("/uploads/%s", file.Filename) // Adjust as necessary
+	ctx.JSON(http.StatusOK, gin.H{"imageUrl": imageUrl})
 }

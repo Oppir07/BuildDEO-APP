@@ -24,7 +24,7 @@ type Querier interface {
 	GetQuotation(ctx context.Context, id int64) (Quotation, error)
 	GetServiceByCategory(ctx context.Context, categoryID int64) ([]Service, error)
 	GetServiceByID(ctx context.Context, id int64) (GetServiceByIDRow, error)
-	GetServiceBySeller(ctx context.Context, sellerID int64) ([]Service, error)
+	GetServiceBySeller(ctx context.Context, sellerID int64) ([]GetServiceBySellerRow, error)
 	GetServicePhotoByID(ctx context.Context, id int64) (ServicePhoto, error)
 	GetServicePhotosByServiceID(ctx context.Context, serviceID int64) ([]ServicePhoto, error)
 	GetUser(ctx context.Context, email string) (User, error)

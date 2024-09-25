@@ -7,7 +7,7 @@ import API_BASE_URL from "../../api/config"; // Import the API base URL
 import { Alert, Stack } from "@mui/material";
 export default function LoginPage() {
   const [isCraftman, setIsCraftman] = useState(false);
-  const [loading, setLoading] =useState(false)
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Manage form input state for email and password
@@ -31,7 +31,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_BASE_URL}/users/login`, { // Use the base URL
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
+        // Use the base URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +47,13 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/home");
+
+        // Navigate based on user role
+        if (data.user.role === "seller") {
+          navigate("/home/craftman"); // Redirect to craftman home
+        } else {
+          navigate("/home"); // Redirect to buyer home
+        }
       }
     } catch (err) {
       setError("Login failed. Please try again.");
@@ -58,10 +65,6 @@ export default function LoginPage() {
     event.preventDefault();
     const newRole = isCraftman ? "buyer" : "seller"; // Toggle role
     setIsCraftman(!isCraftman);
-    setFormData({
-      ...formData,
-      role: newRole, // Update role in formData
-    });
     console.log("role = " + newRole);
   };
 
@@ -93,9 +96,9 @@ export default function LoginPage() {
                   <button
                     className="text-[#FF460A] bg-transparent font-bold border-none cursor-pointer"
                     onClick={handleClick}
-                    //spinner 
+                    //spinner
                   >
-                    { isCraftman ?  "Login as craftman"  : "Login as buyer"}
+                    {isCraftman ? "Login as craftman" : "Login as buyer"}
                   </button>
                 </div>
               </div>
@@ -158,9 +161,7 @@ export default function LoginPage() {
                   <div className="p-4">Register</div>
                 </button>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

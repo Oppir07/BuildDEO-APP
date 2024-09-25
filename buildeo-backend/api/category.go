@@ -37,6 +37,7 @@ type categoryFullResponse struct {
 	UpdatedAt   time.Time             `json:"updated_at"`
 }
 
+
 func newCategoryResponse(category db.Category) categoryResponse {
 	return categoryResponse{
 		ID:          category.ID,
@@ -221,7 +222,7 @@ func (server *Server) getAllCategoriesWithServices(ctx *gin.Context) {
             photosByService[service.ID] = []string{}
         }
         // Assuming service.PhotoUrl is the photo URL field; adjust if needed
-        photosByService[service.ID] = append(photosByService[service.ID], service.PhotoUrl)
+        photosByService[service.ID] = append(photosByService[service.ID], service.PhotoUrl.String)
     }
 
     // Populate servicesByCategory map

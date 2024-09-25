@@ -7,8 +7,13 @@ INSERT INTO services (
 
 -- name: GetServiceBySeller :many
 SELECT * 
-FROM services
-WHERE seller_id = ?;
+FROM services s
+LEFT JOIN service_photos sp
+ON s.id = sp.service_id
+LEFT JOIN categories c
+ON s.category_id = c.id
+WHERE s.seller_id = ?
+ORDER BY s.id;
 
 -- name: GetServiceByCategory :many
 SELECT * 
@@ -18,7 +23,7 @@ WHERE category_id = ?;
 -- name: GetServiceByID :one
 SELECT * 
 FROM services s
-INNER JOIN service_photos sp
+LEFT JOIN service_photos sp
 ON s.id = sp.service_id
 WHERE s.id = ?
 LIMIT 1;
@@ -26,7 +31,7 @@ LIMIT 1;
 -- name: ListService :many
 SELECT *
 FROM services s
-INNER JOIN service_photos sp
+LEFT JOIN service_photos sp
 ON s.id = sp.service_id
 ORDER BY s.id;
 

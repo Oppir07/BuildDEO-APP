@@ -99,7 +99,7 @@ export default function RegisterPage() {
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error(errorData.error);
+        console.error("ini error" + errorData.error);
       } else {
         const data = await response.json();
         console.log(data);
@@ -112,7 +112,7 @@ export default function RegisterPage() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            email: formData.email,
+            email: formData.email, // Use the email and password from formData
             password: formData.password,
           }),
         });
@@ -122,6 +122,12 @@ export default function RegisterPage() {
           // Store token and user data in localStorage
           localStorage.setItem("access_token", loginData.token);
           localStorage.setItem("user", JSON.stringify(loginData.user));
+          // Navigate based on user role
+          if (loginData.user.role === "seller") {
+            navigate("/home/craftman"); // Redirect to craftman home
+          } else {
+            navigate("/home"); // Redirect to buyer home
+          }
 
           setShowAlert(true); // Show success alert
         } else {
@@ -130,6 +136,7 @@ export default function RegisterPage() {
       }
     } catch (err) {
       setShowAlert(false);
+      console.log("login is failed");
       navigate("/register");
     }
   };
@@ -244,53 +251,30 @@ export default function RegisterPage() {
                 <div className="mt-10 flex justify-center">
                   <button
                     type="submit"
-                    className="bg-[#FF460A] font-bold rounded-[40px] text-white text-center w-full"
+                    className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px]"
                   >
-                    <div className="p-4">Register</div>
+                    Register
                   </button>
                 </div>
               </form>
-              <div className="flex justify-center">
-                <div className="flex items-center m-4 w-full">
-                  <div className="flex-grow border-t border-black"></div>
-                  <span className="mx-4 text-black">
-                    Already have an account?
-                  </span>
-                  <div className="flex-grow border-t border-black"></div>
+              {showAlert && (
+                <div className="bg-white h-screen absolute top-0 left-0 right-0 flex flex-col items-center justify-center">
+                  <img src={Check} alt="checklist" className="h-[100px]" />
+                  <p className="mt-5 text-black font-semibold text-xl">
+                    Registration successful!
+                  </p>
+                  <button
+                    onClick={handleAlertClose}
+                    className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px] mt-5"
+                  >
+                    Get Started
+                  </button>
                 </div>
-              </div>
-              <div className="flex justify-center">
-                <button
-                  onClick={login}
-                  className="w-full bg-white text-[#FF460A] font-bold rounded-[40px] border border-[#FF460A] text-center"
-                >
-                  <div className="p-4">Login</div>
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-
-      {/* Success Alert */}
-      {showAlert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
-            <img src={Check} alt="Success" className="w-[100px] fade-in" />
-            <p className="mt-2 text-center">
-              Your account has been successfully created
-            </p>
-            <div className="mt-4">
-              <button
-                onClick={handleAlertClose}
-                className="bg-[#FF460A] text-white w-[250px] p-2 rounded-[15px]"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

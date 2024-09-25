@@ -93,7 +93,7 @@ func (q *Queries) GetServiceByCategory(ctx context.Context, categoryID int64) ([
 const getServiceByID = `-- name: GetServiceByID :one
 SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
 FROM services s
-INNER JOIN service_photos sp
+LEFT JOIN service_photos sp
 ON s.id = sp.service_id
 WHERE s.id = ?
 LIMIT 1
@@ -110,13 +110,13 @@ type GetServiceByIDRow struct {
 	CreatedBy   int64          `json:"created_by"`
 	UpdatedAt   time.Time      `json:"updated_at"`
 	UpdatedBy   int64          `json:"updated_by"`
-	ID_2        int64          `json:"id_2"`
-	ServiceID   int64          `json:"service_id"`
-	PhotoUrl    string         `json:"photo_url"`
-	CreatedAt_2 time.Time      `json:"created_at_2"`
-	CreatedBy_2 int64          `json:"created_by_2"`
-	UpdatedAt_2 time.Time      `json:"updated_at_2"`
-	UpdatedBy_2 int64          `json:"updated_by_2"`
+	ID_2        sql.NullInt64  `json:"id_2"`
+	ServiceID   sql.NullInt64  `json:"service_id"`
+	PhotoUrl    sql.NullString `json:"photo_url"`
+	CreatedAt_2 sql.NullTime   `json:"created_at_2"`
+	CreatedBy_2 sql.NullInt64  `json:"created_by_2"`
+	UpdatedAt_2 sql.NullTime   `json:"updated_at_2"`
+	UpdatedBy_2 sql.NullInt64  `json:"updated_by_2"`
 }
 
 func (q *Queries) GetServiceByID(ctx context.Context, id int64) (GetServiceByIDRow, error) {
@@ -145,20 +145,52 @@ func (q *Queries) GetServiceByID(ctx context.Context, id int64) (GetServiceByIDR
 }
 
 const getServiceBySeller = `-- name: GetServiceBySeller :many
-SELECT id, seller_id, category_id, title, description, price, created_at, created_by, updated_at, updated_by 
-FROM services
-WHERE seller_id = ?
+SELECT s.id, seller_id, category_id, title, s.description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by, c.id, name, c.description, c.created_at, c.created_by, c.updated_at, c.updated_by 
+FROM services s
+LEFT JOIN service_photos sp
+ON s.id = sp.service_id
+LEFT JOIN categories c
+ON s.category_id = c.id
+WHERE s.seller_id = ?
+ORDER BY s.id
 `
 
-func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Service, error) {
+type GetServiceBySellerRow struct {
+	ID            int64          `json:"id"`
+	SellerID      int64          `json:"seller_id"`
+	CategoryID    int64          `json:"category_id"`
+	Title         string         `json:"title"`
+	Description   sql.NullString `json:"description"`
+	Price         int64          `json:"price"`
+	CreatedAt     time.Time      `json:"created_at"`
+	CreatedBy     int64          `json:"created_by"`
+	UpdatedAt     time.Time      `json:"updated_at"`
+	UpdatedBy     int64          `json:"updated_by"`
+	ID_2          sql.NullInt64  `json:"id_2"`
+	ServiceID     sql.NullInt64  `json:"service_id"`
+	PhotoUrl      sql.NullString `json:"photo_url"`
+	CreatedAt_2   sql.NullTime   `json:"created_at_2"`
+	CreatedBy_2   sql.NullInt64  `json:"created_by_2"`
+	UpdatedAt_2   sql.NullTime   `json:"updated_at_2"`
+	UpdatedBy_2   sql.NullInt64  `json:"updated_by_2"`
+	ID_3          sql.NullInt64  `json:"id_3"`
+	Name          sql.NullString `json:"name"`
+	Description_2 sql.NullString `json:"description_2"`
+	CreatedAt_3   sql.NullTime   `json:"created_at_3"`
+	CreatedBy_3   sql.NullInt64  `json:"created_by_3"`
+	UpdatedAt_3   sql.NullTime   `json:"updated_at_3"`
+	UpdatedBy_3   sql.NullInt64  `json:"updated_by_3"`
+}
+
+func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]GetServiceBySellerRow, error) {
 	rows, err := q.db.QueryContext(ctx, getServiceBySeller, sellerID)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
-	items := []Service{}
+	items := []GetServiceBySellerRow{}
 	for rows.Next() {
-		var i Service
+		var i GetServiceBySellerRow
 		if err := rows.Scan(
 			&i.ID,
 			&i.SellerID,
@@ -170,6 +202,20 @@ func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Ser
 			&i.CreatedBy,
 			&i.UpdatedAt,
 			&i.UpdatedBy,
+			&i.ID_2,
+			&i.ServiceID,
+			&i.PhotoUrl,
+			&i.CreatedAt_2,
+			&i.CreatedBy_2,
+			&i.UpdatedAt_2,
+			&i.UpdatedBy_2,
+			&i.ID_3,
+			&i.Name,
+			&i.Description_2,
+			&i.CreatedAt_3,
+			&i.CreatedBy_3,
+			&i.UpdatedAt_3,
+			&i.UpdatedBy_3,
 		); err != nil {
 			return nil, err
 		}
@@ -187,7 +233,7 @@ func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Ser
 const listService = `-- name: ListService :many
 SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by
 FROM services s
-INNER JOIN service_photos sp
+LEFT JOIN service_photos sp
 ON s.id = sp.service_id
 ORDER BY s.id
 `
@@ -203,13 +249,13 @@ type ListServiceRow struct {
 	CreatedBy   int64          `json:"created_by"`
 	UpdatedAt   time.Time      `json:"updated_at"`
 	UpdatedBy   int64          `json:"updated_by"`
-	ID_2        int64          `json:"id_2"`
-	ServiceID   int64          `json:"service_id"`
-	PhotoUrl    string         `json:"photo_url"`
-	CreatedAt_2 time.Time      `json:"created_at_2"`
-	CreatedBy_2 int64          `json:"created_by_2"`
-	UpdatedAt_2 time.Time      `json:"updated_at_2"`
-	UpdatedBy_2 int64          `json:"updated_by_2"`
+	ID_2        sql.NullInt64  `json:"id_2"`
+	ServiceID   sql.NullInt64  `json:"service_id"`
+	PhotoUrl    sql.NullString `json:"photo_url"`
+	CreatedAt_2 sql.NullTime   `json:"created_at_2"`
+	CreatedBy_2 sql.NullInt64  `json:"created_by_2"`
+	UpdatedAt_2 sql.NullTime   `json:"updated_at_2"`
+	UpdatedBy_2 sql.NullInt64  `json:"updated_by_2"`
 }
 
 func (q *Queries) ListService(ctx context.Context) ([]ListServiceRow, error) {
