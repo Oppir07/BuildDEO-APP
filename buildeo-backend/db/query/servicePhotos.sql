@@ -5,10 +5,11 @@ INSERT INTO service_photos (
   ?, ?, ?, ?
 );
 
--- name: GetServicePhotosByServiceID :many
+-- name: GetServicePhotosByServiceID :one
 SELECT *
 FROM service_photos
-WHERE service_id = ?;
+WHERE service_id = ?
+LIMIT 1;
 
 -- name: GetServicePhotoByID :one
 SELECT *
@@ -19,13 +20,13 @@ LIMIT 1;
 -- name: ListServicePhotos :many
 SELECT *
 FROM service_photos 
-ORDER BY id;
+ORDER BY updated_at DESC;
 
 -- name: UpdateServicePhoto :execresult
 UPDATE service_photos
-SET service_id = ?, photo_url = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
-WHERE id = ?;
+SET photo_url = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+WHERE service_id = ?;
 
 -- name: DeleteServicePhoto :exec
-DELETE FROM service_photos WHERE id = ?;
+DELETE FROM service_photos WHERE service_id = ?;
 

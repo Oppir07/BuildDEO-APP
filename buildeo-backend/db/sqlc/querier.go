@@ -18,7 +18,7 @@ type Querier interface {
 	DeleteCategory(ctx context.Context, id int64) error
 	DeleteQuotation(ctx context.Context, id int64) error
 	DeleteService(ctx context.Context, id int64) error
-	DeleteServicePhoto(ctx context.Context, id int64) error
+	DeleteServicePhoto(ctx context.Context, serviceID int64) error
 	DeleteUser(ctx context.Context, id int64) error
 	GetCategory(ctx context.Context, id int64) (Category, error)
 	GetQuotation(ctx context.Context, id int64) (Quotation, error)
@@ -26,7 +26,7 @@ type Querier interface {
 	GetServiceByID(ctx context.Context, id int64) (GetServiceByIDRow, error)
 	GetServiceBySeller(ctx context.Context, sellerID int64) ([]GetServiceBySellerRow, error)
 	GetServicePhotoByID(ctx context.Context, id int64) (ServicePhoto, error)
-	GetServicePhotosByServiceID(ctx context.Context, serviceID int64) ([]ServicePhoto, error)
+	GetServicePhotosByServiceID(ctx context.Context, serviceID int64) (ServicePhoto, error)
 	GetUser(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id int64) (User, error)
 	ListCategory(ctx context.Context) ([]ListCategoryRow, error)

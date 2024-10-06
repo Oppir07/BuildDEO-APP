@@ -19,7 +19,7 @@ INNER JOIN services s
 ON c.id = s.category_id
 INNER JOIN service_photos sp
 ON s.id = sp.service_id
-ORDER BY c.id;
+ORDER BY s.updated_at DESC;
 
 -- name: UpdateCategory :execresult
 UPDATE categories

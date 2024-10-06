@@ -29,22 +29,22 @@ type serviceResponse struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	Price       int64     `json:"price"`
-	Photos      []string  `json:"photos"`
+	Photo       string    `json:"photo"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // Response structure for service detail with its photos and category
 type serviceFullResponse struct {
-	ID           int64     `json:"id"`
-	SellerID     int64     `json:"seller_id"`
-	CategoryID   int64     `json:"category_id"`
-	Title        string    `json:"title"`
-	Description  string    `json:"description"`
-	Price        int64     `json:"price"`
-	Photos       []string  `json:"photos"` // Add photos field
-	CreatedAt    time.Time `json:"created_at"`
-	UpdatedAt    time.Time `json:"updated_at"`
+	ID          int64     `json:"id"`
+	SellerID    int64     `json:"seller_id"`
+	CategoryID  int64     `json:"category_id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Price       int64     `json:"price"`
+	Photo       string    `json:"photo"` // Add photos field
+	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
 
 // Helper function to convert db.Service to serviceResponse
@@ -61,7 +61,7 @@ func newServiceResponse(service db.GetServiceByIDRow) serviceResponse {
 	}
 }
 
-func newServiceFullResponse(service db.GetServiceByIDRow, photos []string) serviceFullResponse {
+func newServiceFullResponse(service db.GetServiceByIDRow, photo string) serviceFullResponse {
 	return serviceFullResponse{
 		ID:          service.ID,
 		SellerID:    service.SellerID,
@@ -69,7 +69,7 @@ func newServiceFullResponse(service db.GetServiceByIDRow, photos []string) servi
 		Title:       service.Title,
 		Description: service.Description.String,
 		Price:       service.Price,
-		Photos:      photos,
+		Photo:       photo,
 		CreatedAt:   service.CreatedAt,
 		UpdatedAt:   service.UpdatedAt,
 	}
@@ -132,20 +132,14 @@ func (server *Server) getService(ctx *gin.Context) {
 	}
 
 	// Collect all photos associated with the service
-	photos, err := server.store.GetServicePhotosByServiceID(ctx, id) // You'll need this function to list photos
+	photo, err := server.store.GetServicePhotosByServiceID(ctx, id) // You'll need this function to list photos
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
-	// Map photo URLs into a slice
-	photoUrls := []string{}
-	for _, photo := range photos {
-		photoUrls = append(photoUrls, photo.PhotoUrl)
-	}
-
 	// Respond with the full service details and photos
-	rsp := newServiceFullResponse(service, photoUrls)
+	rsp := newServiceFullResponse(service, photo.PhotoUrl)
 	ctx.JSON(http.StatusOK, rsp)
 }
 
@@ -257,24 +251,16 @@ func (server *Server) getServicesBySeller(ctx *gin.Context) {
 
 	// Loop through the services and build the response
 	for _, service := range services {
-		if _, exists := serviceMap[service.ID]; !exists {
-			// If the service is not yet in the map, create a new entry
-			serviceMap[service.ID] = serviceFullResponse{
-				ID:           service.ID,
-				SellerID:     service.SellerID,
-				CategoryID:   service.CategoryID,
-				Title:        service.Title,
-				Description:  service.Description.String,
-				Price:        service.Price,
-				Photos:       []string{service.PhotoUrl.String}, // Initialize with the first photo
-				CreatedAt:    service.CreatedAt,
-				UpdatedAt:    service.UpdatedAt,
-			}
-		} else {
-			// If the service already exists in the map, append the new photo
-			serviceResponse := serviceMap[service.ID]
-			serviceResponse.Photos = append(serviceResponse.Photos, service.PhotoUrl.String)
-			serviceMap[service.ID] = serviceResponse
+		serviceMap[service.ID] = serviceFullResponse{
+			ID:          service.ID,
+			SellerID:    service.SellerID,
+			CategoryID:  service.CategoryID,
+			Title:       service.Title,
+			Description: service.Description.String,
+			Price:       service.Price,
+			Photo:       service.PhotoUrl.String, // Store single photo
+			CreatedAt:   service.CreatedAt,
+			UpdatedAt:   service.UpdatedAt,
 		}
 	}
 
@@ -301,29 +287,16 @@ func (server *Server) getAllServicesWithPhotos(ctx *gin.Context) {
 
 	// Iterate over each service and group photos by service ID
 	for _, service := range serviceRows {
-		// If the service is already in the map, append the photo to its list
-		if existingService, exists := serviceMap[service.ID]; exists {
-			existingService.Photos = append(existingService.Photos, service.PhotoUrl.String)
-		} else {
-			// Create a new entry for the service
-			photoUrls := []string{}
-			if service.PhotoUrl.String != "" {
-				photoUrls = append(photoUrls, service.PhotoUrl.String)
-			}
-
-			// Manually map ListServiceRow to serviceFullResponse
-			newService := serviceFullResponse{
-				ID:          service.ID,
-				SellerID:    service.SellerID,
-				CategoryID:  service.CategoryID,
-				Title:       service.Title,
-				Description: service.Description.String,
-				Price:       service.Price,
-				Photos:      photoUrls,
-				CreatedAt:   service.CreatedAt,
-				UpdatedAt:   service.UpdatedAt,
-			}
-			serviceMap[service.ID] = &newService
+		serviceMap[service.ID] = &serviceFullResponse{
+			ID:          service.ID,
+			SellerID:    service.SellerID,
+			CategoryID:  service.CategoryID,
+			Title:       service.Title,
+			Description: service.Description.String,
+			Price:       service.Price,
+			Photo:       service.PhotoUrl.String, // Single photo
+			CreatedAt:   service.CreatedAt,
+			UpdatedAt:   service.UpdatedAt,
 		}
 	}
 

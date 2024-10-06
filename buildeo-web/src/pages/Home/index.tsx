@@ -145,7 +145,7 @@ export default function Home() {
                 company={sellers[service.seller_id]?.firstname || "Loading..."} // Use seller's firstname
                 price={service.price.toString()}
                 img={service.photos[0] || cover}
-                link={`/services/${service.id}`}
+                link={`/home/craftman/product-detail/${service.id}`}
               />
             ))}
           </div>

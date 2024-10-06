@@ -7,7 +7,7 @@ interface FileIconProps{
      color?:string,
 }
 
-const FileIcon: FC<FileIconProps>= ({width,height,color})=>(
+const FileIcon: FC<FileIconProps>= ({width,height})=>(
 
      <svg  width={width} height={height}
      viewBox="0 0 58 68" fill="none" xmlns="http://www.w3.org/2000/svg">

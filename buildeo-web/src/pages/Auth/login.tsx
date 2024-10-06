@@ -7,7 +7,6 @@ import API_BASE_URL from "../../api/config"; // Import the API base URL
 import { Alert, Stack } from "@mui/material";
 export default function LoginPage() {
   const [isCraftman, setIsCraftman] = useState(false);
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   // Manage form input state for email and password

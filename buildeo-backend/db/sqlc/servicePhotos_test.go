@@ -61,7 +61,6 @@ func TestUpdateServicePhoto(t *testing.T) {
 		ServiceID: servicePhoto.ServiceID,
 		PhotoUrl:  "https://plus.unsplash.com/premium_photo-1682882688309-54527c93dc97?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
 		UpdatedBy: service.UpdatedBy,
-		ID:        servicePhoto.ID,
 	}
 
 	_, err := testQueries.UpdateServicePhoto(context.Background(), arg)
@@ -132,8 +131,5 @@ func TestGetServicePhotosByServiceID(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, photos)
 
-	// Verify that all the photos are associated with the correct service
-	for _, photo := range photos {
-		require.Equal(t, service.ID, photo.ServiceID)
-	}
+	
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import NavbarSearch from '../../../Components/Ui/headerSearhc'
 import Footer from '../../../Components/Ui/footer'
 import { Input } from '../../../Components/Ui/input'

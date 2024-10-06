@@ -7,9 +7,10 @@ import Footer from "../../../Components/Ui/footer";
 import NavbarSearch from "../../../Components/Ui/headerSearhc";
 import DynamicRating from "../../../Components/Ui/rating";
 import cover from "../../../../public/cover.png";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import API_BASE_URL from "../../../api/config"; // Import the API base URL
+import logo from "../../../../public/logoOrange.png";
 
 export default function DetailProduct() {
   const { id } = useParams(); // Get the service ID from the URL
@@ -36,12 +37,12 @@ export default function DetailProduct() {
   return (
     <>
       <div className="">
-        <NavbarSearch text="black" color="black" />
+        <NavbarSearch text="black" color="black" logoOrange={logo}/>
         <div className="md:pl-[82px] md:pr-[82px]">
           <div className="grid grid-cols-2 w-full">
             <div>
               <img
-                src={service.photos[0] || cover}
+                src={service.photo || cover}
                 className="h-[350px]"
                 alt={service.title}
               />

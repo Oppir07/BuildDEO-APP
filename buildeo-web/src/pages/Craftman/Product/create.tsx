@@ -9,9 +9,9 @@ export default function CreateProductPage() {
   const [serviceName, setServiceName] = useState("");
   const [servicePrice, setServicePrice] = useState(0);
   const [serviceDescription, setServiceDescription] = useState("");
-  const [serviceImageUrl, setServiceImageUrl] = useState(""); 
+  const [serviceImageUrl, setServiceImageUrl] = useState("");
   const [showAlert, setShowAlert] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); 
+  const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
   const [categoryId, setCategoryId] = useState(1);
   const [serviceImage, setServiceImage] = useState<File | null>(null);
@@ -37,9 +37,9 @@ export default function CreateProductPage() {
     if (showAlert) {
       const timer = setTimeout(() => {
         setShowAlert(false);
-      }, 3000); // Close the alert after 3 seconds
+      }, 3000);
 
-      return () => clearTimeout(timer); // Clean up if component unmounts
+      return () => clearTimeout(timer);
     }
   }, [showAlert]);
 
@@ -54,79 +54,86 @@ export default function CreateProductPage() {
       return;
     }
 
-    const newService = {
+    // Create a plain object to hold the service data (JSON format)
+    const serviceData = {
       seller_id: userId,
       category_id: categoryId,
       title: serviceName,
       description: serviceDescription,
-      price: servicePrice,
+      price: servicePrice, // Will remain as integer
       created_by: userId,
       updated_by: userId,
     };
 
     try {
+      // Send the request to create the service
       const serviceResponse = await fetch(`${API_BASE_URL}/services`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json", // Send as JSON
         },
-        body: JSON.stringify(newService),
+        body: JSON.stringify(serviceData),
       });
 
       if (!serviceResponse.ok) {
         const errorText = await serviceResponse.text();
         console.error("Service response error:", errorText);
-        throw new Error(`Error adding service: ${serviceResponse.statusText}`);
+        return;
       }
 
-      const serviceData = await serviceResponse.json();
-      const serviceId = serviceData.id;
+      const serviceResult = await serviceResponse.json();
+      const serviceId = serviceResult.id;
 
-      const photoResponse = await fetch(`${API_BASE_URL}/services/photos`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          service_id: serviceId,
-          photo_url:
-            serviceImageUrl ||
-            "https://images.unsplash.com/photo-1673865641469-34498379d8af?q=80&w=1780&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D", 
-          created_by: userId,
-          updated_by: userId,
-        }),
-      });
+      console.log("image url : " + serviceImage);
 
-      if (!photoResponse.ok) {
-        const errorText = await photoResponse.text();
-        console.error("Photo response error:", errorText);
-        throw new Error(`Error saving photo URL: ${photoResponse.statusText}`);
+      // Handle the photo upload if a service image exists
+      if (serviceImage) {
+        const formData = new FormData();
+        formData.append("service_id", String(serviceId)); // Convert service_id to string
+        formData.append("photo", serviceImage); // Append the image file directly
+        formData.append("created_by", String(userId)); // Convert userId to string
+        formData.append("updated_by", String(userId)); // Convert userId to string
+
+        for (var pair of formData.entries()) {
+          console.log(pair[0] + ": " + pair[1]);
+        }
+
+        const photoResponse = await fetch(`${API_BASE_URL}/services/photos`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`, // No need to set Content-Type here, browser will handle it
+          },
+          body: formData, // Send FormData instead of JSON
+        });
+
+        if (!photoResponse.ok) {
+          const errorText = await photoResponse.text();
+          console.error("Photo response error:", errorText);
+          throw new Error(`Error saving photo: ${photoResponse.statusText}`);
+        }
       }
 
+      // Clear form fields after successful submission
       setServiceName("");
       setServicePrice(0);
       setServiceDescription("");
-      setServiceImageUrl(""); 
+      setServiceImageUrl("");
       setCategoryId(1);
-      setErrorMessage(""); 
+      setErrorMessage("");
 
       navigate("/home/craftman");
 
       setShowAlert(true);
-    } catch (error: unknown) {
+    } catch (error) {
       if (error instanceof Error) {
-        console.error("Error adding service:", error);
         setErrorMessage(
           error.message || "An error occurred while adding the service."
         );
       } else {
-        console.error("Unexpected error:", error);
         setErrorMessage("An unexpected error occurred.");
       }
     }
-    
   };
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,7 +165,10 @@ export default function CreateProductPage() {
                     src={serviceImage ? URL.createObjectURL(serviceImage) : ""}
                     className="h-[200px] w-[200px]"
                   />
-                  <label htmlFor="file-upload" className="custom-file-upload mt-[10px] ml-[25px]">
+                  <label
+                    htmlFor="file-upload"
+                    className="custom-file-upload mt-[10px] ml-[25px]"
+                  >
                     Choose an Image
                   </label>
                   <input

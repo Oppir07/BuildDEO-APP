@@ -22,9 +22,10 @@ interface BgProps {
   bg?: string;
   text?: string;
   color?: string;
+  logoOrange?: string;
 }
 
-export default function NavbarSearch({ bg, text, color }: BgProps) {
+export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
   const [isLoggedIn, setIsLoggedIn] = useState(
     !!localStorage.getItem("access_token")
   );
@@ -99,7 +100,7 @@ export default function NavbarSearch({ bg, text, color }: BgProps) {
             />
           ) : (
             <img
-              src={logow} // Default logo for other users
+              src={logoOrange ? logo : logow}
               alt="buildeo.jpg"
               width={163}
               height={32}
@@ -117,7 +118,6 @@ export default function NavbarSearch({ bg, text, color }: BgProps) {
         </div>
         <div className="mb-6 flex items-center justify-end self-center ml-[300px]">
           <div className="flex flex-col gap-[50px] text-left md:text-right text-[17px] md:flex md:items-center space-x-0 md:flex-row">
-
             {isLoggedIn ? (
               <>
                 <div className="flex justify-center mt-[20px]">
@@ -139,7 +139,7 @@ export default function NavbarSearch({ bg, text, color }: BgProps) {
                 <div></div>
               </>
             )}
-            
+
             <div className="md:mt-5">
               <Link to={"/home"}>Home</Link>
             </div>

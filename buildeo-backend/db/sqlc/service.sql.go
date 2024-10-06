@@ -54,6 +54,7 @@ const getServiceByCategory = `-- name: GetServiceByCategory :many
 SELECT id, seller_id, category_id, title, description, price, created_at, created_by, updated_at, updated_by 
 FROM services
 WHERE category_id = ?
+ORDER BY updated_at DESC
 `
 
 func (q *Queries) GetServiceByCategory(ctx context.Context, categoryID int64) ([]Service, error) {
@@ -152,7 +153,7 @@ ON s.id = sp.service_id
 LEFT JOIN categories c
 ON s.category_id = c.id
 WHERE s.seller_id = ?
-ORDER BY s.id
+ORDER BY s.updated_at DESC
 `
 
 type GetServiceBySellerRow struct {

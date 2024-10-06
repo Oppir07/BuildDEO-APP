@@ -5,7 +5,6 @@ import { FileIcon } from 'lucide-react'
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Input } from '../../../Components/Ui/input'
-import Check from '/Auth/check.png'
 
 export default function PaymentPage() {
      const [selectedFile, setSelectedFile] = useState<File | null>(null);

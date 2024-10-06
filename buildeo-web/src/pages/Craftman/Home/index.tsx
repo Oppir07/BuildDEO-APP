@@ -49,7 +49,15 @@ const handleDelete = async (serviceId: string) => {
         },
       });
 
-      if (response.ok) {
+      const response2 = await fetch(`${API_BASE_URL}/services/photos/${serviceId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // Include token if needed
+        },
+      });
+
+      if (response.ok && response2.ok) {
         alert('Service deleted successfully!');
         // Optionally, you can remove the service from the state here
         setServices((prevServices) => prevServices.filter(service => service.id !== serviceId));
@@ -177,8 +185,8 @@ const handleDelete = async (serviceId: string) => {
                       company={user.firstname}
                       price={`${service.price}€`}
                       img={
-                        service.photos && service.photos[0]
-                          ? service.photos[0]
+                        service.photo
+                          ? service.photo
                           : cover
                       } // Use service photo if available
                       link={`/home/craftman/product-detail/${service.id}`} // Link to service detail page
@@ -269,16 +277,16 @@ const handleDelete = async (serviceId: string) => {
                       <td>Service Sell</td>
                       <td>Manage Service</td>
                     </tr>
-                    {services.map((service, index) => (
+                    {services.map((service) => (
                       <tr className="">
                         <td className="md:w-[600px]">
                           <div className="">
-                            <div className="flex flex-wrap">
+                            <div className="flex flex-wrap mt-2">
                               <div className="mr-10">
                                 <img
                                   src={
-                                    service.photos && service.photos[0]
-                                      ? service.photos[0]
+                                    service.photo
+                                      ? service.photo
                                       : media
                                   }
                                   alt=""

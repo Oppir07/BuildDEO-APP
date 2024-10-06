@@ -13,12 +13,13 @@ ON s.id = sp.service_id
 LEFT JOIN categories c
 ON s.category_id = c.id
 WHERE s.seller_id = ?
-ORDER BY s.id;
+ORDER BY s.updated_at DESC;
 
 -- name: GetServiceByCategory :many
 SELECT * 
 FROM services
-WHERE category_id = ?;
+WHERE category_id = ?
+ORDER BY updated_at DESC;
 
 -- name: GetServiceByID :one
 SELECT * 
