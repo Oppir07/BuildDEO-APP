@@ -1,30 +1,25 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
-import NavbarSearch from '../../../Components/Ui/headerSearhc';
-import NumberInput from '../../../Components/Ui/inputNumber';
-import { Avatar, AvatarFallback, AvatarImage } from '../../../Components/Ui/avatar';
-import DynamicRating from '../../../Components/Ui/rating';
-import Footer from '../../../Components/Ui/footer';
-import MessageIcon from '../../../Components/Icon/MessageIcon';
-import LoginModals from '../../../Components/Ui/login';
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import NavbarSearch from "../../../Components/Ui/headerSearhc";
+import NumberInput from "../../../Components/Ui/inputNumber";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "../../../Components/Ui/avatar";
+import DynamicRating from "../../../Components/Ui/rating";
+import Footer from "../../../Components/Ui/footer";
+import MessageIcon from "../../../Components/Icon/MessageIcon";
+import LoginModals from "../../../Components/Ui/login";
 import API_BASE_URL from "../../../api/config"; // Import the API base URL
-import cover from '../../../../public/cover.png'
-import Check from '/Auth/check.png'
+import cover from "../../../../public/cover.png";
+import Check from "/Auth/check.png";
+
 export default function DetailMenuPage() {
   const { id } = useParams(); // Get service ID from URL
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showModal] = useState(false);
   const [serviceDetails, setServiceDetails] = useState<any>(null); // Store fetched service details
   const [loading, setLoading] = useState(true);
-
-  const pay = () => {
-    if (!isLoggedIn) {
-      setShowModal(true);
-    } else {
-      // Proceed with payment logic
-      setIsLoggedIn(true);
-    }
-  };
 
   useEffect(() => {
     // Fetch service details from API
@@ -54,26 +49,24 @@ export default function DetailMenuPage() {
   const { title, description, price, photos } = serviceDetails;
   const servicePhoto = photos && photos.length > 0 ? photos[0] : cover; // Use service photo if available
 
-
-
   //alert wishlist
-//
-const [showAlert, setShowAlert] = useState(false);
-const navigate = useNavigate();
+  //
+  const [showAlert, setShowAlert] = useState(false);
+  const navigate = useNavigate();
 
-const handleAlertClose = () => {
- setShowAlert(false);
- navigate("/payment");
-};
+  const handleAlertClose = () => {
+    setShowAlert(false);
+    navigate("/payment");
+  };
 
-const send = () =>{
+  const send = () => {
     setShowAlert(true);
-}
+  };
 
   return (
     <>
       <div className="">
-        <NavbarSearch text='black' />
+        <NavbarSearch text="red" />
         <div className="md:pl-[82px] md:pr-[82px] pl-4 pr-4 flex flex-col justify-center items-center">
           <div className="grid md:grid-cols-3 gap-6 w-full">
             <div className="flex items-center justify-center">
@@ -103,28 +96,26 @@ const send = () =>{
 
               {/* //have login */}
               {showAlert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
-            <img src={Check} alt="" className="w-[100px] fade-in" />
-            <p className="mt-2 text-center">
-              Services Succsessfully added to wislist
-            </p>
-            <div className="mt-4 ">
-              <button
-                onClick={handleAlertClose}
-                className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
-              >
-                Back
-              </button>
-              <button
-                className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
-              >
-                Continue to Wishlist
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                  <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
+                    <img src={Check} alt="" className="w-[100px] fade-in" />
+                    <p className="mt-2 text-center">
+                      Services Succsessfully added to wislist
+                    </p>
+                    <div className="mt-4 ">
+                      <button
+                        onClick={handleAlertClose}
+                        className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
+                      >
+                        Back
+                      </button>
+                      <button className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]">
+                        Continue to Wishlist
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Not login/regist */}
 
@@ -149,11 +140,11 @@ const send = () =>{
                   <div className="text-[32px] font-bold">{price}€</div>
                 </div>
                 <div className="text-[20px] mt-[50px] font-bold text-center text-white">
-                  <Link to={'/payment'}><button
-                    className="bg-[#FF460A] rounded-[40px] p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200"
-                  >
-                    Offer
-                  </button></Link>
+                  <Link to={"/payment"}>
+                    <button className="bg-[#FF460A] rounded-[40px] p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200">
+                      Offer
+                    </button>
+                  </Link>
                   <button
                     onClick={send}
                     className="bg-[#FFFFFF] w-full text-[#E31E24] font-bold border border-[1.5px] border-[#E31E24] rounded-[40px] mt-2 p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200"

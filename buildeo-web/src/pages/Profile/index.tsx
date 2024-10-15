@@ -12,6 +12,8 @@ import { EyeIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import Trash from '/trash.png'
+import logo from "/logoOrange.png";
+
 
 export default function ProfilePage() {
   const [value, setValue] = useState('one');
@@ -66,7 +68,7 @@ export default function ProfilePage() {
 
   return (
     <div className="">
-      <NavbarSearch text='black'/>
+      <NavbarSearch text='black'logoOrange={logo}/>
       <div className="mt-[10px] ml-4 mr-4 md:ml-[80px] md:mr-[80px] mb-[50px]">
         <div className="text-[32px] font-bold mb-4">Personal Information</div>
         <div className="flex md:justify-start justify-center flex-wrap mb-10">

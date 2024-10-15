@@ -6,8 +6,7 @@ import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../api/config"; // Import the API base URL
 import { Alert, Stack } from "@mui/material";
 export default function LoginPage() {
-  const [isCraftman, setIsCraftman] = useState(true);
-  const [loading, setLoading] =useState(false)
+  const [isCraftman, setIsCraftman] = useState(false);
   const navigate = useNavigate();
 
   // Manage form input state for email and password
@@ -31,7 +30,8 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${API_BASE_URL}/users/login`, { // Use the base URL
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
+        // Use the base URL
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,7 +46,13 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
-        navigate("/profile");
+
+        // Navigate based on user role
+        if (data.user.role === "seller") {
+          navigate("/home/craftman"); // Redirect to craftman home
+        } else {
+          navigate("/home"); // Redirect to buyer home
+        }
       }
     } catch (err) {
       setError("Login failed. Please try again.");
@@ -54,15 +60,11 @@ export default function LoginPage() {
     }
   };
 
-  const handleClick = (event: { preventDefault: () => void }) => {
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    setLoading(true); //load page
-
-    requestAnimationFrame(() => {
-      window.location.reload();
-    });
-
-    setIsCraftman(!isCraftman); 
+    const newRole = isCraftman ? "buyer" : "seller"; // Toggle role
+    setIsCraftman(!isCraftman);
+    console.log("role = " + newRole);
   };
 
   const regist = () => {
@@ -79,7 +81,7 @@ export default function LoginPage() {
               We are looking for builders who want to save money
             </div>
           </div>
-          <div className="mt-9 md:mt-0  md:w-2/3 w-[360px] flex flex-wrap items-center justify-center md:ml-[120px]">
+          <div className="mt-0 md:mt-[75px]  md:w-2/3 w-[360px] flex flex-wrap items-center justify-center md:ml-[120px]">
             <div className="md:hidden ">
               <img src={logo} alt="" className="w-[100px] mb-4" />
             </div>
@@ -93,9 +95,9 @@ export default function LoginPage() {
                   <button
                     className="text-[#FF460A] bg-transparent font-bold border-none cursor-pointer"
                     onClick={handleClick}
-                    //spinner 
+                    //spinner
                   >
-                    { isCraftman ?  "Login as craftman"  : "Login as buyer"}
+                    {isCraftman ? "Login as craftman" : "Login as buyer"}
                   </button>
                 </div>
               </div>
@@ -158,9 +160,7 @@ export default function LoginPage() {
                   <div className="p-4">Register</div>
                 </button>
               </div>
-
             </div>
-
           </div>
         </div>
       </div>

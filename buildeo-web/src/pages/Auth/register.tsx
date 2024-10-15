@@ -20,23 +20,9 @@ interface FormData {
 }
 
 export default function RegisterPage() {
-  const [isCraftman, setIsCraftman] = useState(true);
+  const [isCraftman, setIsCraftman] = useState(false); // Default to buyer registration
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
-
-  const handleClick = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    setIsCraftman(!isCraftman);
-  };
-
-  const handleAlertClose = () => {
-    setShowAlert(false);
-    navigate("/home");
-  };
-
-  const login = () => {
-    navigate("/");
-  };
 
   // Form state management
   const [formData, setFormData] = useState<FormData>({
@@ -47,10 +33,26 @@ export default function RegisterPage() {
     postNumber: "",
     street: "",
     phone: "",
-    role: "buyer", // default role, can be 'seller' or 'admin'
+    role: "buyer", // default role
     createdBy: 1, // you may set it dynamically
     updatedBy: 1, // you may set it dynamically
   });
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    const newRole = isCraftman ? "buyer" : "seller"; // Toggle role
+    setIsCraftman(!isCraftman);
+    setFormData({
+      ...formData,
+      role: newRole, // Update role in formData
+    });
+    console.log("role = " + newRole);
+  };
+
+  const handleAlertClose = () => {
+    setShowAlert(false);
+    navigate("/home");
+  };
 
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +78,7 @@ export default function RegisterPage() {
     };
   };
 
-  // Handle form submission
+  // Handle form submission with automatic login after registration
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -88,19 +90,49 @@ export default function RegisterPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(apiData), // Send transformed form data as JSON
+        body: JSON.stringify(apiData),
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        console.error(errorData.error); // Log the error from the backend
+        console.error("ini error" + errorData.error);
       } else {
         const data = await response.json();
         console.log(data);
-        setShowAlert(true); // Show success alert
+
+        // After successful registration, automatically log in the user
+        const loginResponse = await fetch(`${API_BASE_URL}/users/login`, {
+          // Correct login URL
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email, // Use the email and password from formData
+            password: formData.password,
+          }),
+        });
+
+        if (loginResponse.ok) {
+          const loginData = await loginResponse.json();
+          // Store token and user data in localStorage
+          localStorage.setItem("access_token", loginData.token);
+          localStorage.setItem("user", JSON.stringify(loginData.user));
+          // Navigate based on user role
+          if (loginData.user.role === "seller") {
+            navigate("/home/craftman"); // Redirect to craftman home
+          } else {
+            navigate("/home"); // Redirect to buyer home
+          }
+
+          setShowAlert(true); // Show success alert
+        } else {
+          console.error("Login failed");
+        }
       }
     } catch (err) {
       setShowAlert(false);
+      console.log("login is failed");
       navigate("/register");
     }
   };
@@ -109,27 +141,28 @@ export default function RegisterPage() {
     <>
       <div className="bg">
         <div className="flex">
+          {/* Left Side (Logo and Text) */}
           <div className="hidden md:block bg-black w-1/3 bg-opacity-40 h-screen md:flex flex-col items-center justify-center">
             <img src={logo} alt="Logo" className="w-[150px]" />
-            <div className=" text-[30px] text-white font-bold w-[331px] mt-[49px] leading-tight">
+            <div className="text-[30px] text-white font-bold w-[331px] mt-[49px] leading-tight">
               We are looking for builders who want to save money
             </div>
           </div>
-          <div className="mt-9 md:mt-0  md:w-2/3 md:w-[360px] w-full flex flex-wrap items-center justify-center md:ml-[350px] md:mb-0 mb-[50px]">
-            <div className="bg-white rounded-[30px] p-[19px] md:w-[400px] w-[360px]">
+
+          {/* Right Side (Registration Form) */}
+          <div className="mt-9 md:mt-0 md:w-2/3 w-full flex flex-wrap items-center justify-center md:ml-[350px] md:mb-0 mb-[50px] ">
+            <div className="bg-white rounded-[30px] p-[19px] md:w-[400px] w-[360px] mt-[75px]">
               <div className="text-[#FF460A] text-[30px] font-bold text-center">
                 Register
               </div>
               <div className="text-[14px] text-center mt-[15px] mb-[15px]">
                 <div>
-                  Want registered in another role,&nbsp;
+                  Want to register in another role?&nbsp;
                   <button
                     className="text-[#FF460A] bg-transparent font-bold border-none cursor-pointer"
                     onClick={handleClick}
                   >
-                    {isCraftman
-                      ? " Register as craftman"
-                      : " Register as buyer"}
+                    {isCraftman ? "Register as buyer" : "Register as craftman"}
                   </button>
                 </div>
               </div>
@@ -156,8 +189,10 @@ export default function RegisterPage() {
                 </div>
                 <div className="md:grid md:grid-cols-2 md:gap-4 mt-4 md:mt-6">
                   <Input
-                    placeholder="city"
+                    placeholder="City"
                     className="border border-black h-[40px]"
+                    name="city"
+                    onChange={handleChange}
                   />
                   <Input
                     className="border border-black h-[40px] mt-4 md:mt-0"
@@ -189,9 +224,9 @@ export default function RegisterPage() {
                     required
                   />
                 </div>
-                <div className="md:grid md:grid-cols-2 gap-4 mt-4 md:mt-6 ">
+                <div className="md:grid md:grid-cols-2 gap-4 mt-4 md:mt-6">
                   <Input
-                    className="border border-black h-[40px] "
+                    className="border border-black h-[40px]"
                     type="email"
                     name="email"
                     placeholder="Email"
@@ -200,7 +235,7 @@ export default function RegisterPage() {
                     required
                   />
                   <Input
-                    className="border border-black h-[40px] mt-4  md:mt-0"
+                    className="border border-black h-[40px] mt-4 md:mt-0"
                     type="password"
                     name="password"
                     placeholder="Password"
@@ -212,54 +247,30 @@ export default function RegisterPage() {
                 <div className="mt-10 flex justify-center">
                   <button
                     type="submit"
-                    className="bg-[#FF460A] font-bold rounded-[40px] w-[448px] text-white text-center w-full"
+                    className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px]"
                   >
-                    <div className="p-4">Register</div>
+                    Register
                   </button>
                 </div>
               </form>
-              <div className="flex justify-center">
-                <div className="flex items-center m-4 w-[448px]">
-                  <div className="flex-grow border-t border-black"></div>
-                  <span className="mx-4 text-black">
-                    Already have an account?
-                  </span>
-                  <div className="flex-grow border-t border-black"></div>
+              {showAlert && (
+                <div className="bg-white h-screen absolute top-0 left-0 right-0 flex flex-col items-center justify-center">
+                  <img src={Check} alt="checklist" className="h-[100px]" />
+                  <p className="mt-5 text-black font-semibold text-xl">
+                    Registration successful!
+                  </p>
+                  <button
+                    onClick={handleAlertClose}
+                    className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px] mt-5"
+                  >
+                    Get Started
+                  </button>
                 </div>
-              </div>
-              <div className="flex justify-center">
-                <button
-                  onClick={login}
-                  className="w-[448px] bg-white text-[#FF460A] font-bold rounded-[40px] border border-[#FF460A] text-center w-full"
-                >
-                  <div className="p-4">Login</div>
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </div>
       </div>
-
-      {showAlert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
-            <img src={Check} alt="" className="w-[100px] fade-in" />
-            <p className="mt-2 text-center">
-              Your account has been successfully created
-            </p>
-            <div className="mt-4 ">
-              <button
-                onClick={handleAlertClose}
-                className="bg-[#FF460A] text-white w-[250px] p-2 rounded-[15px]"
-              >
-                Continue
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }
-
-

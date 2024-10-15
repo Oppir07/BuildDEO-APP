@@ -3,6 +3,8 @@ package api
 import (
 	"fmt"
 	"time"
+    "os"
+    "path/filepath"
 
 	db "github.com/Oppir07/BuildDEO-APP/db/sqlc"
 	"github.com/Oppir07/BuildDEO-APP/token"
@@ -41,7 +43,7 @@ func (server *Server) setupRouter() {
 
 	// Add CORS middleware
 	router.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"https://buildeo.de", "http://localhost:5173"}, // Allow production and localhost origins
+        AllowOrigins:     []string{"https://buildeo.de", "http://localhost:5173","http://127.0.0.1:8080"}, // Allow production and localhost origins
         AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
         AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
         AllowCredentials: true,
@@ -80,6 +82,7 @@ func (server *Server) setupRouter() {
 	router.GET("/services", server.getAllServicesWithPhotos)
 	authRoutes.PUT("/services/:id", server.updateService)
 	authRoutes.DELETE("/services/:id", server.deleteService)
+	router.GET("/services/seller/:seller_id", server.getServicesBySeller)
 
 	// service photo management
 	authRoutes.POST("/services/photos", server.createServicePhoto)
@@ -87,6 +90,15 @@ func (server *Server) setupRouter() {
 	router.GET("/services/photos", server.listServicePhotos)
 	authRoutes.PUT("/services/photos/:id", server.updateServicePhoto)
 	authRoutes.DELETE("/services/photos/:id", server.deleteServicePhoto)
+
+	// Get the current working directory for serving static files
+    cwd, err := os.Getwd()
+    if err != nil {
+        panic(fmt.Sprintf("failed to get working directory: %v", err))
+    }
+
+    // Serve static files from the absolute path
+    router.Static("/uploads", filepath.Join(cwd, "uploads"))
 
 	server.router = router
 }

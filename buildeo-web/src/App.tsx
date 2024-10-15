@@ -61,10 +61,10 @@ export default function App() {
 
         {/* craft */}
         <Route path="/home/craftman" element={<HomeCompanyPage />} />
-        <Route path="/home/craftman/product-detail" element={<DetailProduct />} />
+        <Route path="/home/craftman/product-detail/:id" element={<DetailProduct />} />
         <Route path="/home/craftman/create-product" element={<CreateProductPage />} />
-        <Route path="/home/craftman/show-product" element={<ProductNewPage />} />
-        <Route path="/home/craftman/edit-product" element={<EditProductPage />} />
+        <Route path="/home/craftman/show-product/:id" element={<ProductNewPage />} />
+        <Route path="/home/craftman/edit-product/:id" element={<EditProductPage />} />
         <Route path="/home/craftman/rating-product" element={<RatingPage />} />
         <Route path="/home/craftman/buyer/confirm-product" element={<DetailBuyerPage />} />
         <Route path="/home/craftman/portfolio/detail" element={<DetailPortfolioPage />} />

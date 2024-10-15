@@ -35,11 +35,11 @@ func (q *Queries) CreateServicePhoto(ctx context.Context, arg CreateServicePhoto
 }
 
 const deleteServicePhoto = `-- name: DeleteServicePhoto :exec
-DELETE FROM service_photos WHERE id = ?
+DELETE FROM service_photos WHERE service_id = ?
 `
 
-func (q *Queries) DeleteServicePhoto(ctx context.Context, id int64) error {
-	_, err := q.db.ExecContext(ctx, deleteServicePhoto, id)
+func (q *Queries) DeleteServicePhoto(ctx context.Context, serviceID int64) error {
+	_, err := q.db.ExecContext(ctx, deleteServicePhoto, serviceID)
 	return err
 }
 
@@ -65,47 +65,32 @@ func (q *Queries) GetServicePhotoByID(ctx context.Context, id int64) (ServicePho
 	return i, err
 }
 
-const getServicePhotosByServiceID = `-- name: GetServicePhotosByServiceID :many
+const getServicePhotosByServiceID = `-- name: GetServicePhotosByServiceID :one
 SELECT id, service_id, photo_url, created_at, created_by, updated_at, updated_by
 FROM service_photos
 WHERE service_id = ?
+LIMIT 1
 `
 
-func (q *Queries) GetServicePhotosByServiceID(ctx context.Context, serviceID int64) ([]ServicePhoto, error) {
-	rows, err := q.db.QueryContext(ctx, getServicePhotosByServiceID, serviceID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	items := []ServicePhoto{}
-	for rows.Next() {
-		var i ServicePhoto
-		if err := rows.Scan(
-			&i.ID,
-			&i.ServiceID,
-			&i.PhotoUrl,
-			&i.CreatedAt,
-			&i.CreatedBy,
-			&i.UpdatedAt,
-			&i.UpdatedBy,
-		); err != nil {
-			return nil, err
-		}
-		items = append(items, i)
-	}
-	if err := rows.Close(); err != nil {
-		return nil, err
-	}
-	if err := rows.Err(); err != nil {
-		return nil, err
-	}
-	return items, nil
+func (q *Queries) GetServicePhotosByServiceID(ctx context.Context, serviceID int64) (ServicePhoto, error) {
+	row := q.db.QueryRowContext(ctx, getServicePhotosByServiceID, serviceID)
+	var i ServicePhoto
+	err := row.Scan(
+		&i.ID,
+		&i.ServiceID,
+		&i.PhotoUrl,
+		&i.CreatedAt,
+		&i.CreatedBy,
+		&i.UpdatedAt,
+		&i.UpdatedBy,
+	)
+	return i, err
 }
 
 const listServicePhotos = `-- name: ListServicePhotos :many
 SELECT id, service_id, photo_url, created_at, created_by, updated_at, updated_by
 FROM service_photos 
-ORDER BY id
+ORDER BY updated_at DESC
 `
 
 func (q *Queries) ListServicePhotos(ctx context.Context) ([]ServicePhoto, error) {
@@ -141,22 +126,16 @@ func (q *Queries) ListServicePhotos(ctx context.Context) ([]ServicePhoto, error)
 
 const updateServicePhoto = `-- name: UpdateServicePhoto :execresult
 UPDATE service_photos
-SET service_id = ?, photo_url = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
-WHERE id = ?
+SET photo_url = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+WHERE service_id = ?
 `
 
 type UpdateServicePhotoParams struct {
-	ServiceID int64  `json:"service_id"`
 	PhotoUrl  string `json:"photo_url"`
 	UpdatedBy int64  `json:"updated_by"`
-	ID        int64  `json:"id"`
+	ServiceID int64  `json:"service_id"`
 }
 
 func (q *Queries) UpdateServicePhoto(ctx context.Context, arg UpdateServicePhotoParams) (sql.Result, error) {
-	return q.db.ExecContext(ctx, updateServicePhoto,
-		arg.ServiceID,
-		arg.PhotoUrl,
-		arg.UpdatedBy,
-		arg.ID,
-	)
+	return q.db.ExecContext(ctx, updateServicePhoto, arg.PhotoUrl, arg.UpdatedBy, arg.ServiceID)
 }

@@ -37,6 +37,7 @@ type categoryFullResponse struct {
 	UpdatedAt   time.Time             `json:"updated_at"`
 }
 
+
 func newCategoryResponse(category db.Category) categoryResponse {
 	return categoryResponse{
 		ID:          category.ID,
@@ -212,16 +213,13 @@ func (server *Server) getAllCategoriesWithServices(ctx *gin.Context) {
     // Map to hold services grouped by category ID
     servicesByCategory := make(map[int64]map[int64]serviceFullResponse)
 
-    // Map to hold photos grouped by service ID
-    photosByService := make(map[int64][]string)
+    // Map to hold single photo grouped by service ID (no array needed)
+    photosByService := make(map[int64]string)
 
-    // Populate the photosByService map
+    // Populate the photosByService map with single photo per service
     for _, service := range services {
-        if _, exists := photosByService[service.ID]; !exists {
-            photosByService[service.ID] = []string{}
-        }
         // Assuming service.PhotoUrl is the photo URL field; adjust if needed
-        photosByService[service.ID] = append(photosByService[service.ID], service.PhotoUrl)
+        photosByService[service.ID] = service.PhotoUrl.String
     }
 
     // Populate servicesByCategory map
@@ -233,7 +231,7 @@ func (server *Server) getAllCategoriesWithServices(ctx *gin.Context) {
             Title:       service.Title,
             Description: service.Description.String,
             Price:       service.Price,
-            Photos:      photosByService[service.ID],
+            Photo:       photosByService[service.ID],  // Single photo for the service
             CreatedAt:   service.CreatedAt,
             UpdatedAt:   service.UpdatedAt,
         }
