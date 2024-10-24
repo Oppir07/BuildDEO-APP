@@ -54,6 +54,10 @@ export default function RegisterPage() {
     navigate("/home");
   };
 
+  const login = () =>{
+    navigate('/');
+  }
+
   // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -142,24 +146,24 @@ export default function RegisterPage() {
       <div className="bg">
         <div className="flex">
           {/* Left Side (Logo and Text) */}
-          <div className="hidden md:block bg-black w-1/3 bg-opacity-40 h-screen md:flex flex-col items-center justify-center">
+          <div className="hidden md:block bg-black w-1/3 bg-opacity-40 md:pl-4  md:flex flex-col items-center justify-center">
             <img src={logo} alt="Logo" className="w-[150px]" />
-            <div className="text-[30px] text-white font-bold w-[331px] mt-[49px] leading-tight">
+            <div className="text-[30px] text-white font-bold w-[301px]  mt-[49px] leading-tight">
               We are looking for builders who want to save money
             </div>
           </div>
 
           {/* Right Side (Registration Form) */}
-          <div className="mt-9 md:mt-0 md:w-2/3 w-full flex flex-wrap items-center justify-center md:ml-[350px] md:mb-0 mb-[50px] ">
-            <div className="bg-white rounded-[30px] p-[19px] md:w-[400px] w-[360px] mt-[75px]">
-              <div className="text-[#FF460A] text-[30px] font-bold text-center">
+          <div className="mt-9  md:mt-0 md:w-2/3 w-full flex flex-wrap items-center justify-center md:ml-[200px] md:mb-0 pb-[10px] ">
+            <div className="bg-white rounded-[30px] p-[19px] md:w-[500px] w-[360px] mt-[5px]">
+              <div className="text-[#E31E24] text-[30px] font-bold text-center">
                 Register
               </div>
               <div className="text-[14px] text-center mt-[15px] mb-[15px]">
                 <div>
                   Want to register in another role?&nbsp;
                   <button
-                    className="text-[#FF460A] bg-transparent font-bold border-none cursor-pointer"
+                    className="text-[#E31E24] bg-transparent font-bold border-none cursor-pointer"
                     onClick={handleClick}
                   >
                     {isCraftman ? "Register as buyer" : "Register as craftman"}
@@ -247,12 +251,25 @@ export default function RegisterPage() {
                 <div className="mt-10 flex justify-center">
                   <button
                     type="submit"
-                    className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px]"
+                    className="bg-[#E31E24] font-bold rounded-[30px] text-white py-[15px] w-full"
                   >
                     Register
                   </button>
                 </div>
               </form>
+              <div className="flex items-center m-4">
+                <div className="flex-grow border-t border-black"></div>
+                <span className="mx-4 text-black">Don't have an account?</span>
+                <div className="flex-grow border-t border-black"></div>
+              </div>
+              <div className="">
+                <button
+                onClick={login}
+                  className="bg-white text-[#E31E24] font-bold rounded-[40px] border border-[#E31E24] text-center w-full"
+                >
+                  <div className="p-4">Login</div>
+                </button>
+              </div>
               {showAlert && (
                 <div className="bg-white h-screen absolute top-0 left-0 right-0 flex flex-col items-center justify-center">
                   <img src={Check} alt="checklist" className="h-[100px]" />
@@ -261,7 +278,7 @@ export default function RegisterPage() {
                   </p>
                   <button
                     onClick={handleAlertClose}
-                    className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px] mt-5"
+                    className="bg-[#E31E24] font-bold rounded-[30px] text-white py-[15px] w-[200px] mt-5"
                   >
                     Get Started
                   </button>

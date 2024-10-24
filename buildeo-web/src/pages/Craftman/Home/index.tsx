@@ -123,8 +123,9 @@ const handleDelete = async (serviceId: string) => {
             Your Company Information
           </div>
           <div className="flex flex-wrap mb-10 mt-[40px]">
-            <div className="md:mr-[50px] md:justify-start items-start flex justify-center">
+            <div className="flex flex-col justify-center items-center  md:mr-[50px] md:justify-start items-start flex justify-center">
               <img src={cover} alt="" className="rounded-[250px]" />
+              <button className="p-3 w-full bg-[#E31E24] mt-2 rounded-[25px] text-white font-bold">Change Profile Picture</button>
             </div>
             <div className="ml-[50px]">
               <table className="text-[20px]">
@@ -149,6 +150,12 @@ const handleDelete = async (serviceId: string) => {
                   <td>City </td>
                   <td>
                     : {user.street} - {user.post_number}
+                  </td>
+                </tr>
+                <tr>
+                  <td>Lontitude </td>
+                  <td>
+                    : ''
                   </td>
                 </tr>
               </table>
@@ -198,7 +205,7 @@ const handleDelete = async (serviceId: string) => {
 
             {value === "two" && (
               <div>
-                <div className="mt-[20px] grid md:grid-cols-2 gap-3 bg-white shadow p-4 rounded-[5px]">
+                <div className=" mt-[20px] grid md:grid-cols-2 gap-3 bg-white shadow p-4 rounded-[5px]">
                   <div className="flex">
                     <div className="mr-10">
                       <img
