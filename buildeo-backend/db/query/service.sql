@@ -32,7 +32,7 @@ LIMIT 1;
 -- name: ListService :many
 SELECT *
 FROM services s
-LEFT JOIN service_photos sp
+INNER JOIN service_photos sp
 ON s.id = sp.service_id
 ORDER BY s.id;
 

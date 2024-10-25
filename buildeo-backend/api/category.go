@@ -219,7 +219,7 @@ func (server *Server) getAllCategoriesWithServices(ctx *gin.Context) {
     // Populate the photosByService map with single photo per service
     for _, service := range services {
         // Assuming service.PhotoUrl is the photo URL field; adjust if needed
-        photosByService[service.ID] = service.PhotoUrl.String
+        photosByService[service.ID] = service.PhotoUrl
     }
 
     // Populate servicesByCategory map

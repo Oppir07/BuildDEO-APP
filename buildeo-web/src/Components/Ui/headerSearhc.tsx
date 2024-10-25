@@ -144,7 +144,7 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
               <Link to={"/home"}>Home</Link>
             </div>
             <div className="md:mt-5">
-              <Link to={""}>Favorable Offer</Link>
+              <Link to={"/favorable"}>Favorable Offer</Link>
             </div>
             {isLoggedIn ? (
               <>

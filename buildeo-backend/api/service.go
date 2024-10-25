@@ -294,7 +294,7 @@ func (server *Server) getAllServicesWithPhotos(ctx *gin.Context) {
 			Title:       service.Title,
 			Description: service.Description.String,
 			Price:       service.Price,
-			Photo:       service.PhotoUrl.String, // Single photo
+			Photo:       service.PhotoUrl, // Single photo
 			CreatedAt:   service.CreatedAt,
 			UpdatedAt:   service.UpdatedAt,
 		}

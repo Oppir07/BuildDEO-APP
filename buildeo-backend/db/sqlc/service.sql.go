@@ -234,7 +234,7 @@ func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Get
 const listService = `-- name: ListService :many
 SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by
 FROM services s
-LEFT JOIN service_photos sp
+INNER JOIN service_photos sp
 ON s.id = sp.service_id
 ORDER BY s.id
 `
@@ -250,13 +250,13 @@ type ListServiceRow struct {
 	CreatedBy   int64          `json:"created_by"`
 	UpdatedAt   time.Time      `json:"updated_at"`
 	UpdatedBy   int64          `json:"updated_by"`
-	ID_2        sql.NullInt64  `json:"id_2"`
-	ServiceID   sql.NullInt64  `json:"service_id"`
-	PhotoUrl    sql.NullString `json:"photo_url"`
-	CreatedAt_2 sql.NullTime   `json:"created_at_2"`
-	CreatedBy_2 sql.NullInt64  `json:"created_by_2"`
-	UpdatedAt_2 sql.NullTime   `json:"updated_at_2"`
-	UpdatedBy_2 sql.NullInt64  `json:"updated_by_2"`
+	ID_2        int64          `json:"id_2"`
+	ServiceID   int64          `json:"service_id"`
+	PhotoUrl    string         `json:"photo_url"`
+	CreatedAt_2 time.Time      `json:"created_at_2"`
+	CreatedBy_2 int64          `json:"created_by_2"`
+	UpdatedAt_2 time.Time      `json:"updated_at_2"`
+	UpdatedBy_2 int64          `json:"updated_by_2"`
 }
 
 func (q *Queries) ListService(ctx context.Context) ([]ListServiceRow, error) {

@@ -15,7 +15,7 @@ interface Service {
   title: string;
   description: string;
   price: number;
-  photos: string[];
+  photo: string;
   created_at: string;
   updated_at: string;
 }
@@ -144,7 +144,7 @@ export default function Home() {
                 title={service.title}
                 company={sellers[service.seller_id]?.firstname || "Loading..."} // Use seller's firstname
                 price={service.price.toString()}
-                img={service.photos[0] || cover}
+                img={service.photo || cover}
                 link={`/home/craftman/product-detail/${service.id}`}
               />
             ))}
