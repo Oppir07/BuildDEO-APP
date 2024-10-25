@@ -81,19 +81,19 @@ export default function LoginPage() {
               We are looking for builders who want to save money
             </div>
           </div>
-          <div className="mt-0 md:mt-[75px]  md:w-2/3 w-[360px] flex flex-wrap items-center justify-center md:ml-[120px]">
+          <div className="mt-0 md:mt-[15px]  md:w-2/3 w-[360px] flex flex-wrap items-center justify-center md:ml-[120px]">
             <div className="md:hidden ">
               <img src={logo} alt="" className="w-[100px] mb-4" />
             </div>
             <div className="bg-white rounded-[30px] p-[29px] w-[450px]">
-              <div className="text-[#FF460A] text-[30px] font-bold text-center">
+              <div className="text-[#E31E24] text-[30px] font-bold text-center">
                 Login
               </div>
               <div className="text-[14px] text-center mt-[15px]">
                 <div>
                   Already registered in another role,&nbsp;
                   <button
-                    className="text-[#FF460A] bg-transparent font-bold border-none cursor-pointer"
+                    className="text-[#E31E24] bg-transparent font-bold border-none cursor-pointer"
                     onClick={handleClick}
                     //spinner
                   >
@@ -132,7 +132,7 @@ export default function LoginPage() {
                     </Alert>
                   </Stack>
                 )}
-                <div className="text-end text-[#FF460A] font-bold mt-[17px] mb-[17px]">
+                <div className="text-end text-[#E31E24] font-bold mt-[17px] mb-[17px]">
                   <Link to="" className="text-end">
                     Forget Password
                   </Link>
@@ -140,7 +140,7 @@ export default function LoginPage() {
                 <div className="">
                   <button
                     type="submit"
-                    className="bg-[#FF460A] font-bold rounded-[40px] text-white text-center w-full"
+                    className="bg-[#E31E24] font-bold rounded-[40px] text-white text-center w-full"
                   >
                     <div className="p-4">Login</div>
                   </button>
@@ -155,7 +155,7 @@ export default function LoginPage() {
               <div className="">
                 <button
                   onClick={regist}
-                  className="bg-white text-[#FF460A] font-bold rounded-[40px] border border-[#FF460A] text-center w-full"
+                  className="bg-white text-[#E31E24] font-bold rounded-[40px] border border-[#E31E24] text-center w-full"
                 >
                   <div className="p-4">Register</div>
                 </button>

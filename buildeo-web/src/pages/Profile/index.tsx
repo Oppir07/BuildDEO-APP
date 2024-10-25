@@ -92,6 +92,10 @@ export default function ProfilePage() {
                 <td>Address</td>
                 <td>{user.street}, {user.post_number}</td>
               </tr>
+              <tr>
+                <td>Longtitude</td>
+                <td>{''}</td>
+              </tr>
             </table>
           </div>
         </div>
@@ -117,7 +121,7 @@ export default function ProfilePage() {
           >
             <Tab value="one" label="Payment" />
             <Tab value="two" label="Wishlist Item" />
-            <Tab value="three" label="Your Orders" />
+            <Tab value="three" label="Your Offers" />
           </Tabs>
           {value === 'one' &&
             <div>
@@ -136,8 +140,8 @@ export default function ProfilePage() {
                 </div>
                 <div className="md:ml-[100px] flex flex-col items-center justify-center">
                   <div className="flex font-bold">
-                    <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Give a Review</button>
-                    <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'>Re-Order</button>
+                    <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Remove</button>
+                    <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10'>Order</button>
                   </div>
                 </div>
               </div>
@@ -155,8 +159,8 @@ export default function ProfilePage() {
               <div className="mt-4">
                 <table className="w-full">
                   <tr className=" text-[#9586A8] font-medium">
-                    <td className=''>Service Name</td>
-                    <td className='text-end '>Manage Service</td>
+                    <td className=''>Provier Type</td>
+                    <td className='text-end '>Manage Offer</td>
                   </tr>
                   <tr>
                     <td className='text-end'>
