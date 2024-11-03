@@ -68,7 +68,7 @@ export default function ProfilePage() {
 
   return (
     <div className="">
-      <NavbarSearch text='black'logoOrange={logo}/>
+      <NavbarSearch text='black'logoOrange={logo} color="black"/>
       <div className="mt-[10px] ml-4 mr-4 md:ml-[80px] md:mr-[80px] mb-[50px]">
         <div className="text-[32px] font-bold mb-4">Personal Information</div>
         <div className="flex md:justify-start justify-center flex-wrap mb-10">

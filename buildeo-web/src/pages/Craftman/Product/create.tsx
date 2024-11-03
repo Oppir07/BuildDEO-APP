@@ -9,7 +9,6 @@ export default function CreateProductPage() {
   const [serviceName, setServiceName] = useState("");
   const [servicePrice, setServicePrice] = useState(0);
   const [serviceDescription, setServiceDescription] = useState("");
-  const [serviceImageUrl, setServiceImageUrl] = useState("");
   const [showAlert, setShowAlert] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [categories, setCategories] = useState<any[]>([]);
@@ -24,6 +23,7 @@ export default function CreateProductPage() {
         if (!response.ok) throw new Error("Failed to fetch categories");
         const data = await response.json();
         setCategories(data);
+        categories;
       } catch (error) {
         console.error("Error fetching categories:", error);
         setErrorMessage("Failed to load categories");
@@ -118,12 +118,10 @@ export default function CreateProductPage() {
       setServiceName("");
       setServicePrice(0);
       setServiceDescription("");
-      setServiceImageUrl("");
       setCategoryId(1);
       setErrorMessage("");
 
       navigate("/home/craftman");
-
       setShowAlert(true);
     } catch (error) {
       if (error instanceof Error) {
