@@ -1,3 +1,7 @@
+import ProviderPage from '@/pages/Admin/Provider';
+import DetailProvider from '@/pages/Admin/Provider/detail';
+import DetailOffer from '@/pages/Admin/Provider/detail-offer';
+import DetailService from '@/pages/Admin/Provider/detail-service';
 import FormPage from '@/pages/form';
 import NotFound from '@/pages/not-found';
 import { Suspense, lazy } from 'react';
@@ -42,6 +46,22 @@ export default function AppRouter() {
         {
           path: 'form',
           element: <FormPage />
+        },
+        {
+          path:'provider-manage',
+          element:<ProviderPage/>
+        },
+        {
+          path:'provider-manage/details',
+          element:<DetailProvider/>
+        },
+        {
+          path:'sa-servive/detail',
+          element:<DetailService/>
+        },
+        {
+          path:'sa-offer/detail',
+          element:<DetailOffer/>
         }
       ]
     }

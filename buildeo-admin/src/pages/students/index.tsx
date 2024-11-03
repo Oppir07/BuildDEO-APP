@@ -4,7 +4,6 @@ import StudentsTable from './components/students-table';
 import { useSearchParams } from 'react-router-dom';
 import { DataTableSkeleton } from '@/components/shared/data-table-skeleton';
 import { Breadcrumbs } from '@/components/shared/breadcrumbs';
-
 export default function StudentPage() {
   const [searchParams] = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
@@ -29,6 +28,7 @@ export default function StudentPage() {
   }
 
   return (
+    
     <div className="p-4 md:p-8">
       <PageHead title="Student Management | App" />
       <Breadcrumbs

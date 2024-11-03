@@ -8,11 +8,78 @@ export const navItems: NavItem[] = [
     label: 'Dashboard'
   },
   {
-    title: 'Students',
-    href: '/student',
-    icon: 'user',
-    label: 'Student'
+    title: 'Manage Admin',
+    href: '/sudent',
+    icon: 'settings',
+    label: 'Manage Admin'
   },
+  {
+    title: 'Admin Request',
+    href: '/admin-request',
+    icon: 'user',
+    label: 'Admin Request'
+  },
+  {
+    title: 'Manage Provier',
+    href: '/provider-manage',
+    icon: 'user',
+    label: 'Manage Provier'
+  },
+  {
+    title: 'Provider Category',
+    href: '/provider-category',
+    icon: 'user',
+    label: 'Provider Category'
+  },
+  {
+    title: 'Manage Buyer',
+    href: '/buyer-manage',
+    icon: 'user',
+    label: 'Manage Buyer'
+  },
+  {
+    title: 'Transaction',
+    href: '/admin-manage-transaction',
+    icon: 'user',
+    label: 'Transaction'
+  },
+  {
+    title: 'Offers',
+    href: '/admin-manage-offers',
+    icon: 'user',
+    label: 'Offers'
+  },
+  {
+    title: 'Request',
+    href: '/admin-manage-request',
+    icon: 'user',
+    label: 'Request'
+  },
+  {
+    title: 'Quotation',
+    href: '/admin-manage-quotation',
+    icon: 'user',
+    label: 'Quotation'
+  },
+  {
+    title: 'Reviews',
+    href: '/admin-manage-reviews',
+    icon: 'user',
+    label: 'Reviews'
+  },
+  {
+    title: 'Reviews Basket',
+    href: '/admin-manage-reviewsbasket',
+    icon: 'user',
+    label: 'Reviews Basket'
+  },
+  {
+    title: 'Chat',
+    href: '/admin-manage-that',
+    icon: 'user',
+    label: 'Chat'
+  },
+
   {
     title: 'Login',
     href: '/login',
