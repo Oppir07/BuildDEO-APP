@@ -8,6 +8,8 @@ import Footer from "../../../Components/Ui/footer";
 import cover from '/cover.png'
 import media from '/Media.png'
 import jobs from '/jobs.png'
+import logo from "/logoOrange.png";
+
 export default function MenuPage() {
      const [value, setValue] = React.useState('one');
 
@@ -25,7 +27,7 @@ export default function MenuPage() {
      return (
           <>
                <div className="">
-                    <NavbarSearch bg="white" text="black" />
+                    <NavbarSearch  text='black'logoOrange={logo} color="black"/>
                     <div className="md:ml-[80px] ml-[10px] md:mr-[80px] mr-[10px]">
                          <div className="text-[32px] font-bold">Result</div>
                          <Box sx={{ width: '100%' }}>

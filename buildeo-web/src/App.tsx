@@ -28,6 +28,7 @@ import DetailOrderPage from "./pages/Profile/order/detail";
 import DetailPortfolioPage from "./pages/Craftman/Protfolio/detail";
 import CreatePortfolio from "./pages/Craftman/Protfolio/create";
 import EditPortfolio from "./pages/Craftman/Protfolio/edit";
+import OffersPage from "./pages/buyer/offers";
 
 
 export default function App() {
@@ -49,6 +50,10 @@ export default function App() {
         <Route path="/orders/review" element={<ReviewPage />} />
         <Route path="/orders/review/result" element={<ResultPage />} />
         <Route path="/orders/review/edit" element={<EditPage />} />
+
+        {/* offres  */}
+        <Route path="/offers" element={<OffersPage />} />
+
 
         {/* favorable */}
         <Route path="/favorable" element={<FavorablePage/>} />

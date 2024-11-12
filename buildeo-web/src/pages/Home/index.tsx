@@ -1,12 +1,12 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Footer from '../../Components/Ui/footer';
-import Navbar from "../../Components/Ui/headerSearhc";
 import { Input } from "../../Components/Ui/input";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import Card from "../../Components/Ui/cardMenu";
 import cover from "../../../public/cover.png";
 import React, { useEffect, useState } from "react";
 import API_BASE_URL from "../../api/config"; // Import the API base URL
+import NavbarSearch from "../../Components/Ui/headerSearhc";
 
 interface Service {
   id: number;
@@ -99,7 +99,7 @@ export default function Home() {
   return (
     <>
       <div className="landing n">
-        <Navbar bg="#FFFFFF00" />
+        <NavbarSearch bg="#FFFFFF00" />
         <div className="text-white text-[28px] font-bold text-center mt-[120px]">
           Einfach günstigeren Handwerker finden
         </div>

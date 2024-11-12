@@ -183,8 +183,8 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
                         <MenubarItem>
                           <Link to="/profile">Personal Information</Link>
                         </MenubarItem>
-                        <MenubarItem>Orders</MenubarItem>
-                        <MenubarItem>Pending Offers</MenubarItem>
+                        <MenubarItem><Link to='/orders'> Orders</Link></MenubarItem>
+                        <MenubarItem><Link to={'/offers'}>Offers</Link></MenubarItem>
                         <MenubarItem>Open Application</MenubarItem>
                         <MenubarItem>Inquiry Form</MenubarItem>
                         <MenubarItem>Refer Friends</MenubarItem>

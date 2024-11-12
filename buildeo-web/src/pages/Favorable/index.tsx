@@ -3,7 +3,7 @@ import Footer from "../../Components/Ui/footer";
 import favorable from "/favorable.jpg";
 import { Link } from "react-router-dom";
 import logo from "/logoOrange.png";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 export default function FavorablePage() {
   useEffect(() => {
