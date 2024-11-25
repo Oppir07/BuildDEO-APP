@@ -2,8 +2,13 @@ import ProviderPage from '@/pages/Admin/Provider';
 import DetailProvider from '@/pages/Admin/Provider/detail';
 import DetailOffer from '@/pages/Admin/Provider/detail-offer';
 import DetailService from '@/pages/Admin/Provider/detail-service';
+import ReviewsPage from '@/pages/Admin/Reviews';
+import DetailReviews from '@/pages/Admin/Reviews/detail';
+import TransactionPage from '@/pages/Admin/Transaction';
+import DetailTransaction from '@/pages/Admin/Transaction/detail';
 import FormPage from '@/pages/form';
 import NotFound from '@/pages/not-found';
+import path from 'path';
 import { Suspense, lazy } from 'react';
 import { Navigate, Outlet, useRoutes } from 'react-router-dom';
 
@@ -62,6 +67,22 @@ export default function AppRouter() {
         {
           path:'sa-offer/detail',
           element:<DetailOffer/>
+        },
+        {
+          path:'admin-manage-transaction',
+          element:<TransactionPage/>
+        },
+        {
+          path:'sa-transaction/detail',
+          element:<DetailTransaction/>
+        },
+        {
+          path:'admin-manage-reviews',
+          element: <ReviewsPage/>
+        },
+        {
+          path:'/sa-reviews/details',
+          element:<DetailReviews/>
         }
       ]
     }
