@@ -1,3 +1,5 @@
+import BuyerPage from '@/pages/Admin/Buyer';
+import DetailBuyer from '@/pages/Admin/Buyer/detail';
 import ProviderPage from '@/pages/Admin/Provider';
 import DetailProvider from '@/pages/Admin/Provider/detail';
 import DetailOffer from '@/pages/Admin/Provider/detail-offer';
@@ -83,7 +85,16 @@ export default function AppRouter() {
         {
           path:'/sa-reviews/details',
           element:<DetailReviews/>
+        },
+        {
+          path:'admin-manage-buyer',
+          element:<BuyerPage/>
+        },
+        {
+          path:'/sa-buyer/details',
+          element:<DetailBuyer/>
         }
+        
       ]
     }
   ];
