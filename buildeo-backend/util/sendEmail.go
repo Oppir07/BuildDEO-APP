@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+
 	"gopkg.in/gomail.v2"
 )
 
@@ -22,7 +23,7 @@ func sendGoMail(templatePath string, recipient string, token string) {
 		Token string
 	}{
 		Name:  "Buildeo User", // You can personalize this if needed
-		Token: "123456",          // Pass the login token
+		Token: "123456",       // Pass the login token
 	}
 
 	err = t.Execute(&body, data)

@@ -1,8 +1,11 @@
 package api
 
 import (
+	"bytes"
 	"database/sql"
 	"fmt"
+	"html/template"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -11,6 +14,7 @@ import (
 	"github.com/Oppir07/BuildDEO-APP/token"
 	"github.com/Oppir07/BuildDEO-APP/util"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/gomail.v2"
 )
 
 // Request and Response Structs
@@ -75,7 +79,10 @@ func (server *Server) createQuotation(ctx *gin.Context) {
 		documentURL = sql.NullString{String: req.DocumentUrl, Valid: true}
 	}
 
-	hashedPassword, err := util.HashPassword("123456")
+	// Generate a random 6-digit token
+	token := generateRandomToken()
+
+	hashedPassword, err := util.HashPassword(token)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
@@ -135,6 +142,10 @@ func (server *Server) createQuotation(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
+
+	FullName := req.Firstname + " " + req.Lastname
+
+	sendGoMail("login.html", req.Email, token, FullName)
 
 	ctx.JSON(http.StatusOK, newQuotationResponse(createdQuotation))
 }
@@ -311,4 +322,65 @@ func (server *Server) deleteQuotation(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, gin.H{"message": "quotation deleted successfully"})
+}
+
+func sendGoMail(templatePath string, recipient string, token string, name string) {
+	// Get HTML template and prepare dynamic content
+	var body bytes.Buffer
+	t, err := template.ParseFiles(templatePath)
+	if err != nil {
+		fmt.Println("Error parsing template:", err)
+		return
+	}
+
+	// Execute template with dynamic values
+	data := struct {
+		Name  string
+		Token string
+	}{
+		Name:  name,  // You can personalize this if needed
+		Token: token, // Pass the login token
+	}
+
+	err = t.Execute(&body, data)
+	if err != nil {
+		fmt.Println("Error executing template:", err)
+		return
+	}
+
+	// Email details
+	sender := "app@buildeo.de"
+	password := "appOstroph$43991" // Be sure to handle this securely in production
+	subject := "Login to Buildeo App"
+	bodyContent := body.String()
+
+	// Create a new email message
+	m := gomail.NewMessage()
+	m.SetHeader("From", sender)
+	m.SetHeader("To", recipient)
+	m.SetHeader("Subject", subject)
+	m.SetBody("text/html", bodyContent)
+
+	// Set up the SMTP dialer for Strato SMTP server
+	d := gomail.NewDialer("smtp.strato.de", 465, sender, password)
+	d.SSL = true // Enable SSL (use 465 port for SSL)
+
+	// Send the email
+	if err := d.DialAndSend(m); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("Email sent successfully!")
+}
+
+// Function to generate a random 6-digit token
+func generateRandomToken() string {
+	// Seed the random number generator
+	rand.Seed(time.Now().UnixNano())
+
+	// Generate a random 6-digit number
+	token := rand.Intn(900000) + 100000 // Ensures it's a 6-digit number (between 100000 and 999999)
+
+	// Return as a string
+	return fmt.Sprintf("%d", token)
 }
