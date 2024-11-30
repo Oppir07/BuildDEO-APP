@@ -202,7 +202,7 @@ export default function EditProductPage() {
           {showAlert && (
             <div className="bg-white h-screen absolute top-0 left-0 right-0 flex flex-col items-center justify-center">
               <img src={Check} alt="checklist" className="h-[100px]" />
-              <p className="mt-5 text-black font-semibold text-xl">Your product successfully edited!</p>
+              <p className="mt-5 text-black font-semibold text-xl">Your service successfully edited!</p>
               <button
                 onClick={handleAlertClose}
                 className="bg-[#FF460A] font-bold rounded-[30px] text-white py-[15px] w-[200px] mt-5"

@@ -20,10 +20,13 @@
 
 .bg {
   background-image: url('/Auth/bg.webp');
-  background-size:cover;
+  background-size: cover;
+  background-position: center;
   width: 100%;
-  height: max-content;
-  background-repeat:initial;
+  height: 100vh; /* Fill the viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .landing {
   background-image: url('/landing.png');

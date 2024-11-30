@@ -75,9 +75,9 @@ export default function LoginPage() {
     <>
       <div className="bg">
         <div className="md:flex flex justify-center items-center">
-          <div className="hidden md:block  bg-black md:w-1/3 bg-opacity-40 h-screen md:flex md:flex-col md:items-center justify-center">
+          <div className="hidden md:block  bg-black md:w-2/3 bg-opacity-40 h-screen md:flex md:flex-col md:items-center justify-center">
             <img src={logo} alt="Logo" className="w-[150px]" />
-            <div className="text-[30px] text-white font-bold w-[331px] mt-[49px] leading-tight">
+            <div className="text-[30px] text-white font-bold w-[350px] mt-[49px] pl-[50px] leading-tight">
               We are looking for builders who want to save money
             </div>
           </div>
