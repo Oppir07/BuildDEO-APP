@@ -33,7 +33,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Manage Buyer',
-    href: '/buyer-manage',
+    href: '/admin-manage-buyer',
     icon: 'user',
     label: 'Manage Buyer'
   },

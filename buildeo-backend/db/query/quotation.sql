@@ -1,8 +1,8 @@
 -- name: CreateQuotation :execresult
 INSERT INTO quotations (
-  category_id, name, email, phone, address, document_url, status, admin_id, admin_notes, created_by, updated_by
+  category_id, document_url, status, user_id, description, created_by, updated_by
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?
 );
 
 -- name: GetQuotation :one
@@ -14,12 +14,12 @@ LIMIT 1;
 -- name: ListQuotations :many
 SELECT *
 FROM quotations
-WHERE admin_id = ?
+WHERE user_id = ?
 ORDER BY id;
 
 -- name: UpdateQuotation :execresult
 UPDATE quotations
-SET category_id = ?, name = ?, email = ?, phone = ?, address = ?, document_url = ?, status = ?, admin_id = ?, admin_notes = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+SET category_id = ?, document_url = ?, status = ?, description = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: DeleteQuotation :exec

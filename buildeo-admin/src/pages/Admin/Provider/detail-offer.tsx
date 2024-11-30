@@ -19,7 +19,7 @@ export default function DetailOffer() {
                                         </BreadcrumbItem>
                                         <BreadcrumbSeparator />
                                         <BreadcrumbItem>
-                                             <BreadcrumbPage className="text-black text-[16px]">Detail Offer</BreadcrumbPage>
+                                             <BreadcrumbPage className="text-black text-[16px]">Offer Detail</BreadcrumbPage>
                                         </BreadcrumbItem>
                                    </BreadcrumbList>
                               </Breadcrumb>
