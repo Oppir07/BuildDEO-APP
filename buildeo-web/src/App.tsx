@@ -27,6 +27,9 @@ import DetailOrderPage from "./pages/Profile/order/detail";
 import DetailPortfolioPage from "./pages/Craftman/Protfolio/detail";
 import CreatePortfolio from "./pages/Craftman/Protfolio/create";
 import EditPortfolio from "./pages/Craftman/Protfolio/edit";
+import HomeCompanyPage from "./pages/Craftman/Home/index";
+import OffersPage from "./pages/buyer/offers/index";
+
 
 
 export default function App() {
