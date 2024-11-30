@@ -2,9 +2,9 @@ package api
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"time"
-    "os"
-    "path/filepath"
 
 	db "github.com/Oppir07/BuildDEO-APP/db/sqlc"
 	"github.com/Oppir07/BuildDEO-APP/token"
@@ -43,12 +43,12 @@ func (server *Server) setupRouter() {
 
 	// Add CORS middleware
 	router.Use(cors.New(cors.Config{
-        AllowOrigins:     []string{"https://buildeo.de", "http://localhost:5173","http://127.0.0.1:8080"}, // Allow production and localhost origins
-        AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
-        AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
-        AllowCredentials: true,
-        MaxAge:           12 * time.Hour,
-    }))
+		AllowOrigins:     []string{"https://buildeo.de", "http://localhost:5173", "http://127.0.0.1:8080"}, // Allow production and localhost origins
+		AllowMethods:     []string{"POST", "GET", "OPTIONS", "PUT", "DELETE"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Authorization"},
+		AllowCredentials: true,
+		MaxAge:           12 * time.Hour,
+	}))
 
 	//authentication
 	router.POST("/users/login", server.loginUser)
@@ -64,6 +64,7 @@ func (server *Server) setupRouter() {
 
 	// quotation management
 	router.POST("/quotation", server.createQuotation)
+	router.POST("/quotation/upload", server.uploadQuotation)
 	authRoutes.GET("/quotation/:id", server.getQuotation)
 	authRoutes.GET("/quotation", server.listQuotations)
 	authRoutes.PUT("/quotation/:id", server.updateQuotation)
@@ -92,20 +93,20 @@ func (server *Server) setupRouter() {
 	authRoutes.DELETE("/services/photos/:id", server.deleteServicePhoto)
 
 	// Get the current working directory for serving static files
-    cwd, err := os.Getwd()
-    if err != nil {
-        panic(fmt.Sprintf("failed to get working directory: %v", err))
-    }
+	cwd, err := os.Getwd()
+	if err != nil {
+		panic(fmt.Sprintf("failed to get working directory: %v", err))
+	}
 
-    // Serve static files from the absolute path
-    router.Static("/uploads", filepath.Join(cwd, "uploads"))
+	// Serve static files from the absolute path
+	router.Static("/uploads", filepath.Join(cwd, "uploads"))
 
 	server.router = router
 }
 
 // Start runs the HTTP server on a specific address.
 func (server *Server) Start(address string) error {
-	return server.router.RunTLS(address,"server.pem", "server.key")
+	return server.router.RunTLS(address, "server.pem", "server.key")
 }
 
 // Start runs the HTTP server on a specific address.
