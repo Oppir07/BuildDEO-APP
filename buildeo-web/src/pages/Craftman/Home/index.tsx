@@ -16,7 +16,7 @@ import TrashIcon from "../../../Components/Icon/TrashIcon";
 import PaymentMethod from "../../../Components/Ui/payment";
 import { Link, useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../../api/config"; // Import the API base URL
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HomeCompanyPage() {
   const [value, setValue] = useState("one");

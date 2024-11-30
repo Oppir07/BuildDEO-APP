@@ -2,7 +2,6 @@ import Footer from "../../Components/Ui/footer";
 import NavbarSearch from "../../Components/Ui/headerSearhc";
 import FileIcon from "../../Components/Icon/FilIcon";
 import { useNavigate } from "react-router-dom";
-import Check from "/Auth/check.png";
 import logo from "/logoOrange.png";
 import API_BASE_URL from "../../api/config"; // Import the API base URL
 import React, { useEffect, useState } from "react";
@@ -32,6 +31,10 @@ export default function DocumentPage() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [categories, setCategories] = useState<Category[]>([]); // State to store fetched categories
   const [selectedCategory, setSelectedCategory] = useState<string>(""); // State to store selected category
+  const [description, setDescription] = useState<string>(""); // State to store description
+  const [documentUrl, setDocumentUrl] = useState<string>(""); // State to temporarily store document URL
+  const [loading, setLoading] = useState<boolean>(false); // Loading state
+  const navigate = useNavigate();
 
   // Fetch categories with services
   useEffect(() => {
@@ -51,7 +54,30 @@ export default function DocumentPage() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      const validFormats = [
+        "application/pdf",
+        "application/msword",
+        "image/jpeg",
+        "image/png",
+        "application/zip",
+      ];
+      if (!validFormats.includes(file.type)) {
+        alert(
+          "Invalid file format. Accepted formats are zip, jpg, png, pdf, or ms.word."
+        );
+        return;
+      }
       setSelectedFile(file);
+
+      // Save only metadata to session storage
+      const sessionData = JSON.parse(
+        sessionStorage.getItem("temporaryData") || "{}"
+      );
+      sessionData.document_url = {
+        name: file.name,
+        type: file.type,
+      };
+      sessionStorage.setItem("temporaryData", JSON.stringify(sessionData)); // Use file.name or upload logic for actual URL
     }
   };
 
@@ -60,7 +86,31 @@ export default function DocumentPage() {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0];
     if (file) {
+      const validFormats = [
+        "application/pdf",
+        "application/msword",
+        "image/jpeg",
+        "image/png",
+        "application/zip",
+      ];
+      if (!validFormats.includes(file.type)) {
+        alert(
+          "Invalid file format. Accepted formats are zip, jpg, png, pdf, or ms.word."
+        );
+        return;
+      }
+
       setSelectedFile(file);
+
+      // Save only metadata to session storage
+      const sessionData = JSON.parse(
+        sessionStorage.getItem("temporaryData") || "{}"
+      );
+      sessionData.document_url = {
+        name: file.name,
+        type: file.type,
+      };
+      sessionStorage.setItem("temporaryData", JSON.stringify(sessionData)); // Use file.name or upload logic for actual URL
     }
   };
 
@@ -69,20 +119,93 @@ export default function DocumentPage() {
     event.preventDefault();
   };
 
-  const [showAlert, setShowAlert] = useState(false);
-  const navigate = useNavigate();
-
-  const handleAlertClose = () => {
-    setShowAlert(false);
-    navigate("/home");
-  };
-
-  const send = () => {
-    setShowAlert(true);
-  };
-
-  const handleCategoryChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleCategoryChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setSelectedCategory(event.target.value); // Set the selected category
+  };
+
+  const handleDescriptionChange = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setDescription(event.target.value); // Set the description
+  };
+
+  const handleFirstSendOffer = async () => {
+    // Add async here
+    if (!selectedCategory || !selectedFile) {
+      alert("Please select a category and upload a document.");
+      return;
+    }
+
+    const categoryId = parseInt(selectedCategory, 10);
+    if (isNaN(categoryId)) {
+      alert("Invalid category selected.");
+      return;
+    }
+
+    // Show loading state
+    setLoading(true);
+
+    // Upload the file to the server
+    const formData = new FormData();
+    formData.append("document_url", selectedFile);
+
+    console.log("selectedFile : " + selectedFile);
+
+    try {
+      const uploadResponse = await fetch(`${API_BASE_URL}/quotation/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!uploadResponse.ok) {
+        throw new Error("Failed to upload the file.");
+      }
+
+      const uploadedData = await uploadResponse.json();
+
+      console.log("uploadedData : " + uploadedData);
+
+      const fileUrl = uploadedData.file_url;
+
+      const temporaryData = {
+        category_id: categoryId,
+        document_url: fileUrl,
+      };
+
+      sessionStorage.setItem("temporaryData", JSON.stringify(temporaryData));
+      console.log("Temporary Data:", temporaryData);
+      navigate("/favorable/document/profile/");
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      alert("File upload failed.");
+    } finally {
+      setLoading(false); // Hide loading state
+    }
+  };
+
+  const handleSecondSendOffer = () => {
+    if (!description.trim()) {
+      alert("Please provide a description.");
+      return;
+    }
+    const existingData = JSON.parse(
+      sessionStorage.getItem("temporaryData") || "{}"
+    );
+    const updatedData = {
+      ...existingData,
+      description,
+    };
+
+    // Show loading state
+    setLoading(true);
+
+    sessionStorage.setItem("temporaryData", JSON.stringify(updatedData));
+    console.log("Second Send Offer Temporary Data:", updatedData);
+    navigate(`/favorable/document/profile/`);
+
+    setLoading(false); // Hide loading state after navigation
   };
 
   return (
@@ -94,7 +217,8 @@ export default function DocumentPage() {
             In 1 minute at the cheapest price
           </div>
           <div className="">
-            Send your previous offer and BUILDEO will help you find better prices
+            Send your previous offer and BUILDEO will help you find better
+            prices
           </div>
           <div className="">
             <select
@@ -106,12 +230,13 @@ export default function DocumentPage() {
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
-                <option key={category.id} value={category.name}>
+                <option key={category.id} value={category.id.toString()}>
                   {category.name}
                 </option>
               ))}
             </select>
           </div>
+
           <div className="mb-10">
             <div
               className="border border-dashed rounded mt-4 w-full p-6 text-[18px] flex flex-col items-center justify-center"
@@ -121,6 +246,7 @@ export default function DocumentPage() {
               <FileIcon color="#E31E24" height={58} width={68} />
               <div>Drag and Drop File here</div>
               <div>Or</div>
+              <br />
               <div>
                 <input
                   type="file"
@@ -128,31 +254,32 @@ export default function DocumentPage() {
                   className="hidden" // Hidden input for file browsing
                   onChange={handleFileChange}
                 />
-                <label htmlFor="fileInput">
-                  <button className="bg-[#E31E24] pl-4 pr-4 p-2 text-white rounded-[45px]">
-                    Browse File
-                  </button>
+                <label
+                  htmlFor="fileInput"
+                  className="bg-[#E31E24] pl-4 pr-4 p-2 text-white rounded-[45px] cursor-pointer"
+                >
+                  Browse File
                 </label>
               </div>
+              <br />
               <div>Formats: zip, jpg, png, pdf, or ms.word</div>
-
-              {/* Show the name of the selected file if it exists */}
               {selectedFile && (
-                <div className="mt-4 text-[#E31E24]">
+                <div className="mt-4 text-[#00FF00]">
                   Selected File: {selectedFile.name}
                 </div>
               )}
             </div>
-            <div className=" flex flex-col md:items-end items-center mt-4 md:justify-end justify-center">
+            <div className="flex flex-col md:items-end items-center mt-4 md:justify-end justify-center">
               <div className="flex font-bold">
                 <button className="bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]">
                   Cancel
                 </button>
                 <button
                   className="bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10"
-                  onClick={send}
+                  onClick={handleFirstSendOffer} // Trigger first send offer
+                  disabled={loading}
                 >
-                  Send offer
+                  {loading ? "Submitting..." : "Send offer"}
                 </button>
               </div>
             </div>
@@ -161,7 +288,8 @@ export default function DocumentPage() {
               Don't have an offer yet?
             </div>
             <div className="">
-              Tell what project you want to make, BUILDEO will help find better prices
+              Tell what project you want to make, BUILDEO will help find better
+              prices
             </div>
             <textarea
               placeholder="Short description of your project"
@@ -169,43 +297,26 @@ export default function DocumentPage() {
               id=""
               rows={7}
               className="border border-[#E31E24] w-full p-2 rounded mt-2"
+              value={description}
+              onChange={handleDescriptionChange} // Handle description change
             ></textarea>
-            <div className=" flex flex-col md:items-end items-center mt-4 md:justify-end justify-center">
+            <div className="flex flex-col md:items-end items-center mt-4 md:justify-end justify-center">
               <div className="flex font-bold">
                 <button className="bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]">
                   Cancel
                 </button>
                 <button
                   className="bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10"
-                  onClick={send}
+                  onClick={handleSecondSendOffer} // Trigger second send offer
+                  disabled={loading}
                 >
-                  Send offer
+                  {loading ? "Submitting..." : "Send offer"}
                 </button>
               </div>
             </div>
           </div>
         </div>
-
-        {showAlert && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
-              <img src={Check} alt="" className="w-[100px] fade-in" />
-              <p className="mt-2 text-center">
-                The Cheapest Offer will be sent
-              </p>
-              <div className="mt-4 ">
-                <button
-                  onClick={handleAlertClose}
-                  className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
-                >
-                  Continue
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
-
       <Footer />
     </div>
   );

@@ -1,7 +1,7 @@
 import Footer from '../../../Components/Ui/footer'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import media from '/Media.png'
+import media from '/Media.png';
 import NavbarSearch from '../../../Components/Ui/headerSearhc';
 import { Link } from 'react-router-dom';
 export default function OrdersPage() {

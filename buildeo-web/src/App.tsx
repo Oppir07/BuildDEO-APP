@@ -10,7 +10,6 @@ import OrdersPage from "./pages/Profile/order/orders";
 import ResultPage from "./pages/Profile/Review/result";
 import ReviewPage from "./pages/Profile/Review/review";
 import EditPage from "./pages/Profile/Review/edit";
-import HomeCompanyPage from "./pages/Craftman/Home";
 import DetailProduct from "./pages/Craftman/Product/detail";
 import CreateProductPage from "./pages/Craftman/Product/create";
 import ProductNewPage from "./pages/Craftman/Product";
@@ -28,6 +27,7 @@ import DetailOrderPage from "./pages/Profile/order/detail";
 import DetailPortfolioPage from "./pages/Craftman/Protfolio/detail";
 import CreatePortfolio from "./pages/Craftman/Protfolio/create";
 import EditPortfolio from "./pages/Craftman/Protfolio/edit";
+import HomeCompanyPage from "./pages/Craftman/Home";
 
 
 export default function App() {
@@ -51,8 +51,12 @@ export default function App() {
         <Route path="/orders/review/edit" element={<EditPage />} />
 
         {/* favorable */}
+        {/* unauthenticated user */}
         <Route path="/favorable" element={<FavorablePage/>} />
         <Route path="/favorable/document" element={<DocumentPage/>} />
+        <Route path="/favorable/document/profile/" element={<OrderOfferPage/>} />
+        
+        
         <Route path="/favorable/document-buyer" element={<OfferBuyerPage/>} />
         <Route path="/favorable/document-buyer/edit/" element={<OfferBuyerEditPage/>} />
         <Route path="/favorable/document-buyer/detail/" element={<OfferBuyerDetailPage/>} />
