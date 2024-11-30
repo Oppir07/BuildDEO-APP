@@ -77,12 +77,10 @@ func (q *Queries) GetQuotation(ctx context.Context, id int64) (Quotation, error)
 const listQuotations = `-- name: ListQuotations :many
 SELECT id, category_id, document_url, status, user_id, description, created_at, created_by, updated_at, updated_by
 FROM quotations
-WHERE user_id = ?
-ORDER BY id
 `
 
-func (q *Queries) ListQuotations(ctx context.Context, userID sql.NullInt64) ([]Quotation, error) {
-	rows, err := q.db.QueryContext(ctx, listQuotations, userID)
+func (q *Queries) ListQuotations(ctx context.Context) ([]Quotation, error) {
+	rows, err := q.db.QueryContext(ctx, listQuotations)
 	if err != nil {
 		return nil, err
 	}

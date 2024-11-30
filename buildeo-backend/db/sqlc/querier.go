@@ -30,7 +30,7 @@ type Querier interface {
 	GetUser(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id int64) (User, error)
 	ListCategory(ctx context.Context) ([]ListCategoryRow, error)
-	ListQuotations(ctx context.Context, userID sql.NullInt64) ([]Quotation, error)
+	ListQuotations(ctx context.Context) ([]Quotation, error)
 	ListService(ctx context.Context) ([]ListServiceRow, error)
 	ListServicePhotos(ctx context.Context) ([]ServicePhoto, error)
 	ListUsers(ctx context.Context) ([]User, error)

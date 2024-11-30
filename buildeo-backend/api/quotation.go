@@ -213,14 +213,14 @@ func (server *Server) listQuotations(ctx *gin.Context) {
 	authPayload := ctx.MustGet(authorizationPayloadKey).(*token.Payload)
 
 	// Fetch the authenticated user
-	user, err := server.store.GetUser(ctx, authPayload.Username)
+	_, err := server.store.GetUser(ctx, authPayload.Username)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return
 	}
 
 	// Use the user's ID directly for listing quotations
-	quotations, err := server.store.ListQuotations(ctx, sql.NullInt64{Int64: user.ID, Valid: true})
+	quotations, err := server.store.ListQuotations(ctx, )
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
 		return

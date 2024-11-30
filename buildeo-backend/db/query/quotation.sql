@@ -13,9 +13,7 @@ LIMIT 1;
 
 -- name: ListQuotations :many
 SELECT *
-FROM quotations
-WHERE user_id = ?
-ORDER BY id;
+FROM quotations;
 
 -- name: UpdateQuotation :execresult
 UPDATE quotations
