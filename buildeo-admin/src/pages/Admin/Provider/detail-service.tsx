@@ -27,7 +27,7 @@ export default function DetailService() {
                                         </BreadcrumbItem>
                                         <BreadcrumbSeparator />
                                         <BreadcrumbItem>
-                                             <BreadcrumbPage className="text-black text-[16px]">Detail Service</BreadcrumbPage>
+                                             <BreadcrumbPage className="text-black text-[16px]">Service Detail</BreadcrumbPage>
                                         </BreadcrumbItem>
                                    </BreadcrumbList>
                               </Breadcrumb>
