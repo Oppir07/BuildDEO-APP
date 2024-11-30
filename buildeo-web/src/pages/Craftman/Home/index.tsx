@@ -18,10 +18,36 @@ import { Link, useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../../api/config"; // Import the API base URL
 import { useEffect, useState } from "react";
 
+interface Quotation {
+  id: number;
+  category_id: {
+    Int64: number;
+    Valid: boolean;
+  };
+  document_url: {
+    String: string;
+    Valid: boolean;
+  };
+  status: string;
+  user_id: {
+    Int64: number;
+    Valid: boolean;
+  };
+  description: {
+    String: string;
+    Valid: boolean;
+  };
+  created_at: string;
+  updated_at: string;
+}
+
 export default function HomeCompanyPage() {
   const [value, setValue] = useState("one");
   const [user, setUser] = useState<any>(null); // State to hold user data
   const [services, setServices] = useState<any[]>([]); // State to hold services
+  const [quotation, setQuotation] = useState<any[]>([]); // State to hold quotations
+  const [selectedDocument, setSelectedDocument] = useState<string | null>(null); // Stores the selected document URL
+  const [categories, setCategories] = useState<any[]>([]);
 
   const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -29,7 +55,6 @@ export default function HomeCompanyPage() {
 
   const navigate = useNavigate(); // For navigation
 
-  
   const token = localStorage.getItem("access_token");
   const userId = JSON.parse(localStorage.getItem("user") || "{}").id; // Retrieve user ID from localStorage
 
@@ -37,46 +62,62 @@ export default function HomeCompanyPage() {
   const maxLength = 30;
 
   // Function to delete a service
-const handleDelete = async (serviceId: string) => {
-  const confirmed = window.confirm('Are you sure you want to delete this service?');
-  if (confirmed) {
-    try {
-      const response = await fetch(`${API_BASE_URL}/services/${serviceId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // Include token if needed
-        },
-      });
+  const handleDelete = async (serviceId: string) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to delete this service?"
+    );
+    if (confirmed) {
+      try {
+        const response = await fetch(`${API_BASE_URL}/services/${serviceId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Include token if needed
+          },
+        });
 
-      const response2 = await fetch(`${API_BASE_URL}/services/photos/${serviceId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('access_token')}`, // Include token if needed
-        },
-      });
+        const response2 = await fetch(
+          `${API_BASE_URL}/services/photos/${serviceId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("access_token")}`, // Include token if needed
+            },
+          }
+        );
 
-      if (response.ok && response2.ok) {
-        alert('Service deleted successfully!');
-        // Optionally, you can remove the service from the state here
-        setServices((prevServices) => prevServices.filter(service => service.id !== serviceId));
-      } else {
-        alert('Failed to delete service.');
+        if (response.ok && response2.ok) {
+          alert("Service deleted successfully!");
+          // Optionally, you can remove the service from the state here
+          setServices((prevServices) =>
+            prevServices.filter((service) => service.id !== serviceId)
+          );
+        } else {
+          alert("Failed to delete service.");
+        }
+      } catch (error) {
+        console.error("Error deleting service:", error);
+        alert("Failed to delete service.");
       }
-    } catch (error) {
-      console.error('Error deleting service:', error);
-      alert('Failed to delete service.');
     }
-  }
-};
+  };
 
+  const [isModalOpen, setIsModalOpen] = useState(false); // Tracks modal visibility
 
-  
+  const openModal = (documentUrl: string) => {
+    setSelectedDocument(documentUrl); // Set the document URL for the modal
+    setIsModalOpen(true); // Open the modal
+  };
+
+  const closeModal = () => {
+    setSelectedDocument(null); // Reset the selected document
+    setIsModalOpen(false); // Close the modal
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
-            if (token && userId) {
+      if (token && userId) {
         try {
           const response = await fetch(`${API_BASE_URL}/users/${userId}`);
           const data = await response.json();
@@ -87,9 +128,17 @@ const handleDelete = async (serviceId: string) => {
       }
     };
 
+    const fetchAllUsers = async () => {
+      try {
+        const response = await fetch("http://127.0.0.1:8080/users");
+        const data = await response.json();
+        setUsers(data);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      }
+    };
+
     const fetchSellerServices = async () => {
-      console.log("user id : "+userId)
-      console.log("token : "+token)
       if (token && userId) {
         try {
           const response = await fetch(
@@ -97,18 +146,73 @@ const handleDelete = async (serviceId: string) => {
           );
           const serviceData = await response.json();
 
-          console.log("data service: "+serviceData);
           setServices(serviceData); // Set services data
         } catch (error) {
           console.error("Error fetching services:", error);
-          console.log("errorr")
+        }
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/categories`);
+        const data = await response.json();
+        setCategories(data); // Set categories data
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    const fetchListQuotation = async () => {
+      if (token && userId) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/quotation`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Add the token to the header
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+
+            // Map the data to simplify nested structures (optional)
+            const simplifiedData = data.map((item: Quotation) => ({
+              id: item.id,
+              categoryId: item.category_id.Int64,
+              documentUrl: item.document_url.Valid
+                ? item.document_url.String
+                : null,
+              status: item.status,
+              userId: item.user_id.Int64,
+              description: item.description.Valid
+                ? item.description.String
+                : "No description provided",
+              createdAt: item.created_at,
+              updatedAt: item.updated_at,
+            }));
+
+            setQuotation(simplifiedData); // Simplified structure
+          } else {
+            console.error("Failed to fetch quotations:", response.status);
+          }
+        } catch (error) {
+          console.error("Error fetching quotations:", error);
         }
       }
     };
 
     fetchUserData();
     fetchSellerServices();
+    fetchListQuotation();
+    fetchCategories();
   }, []);
+
+   // Function to get category name by ID
+   const getCategoryNameById = (categoryId: number) => {
+    const category = categories.find((category) => category.id === categoryId);
+    return category ? category.name : "Unknown Category";
+  };
 
   if (!user) {
     return <div>Loading...</div>; // Show loading state while fetching
@@ -125,7 +229,9 @@ const handleDelete = async (serviceId: string) => {
           <div className="flex flex-wrap mb-10 mt-[40px]">
             <div className="flex flex-col justify-center items-center  md:mr-[50px] md:justify-start items-start flex justify-center">
               <img src={cover} alt="" className="rounded-[250px]" />
-              <button className="p-3 w-full bg-[#E31E24] mt-2 rounded-[25px] text-white font-bold">Change Profile Picture</button>
+              <button className="p-3 w-full bg-[#E31E24] mt-2 rounded-[25px] text-white font-bold">
+                Change Profile Picture
+              </button>
             </div>
             <div className="ml-[50px]">
               <table className="text-[20px]">
@@ -154,9 +260,7 @@ const handleDelete = async (serviceId: string) => {
                 </tr>
                 <tr>
                   <td>Lontitude </td>
-                  <td>
-                    : ''
-                  </td>
+                  <td>: ''</td>
                 </tr>
               </table>
             </div>
@@ -179,7 +283,8 @@ const handleDelete = async (serviceId: string) => {
               <Tab value="three" label="Manage Service" />
               <Tab value="four" label="Payment" />
               <Tab value="five" label="Buyer Offer" />
-              <Tab value="six" label="Your Portfolio" />
+              <Tab value="six" label="Quotation" />
+              <Tab value="seven" label="Your Portfolio" />
             </Tabs>
 
             {value === "one" && (
@@ -191,11 +296,7 @@ const handleDelete = async (serviceId: string) => {
                       title={service.title}
                       company={user.firstname}
                       price={`${service.price}€`}
-                      img={
-                        service.photo
-                          ? service.photo
-                          : cover
-                      } // Use service photo if available
+                      img={service.photo ? service.photo : cover} // Use service photo if available
                       link={`/home/craftman/product-detail/${service.id}`} // Link to service detail page
                     />
                   ))}
@@ -271,7 +372,10 @@ const handleDelete = async (serviceId: string) => {
                     </div>
                   </div>
                   <div className="">
-                    <button className="bg-[#E31E24] p-3 pl-6 pr-6 text-white rounded-[25px] font-medium" onClick={() => navigate(`/home/craftman/create-product`)}>
+                    <button
+                      className="bg-[#E31E24] p-3 pl-6 pr-6 text-white rounded-[25px] font-medium"
+                      onClick={() => navigate(`/home/craftman/create-product`)}
+                    >
                       Add Service
                     </button>
                   </div>
@@ -291,11 +395,7 @@ const handleDelete = async (serviceId: string) => {
                             <div className="flex flex-wrap mt-2">
                               <div className="mr-10">
                                 <img
-                                  src={
-                                    service.photo
-                                      ? service.photo
-                                      : media
-                                  }
+                                  src={service.photo ? service.photo : media}
                                   alt=""
                                   className="w-[100px] h-[100px] rounded-[10px]"
                                 />
@@ -340,9 +440,12 @@ const handleDelete = async (serviceId: string) => {
                                 <NotestIcon color="black" width={24} />
                               </Link>
                             </div>
-                            <div onClick={() => handleDelete(service.id)} className="cursor-pointer">
-              <TrashIcon color="black" width={24} />
-            </div>
+                            <div
+                              onClick={() => handleDelete(service.id)}
+                              className="cursor-pointer"
+                            >
+                              <TrashIcon color="black" width={24} />
+                            </div>
                           </div>
                         </td>
                       </tr>
@@ -397,7 +500,109 @@ const handleDelete = async (serviceId: string) => {
                 </div>
               </div>
             )}
+
             {value === "six" && (
+              <div>
+                {quotation.map((quotation) => (
+                  <div
+                    key={quotation.id}
+                    className="flex flex-wrap justify-between bg-white shadow p-4 rounded-[5px] mb-4"
+                  >
+                    <div className="flex">
+                      <div className="mr-10">
+                        {quotation.documentUrl ? (
+                          <iframe
+                            src={quotation.documentUrl}
+                            className="w-[200px] h-[150px] rounded-[10px] border"
+                            title={`Quotation-${quotation.id}`}
+                          />
+                        ) : (
+                          <p className="text-gray-400 italic">
+                            No document available
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-[14px] flex flex-col justify-between">
+                        <div className="font-bold text-[20px]">
+                          Quotation #{quotation.id}
+                        </div>
+                        <div className="text-[#9586A8]">
+                          Status:{" "}
+                          <span className="font-medium">
+                            {quotation.status}
+                          </span>
+                        </div>
+                        <div className="text-[#9586A8]">
+                          Category :{" "}
+                          <span className="font-medium">
+                            {getCategoryNameById(quotation.categoryId)}
+                          </span>
+                        </div>
+                        <div className="text-[#9586A8]">
+                          Description:{" "}
+                          <span className="font-medium">
+                            {quotation.description}
+                          </span>
+                        </div>
+                        <div className="text-[#9586A8] mt-4">
+                          Created At:{" "}
+                          <span className="font-medium">
+                            {new Date(quotation.createdAt).toLocaleDateString()}{" "}
+                            {new Date(quotation.createdAt).toLocaleTimeString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="md:ml-[100px] flex flex-col items-center justify-center">
+                      <div className="flex flex-wrap font-bold">
+                        <button
+                          className="bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] mt-2 md:mt-0"
+                          onClick={() => openModal(quotation.documentUrl)}
+                        >
+                          View Full Document
+                        </button>
+                        <button className="bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px] ml-6 md:ml-10">
+                          Reject
+                        </button>
+                        <button className="bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] mt-2 md:mt-0 md:ml-10">
+                          Accept
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Modal for Full Document View */}
+                {isModalOpen && (
+                  <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white w-[90%] h-[90%] rounded-lg overflow-hidden">
+                      <div className="flex justify-between items-center p-4 bg-gray-200">
+                        <h2 className="text-xl font-bold">
+                          Full Document View
+                        </h2>
+                        <button
+                          className="text-red-600 font-bold"
+                          onClick={closeModal}
+                        >
+                          Close
+                        </button>
+                      </div>
+                      <div className="w-full h-full">
+                        {selectedDocument && (
+                          <iframe
+                            src={selectedDocument}
+                            className="w-full h-full"
+                            title="Full Document Viewer"
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {value === "seven" && (
               <div>
                 <div className="mt-[20px] bg-[#FEABB1] w-full flex items-center justify-between p-6">
                   <div className="">
