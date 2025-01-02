@@ -120,9 +120,11 @@ export default function CreateProductPage() {
       setServiceDescription("");
       setCategoryId(1);
       setErrorMessage("");
-
-      navigate("/home/craftman");
+      
       setShowAlert(true);
+      setTimeout(() => {
+        navigate("/home/craftman"); // Navigate after 2 seconds
+      }, 2000);
     } catch (error) {
       if (error instanceof Error) {
         setErrorMessage(
@@ -218,7 +220,7 @@ export default function CreateProductPage() {
             <div className="bg-white h-screen absolute top-0 left-0 right-0 flex flex-col items-center justify-center">
               <img src={Check} alt="checklist" className="h-[100px]" />
               <p className="mt-5 text-black font-semibold text-xl">
-                Your product has been successfully added!
+                Your service has been successfully added!
               </p>
               <button
                 onClick={handleAlertClose}

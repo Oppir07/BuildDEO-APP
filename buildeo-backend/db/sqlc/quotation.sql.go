@@ -12,22 +12,18 @@ import (
 
 const createQuotation = `-- name: CreateQuotation :execresult
 INSERT INTO quotations (
-  category_id, name, email, phone, address, document_url, status, admin_id, admin_notes, created_by, updated_by
+  category_id, document_url, status, user_id, description, created_by, updated_by
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?
 )
 `
 
 type CreateQuotationParams struct {
-	CategoryID  int64          `json:"category_id"`
-	Name        string         `json:"name"`
-	Email       string         `json:"email"`
-	Phone       string         `json:"phone"`
-	Address     string         `json:"address"`
-	DocumentUrl string         `json:"document_url"`
+	CategoryID  sql.NullInt64  `json:"category_id"`
+	DocumentUrl sql.NullString `json:"document_url"`
 	Status      string         `json:"status"`
-	AdminID     sql.NullInt64  `json:"admin_id"`
-	AdminNotes  sql.NullString `json:"admin_notes"`
+	UserID      sql.NullInt64  `json:"user_id"`
+	Description sql.NullString `json:"description"`
 	CreatedBy   int64          `json:"created_by"`
 	UpdatedBy   int64          `json:"updated_by"`
 }
@@ -35,14 +31,10 @@ type CreateQuotationParams struct {
 func (q *Queries) CreateQuotation(ctx context.Context, arg CreateQuotationParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, createQuotation,
 		arg.CategoryID,
-		arg.Name,
-		arg.Email,
-		arg.Phone,
-		arg.Address,
 		arg.DocumentUrl,
 		arg.Status,
-		arg.AdminID,
-		arg.AdminNotes,
+		arg.UserID,
+		arg.Description,
 		arg.CreatedBy,
 		arg.UpdatedBy,
 	)
@@ -58,7 +50,7 @@ func (q *Queries) DeleteQuotation(ctx context.Context, id int64) error {
 }
 
 const getQuotation = `-- name: GetQuotation :one
-SELECT id, category_id, name, email, phone, address, document_url, status, admin_id, admin_notes, created_at, created_by, updated_at, updated_by
+SELECT id, category_id, document_url, status, user_id, description, created_at, created_by, updated_at, updated_by
 FROM quotations
 WHERE id = ?
 LIMIT 1
@@ -70,14 +62,10 @@ func (q *Queries) GetQuotation(ctx context.Context, id int64) (Quotation, error)
 	err := row.Scan(
 		&i.ID,
 		&i.CategoryID,
-		&i.Name,
-		&i.Email,
-		&i.Phone,
-		&i.Address,
 		&i.DocumentUrl,
 		&i.Status,
-		&i.AdminID,
-		&i.AdminNotes,
+		&i.UserID,
+		&i.Description,
 		&i.CreatedAt,
 		&i.CreatedBy,
 		&i.UpdatedAt,
@@ -87,14 +75,12 @@ func (q *Queries) GetQuotation(ctx context.Context, id int64) (Quotation, error)
 }
 
 const listQuotations = `-- name: ListQuotations :many
-SELECT id, category_id, name, email, phone, address, document_url, status, admin_id, admin_notes, created_at, created_by, updated_at, updated_by
+SELECT id, category_id, document_url, status, user_id, description, created_at, created_by, updated_at, updated_by
 FROM quotations
-WHERE admin_id = ?
-ORDER BY id
 `
 
-func (q *Queries) ListQuotations(ctx context.Context, adminID sql.NullInt64) ([]Quotation, error) {
-	rows, err := q.db.QueryContext(ctx, listQuotations, adminID)
+func (q *Queries) ListQuotations(ctx context.Context) ([]Quotation, error) {
+	rows, err := q.db.QueryContext(ctx, listQuotations)
 	if err != nil {
 		return nil, err
 	}
@@ -105,14 +91,10 @@ func (q *Queries) ListQuotations(ctx context.Context, adminID sql.NullInt64) ([]
 		if err := rows.Scan(
 			&i.ID,
 			&i.CategoryID,
-			&i.Name,
-			&i.Email,
-			&i.Phone,
-			&i.Address,
 			&i.DocumentUrl,
 			&i.Status,
-			&i.AdminID,
-			&i.AdminNotes,
+			&i.UserID,
+			&i.Description,
 			&i.CreatedAt,
 			&i.CreatedBy,
 			&i.UpdatedAt,
@@ -133,20 +115,15 @@ func (q *Queries) ListQuotations(ctx context.Context, adminID sql.NullInt64) ([]
 
 const updateQuotation = `-- name: UpdateQuotation :execresult
 UPDATE quotations
-SET category_id = ?, name = ?, email = ?, phone = ?, address = ?, document_url = ?, status = ?, admin_id = ?, admin_notes = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+SET category_id = ?, document_url = ?, status = ?, description = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
 
 type UpdateQuotationParams struct {
-	CategoryID  int64          `json:"category_id"`
-	Name        string         `json:"name"`
-	Email       string         `json:"email"`
-	Phone       string         `json:"phone"`
-	Address     string         `json:"address"`
-	DocumentUrl string         `json:"document_url"`
+	CategoryID  sql.NullInt64  `json:"category_id"`
+	DocumentUrl sql.NullString `json:"document_url"`
 	Status      string         `json:"status"`
-	AdminID     sql.NullInt64  `json:"admin_id"`
-	AdminNotes  sql.NullString `json:"admin_notes"`
+	Description sql.NullString `json:"description"`
 	UpdatedBy   int64          `json:"updated_by"`
 	ID          int64          `json:"id"`
 }
@@ -154,14 +131,9 @@ type UpdateQuotationParams struct {
 func (q *Queries) UpdateQuotation(ctx context.Context, arg UpdateQuotationParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, updateQuotation,
 		arg.CategoryID,
-		arg.Name,
-		arg.Email,
-		arg.Phone,
-		arg.Address,
 		arg.DocumentUrl,
 		arg.Status,
-		arg.AdminID,
-		arg.AdminNotes,
+		arg.Description,
 		arg.UpdatedBy,
 		arg.ID,
 	)

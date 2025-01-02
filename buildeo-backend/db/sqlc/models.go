@@ -70,21 +70,17 @@ type Offer struct {
 }
 
 type Quotation struct {
-	ID          int64  `json:"id"`
-	CategoryID  int64  `json:"category_id"`
-	Name        string `json:"name"`
-	Email       string `json:"email"`
-	Phone       string `json:"phone"`
-	Address     string `json:"address"`
-	DocumentUrl string `json:"document_url"`
+	ID          int64          `json:"id"`
+	CategoryID  sql.NullInt64  `json:"category_id"`
+	DocumentUrl sql.NullString `json:"document_url"`
 	// open, in_progress, or completed
-	Status     string         `json:"status"`
-	AdminID    sql.NullInt64  `json:"admin_id"`
-	AdminNotes sql.NullString `json:"admin_notes"`
-	CreatedAt  time.Time      `json:"created_at"`
-	CreatedBy  int64          `json:"created_by"`
-	UpdatedAt  time.Time      `json:"updated_at"`
-	UpdatedBy  int64          `json:"updated_by"`
+	Status      string         `json:"status"`
+	UserID      sql.NullInt64  `json:"user_id"`
+	Description sql.NullString `json:"description"`
+	CreatedAt   time.Time      `json:"created_at"`
+	CreatedBy   int64          `json:"created_by"`
+	UpdatedAt   time.Time      `json:"updated_at"`
+	UpdatedBy   int64          `json:"updated_by"`
 }
 
 type Request struct {
