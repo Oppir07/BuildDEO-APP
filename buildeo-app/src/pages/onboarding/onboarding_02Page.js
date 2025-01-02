@@ -15,13 +15,13 @@ function OnboardingNext() {
                <Text style={styles.subtitle}>Mehr Geld bei gleicher Leistung gefällig?</Text>
                <View style={styles.flexGrow} />
                <View style={styles.boxBtn}>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Home')}>
+                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Prinsip')}>
                          <Text style={styles.txtBtn}>Günstiges Angebot erhalten</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Home')}>
+                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('TopLogin')}>
                          <Text style={styles.txtBtn}>Anbieter-Login</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Login')}>
+                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('TopLogin')}>
                          <Text style={styles.txtBtn}>Käufer-Login</Text>
                     </TouchableOpacity>
                </View>

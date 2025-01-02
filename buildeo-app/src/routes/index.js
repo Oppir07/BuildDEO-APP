@@ -9,6 +9,8 @@ import OnboardingNext from '../pages/onboarding/onboarding_02Page';
 import HomePage from '../pages/Home/indexPage';
 import LoginPage from '../pages/auth/loginPage';
 import RegisterPage from '../pages/auth/registerPage';
+import PrinsipPage from '../pages/Offer Info/PrinsipPage';
+import CustomHeader from '../components/ui/customHedader';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -60,6 +62,9 @@ function MainStackNavigator() {
     <Stack.Navigator>
       <Stack.Screen name='Onboarding' component={Onboarding} options={{ headerShown: false }} />
       <Stack.Screen name='OnboardingNext' component={OnboardingNext} options={{ headerShown: false }}/>
+      <Stack.Screen name='Prinsip' component={PrinsipPage} options={{
+            header: () => <CustomHeader title="Das BUILDEO Prinzip" url="" />,
+          }}/>
     </Stack.Navigator>
   );
 }
@@ -99,10 +104,13 @@ function RootStackNavigator() {
   return (
     <Stack.Navigator initialRouteName="Onboarding">
       <Stack.Screen name="Home" component={BottomNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="Login" component={TopNavigationWithHeader} options={{ headerShown: false }} />
-      <Stack.Screen name="Register" component={TopNavigation} options={{ headerShown: false }} />
+      <Stack.Screen name="TopLogin" component={TopNavigationWithHeader} options={{ headerShown: false }} />
+      <Stack.Screen name="TopRegister" component={TopNavigation} options={{ headerShown: false }} />
       <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
       <Stack.Screen name="OnboardingNext" component={OnboardingNext}  options={{ headerShown: false }}/>
+      <Stack.Screen name="Prinsip" component={PrinsipPage}  options={{
+            header: () => <CustomHeader title="Das BUILDEO Prinzip" url="" />,
+          }}/>
     </Stack.Navigator>
   );
 }
@@ -124,7 +132,6 @@ const styles = StyleSheet.create({
   },
 
 });
-
 
 //render all navigation
 export default function AppNavigator() {
