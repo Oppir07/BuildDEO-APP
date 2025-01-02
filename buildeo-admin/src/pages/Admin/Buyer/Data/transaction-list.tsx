@@ -54,7 +54,7 @@ const Action = () => (
                <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
                <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/provider-manage/details'}>View</Link>
+                         <Link to={'/sa-buyer/transaction-detail/'}>View</Link>
                     </MenubarItem>
 
                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>

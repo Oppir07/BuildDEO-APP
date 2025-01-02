@@ -45,7 +45,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Offers',
-    href: '/admin-manage-offers',
+    href: 'admin-manage-offers',
     icon: 'user',
     label: 'Offers'
   },
@@ -69,7 +69,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: 'Reviews Basket',
-    href: '/admin-manage-reviewsbasket',
+    href: 'admin-manage-shopbasket',
     icon: 'user',
     label: 'Reviews Basket'
   },

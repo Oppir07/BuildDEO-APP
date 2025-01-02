@@ -60,7 +60,7 @@ const Action = () => (
                <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
                <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-buyer/offer-details/'}>View</Link>
+                         <Link to={'/sa-offers/detail-offers/'}>View</Link>
                     </MenubarItem>
 
                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
@@ -94,10 +94,10 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
      { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
-     { id: 'service_id', numeric: true, disablePadding: false, label: 'User ID' },
-     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Basket ID' },
-     { id: 'request_id', numeric: false, disablePadding: false, label: 'Payment Methode' },
-     { id: 'price', numeric: true, disablePadding: false, label: 'Category ID' },
+     { id: 'service_id', numeric: true, disablePadding: false, label: 'Service ID' },
+     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Seller ID' },
+     { id: 'request_id', numeric: false, disablePadding: false, label: 'Request ID' },
+     { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
      { id: 'description', numeric: true, disablePadding: false, label: 'Description' },
      { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
      { id: 'action', numeric: true, disablePadding: false, label: 'Manage Offers' },
@@ -203,7 +203,7 @@ function DataTableProvider(props: DataTableProviderProps) {
      );
 }
 
-export default function DataTableOffer() {
+export default function DataTableOffers() {
      const [order, setOrder] = React.useState<Order>('asc');
      const [orderBy, setOrderBy] = React.useState<keyof Data>('service_id');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
@@ -303,7 +303,7 @@ export default function DataTableOffer() {
                                                             <TableCell align="center">{row.service_id}</TableCell>
                                                             <TableCell align="center">{row.seller_id}</TableCell>
                                                             <TableCell align="center">{row.request_id}</TableCell>
-                                                            <TableCell align="center">{row.price}</TableCell>
+                                                            <TableCell align="center">{row.price}$</TableCell>
                                                             <TableCell align="center">{row.description}</TableCell>
                                                             <TableCell align="center">{row.status}</TableCell>
                                                             <TableCell align="center">{row.action}</TableCell>

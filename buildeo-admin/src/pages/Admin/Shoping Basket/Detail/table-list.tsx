@@ -21,38 +21,53 @@ import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 interface Data {
      id: number;
-     service_id: number;
-     request_id: number;
-     seller_id: number;
-     price: number;
-     description:string;
-     status:string;
+     price: string;
+     created_at:string;
+     updated_at:string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     service_id: number,
-     seller_id: number,
-     request_id: number,
-     price: number,
-     description:string,
-     status:string,
+     price: string,
+     created_at:string,
+     updated_at:string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          service_id,
-          seller_id,
-          action,
-          request_id,
           price,
-          description,
-          status
+          created_at,
+          updated_at,
+          action,
      };
 }
+//alert comfirmasi
+const showConfirmationModal = async () => {
+     const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: "You won't be able to revert this!",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, delete it!'
+     });
+
+     if (result.isConfirmed) {
+          Swal.fire(
+               'Deleted!',
+               'Your file has been deleted.',
+               'success'
+          );
+          // Lakukan aksi yang diinginkan, seperti memanggil API delete
+     }
+};
+
+
 
 const Action = () => (
      <Menubar >
@@ -60,22 +75,22 @@ const Action = () => (
                <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
                <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-buyer/offer-details/'}>View</Link>
+                         <Link to={'/sa-basket/details'}>View</Link>
                     </MenubarItem>
-
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
+                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' onClick={showConfirmationModal}>Delete</MenubarItem>
                </MenubarContent>
           </MenubarMenu>
+          
      </Menubar>
 
 )
 
 // Dummy data
 const rows = [
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
+     createData(1, '2$', '12/08/2024', '12/28/2024', <Action />),
+     createData(1, '2$', '12/08/2024', '12/28/2024', <Action />),
+     createData(1, '2$', '12/08/2024', '12/28/2024', <Action />),
+     createData(1, '2$', '12/08/2024', '12/28/2024', <Action />),
 
 ];
 
@@ -93,14 +108,10 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
-     { id: 'service_id', numeric: true, disablePadding: false, label: 'User ID' },
-     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Basket ID' },
-     { id: 'request_id', numeric: false, disablePadding: false, label: 'Payment Methode' },
-     { id: 'price', numeric: true, disablePadding: false, label: 'Category ID' },
-     { id: 'description', numeric: true, disablePadding: false, label: 'Description' },
-     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Offers' },
+     { id: 'price', numeric: false, disablePadding: true, label: 'Price' },
+     { id: 'created_at', numeric: true, disablePadding: false, label: 'Created At' },
+     { id: 'updated_at', numeric: false, disablePadding: false, label: 'Updated AT'},
+     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Item' },
 ];
 
 interface EnhancedTableProps {
@@ -203,9 +214,9 @@ function DataTableProvider(props: DataTableProviderProps) {
      );
 }
 
-export default function DataTableOffer() {
+export default function DetailDataTableShoppBasket() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('service_id');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('price');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -248,13 +259,9 @@ export default function DataTableOffer() {
 
      const filteredRows = rows.filter(
           (row) =>
-               row.id.toString().includes(searchQuery.toLowerCase()) ||
-               row.service_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.seller_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.request_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.description.toString().includes(searchQuery.toLowerCase()) ||
-               row.status.toString().includes(searchQuery.toLowerCase()) ||
-               row.price.toString().includes(searchQuery),
+               row.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.created_at.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.updated_at.toLowerCase().includes(searchQuery.toLowerCase()),
      );
 
 
@@ -298,14 +305,10 @@ export default function DataTableOffer() {
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
                                                             <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.id}
+                                                                 {row.price}
                                                             </TableCell>
-                                                            <TableCell align="center">{row.service_id}</TableCell>
-                                                            <TableCell align="center">{row.seller_id}</TableCell>
-                                                            <TableCell align="center">{row.request_id}</TableCell>
-                                                            <TableCell align="center">{row.price}</TableCell>
-                                                            <TableCell align="center">{row.description}</TableCell>
-                                                            <TableCell align="center">{row.status}</TableCell>
+                                                            <TableCell align="center">{row.created_at}</TableCell>
+                                                            <TableCell align="center">{row.updated_at}</TableCell>
                                                             <TableCell align="center">{row.action}</TableCell>
                                                        </TableRow>
                                                   );
