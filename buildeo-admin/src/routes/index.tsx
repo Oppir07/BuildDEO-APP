@@ -8,6 +8,10 @@ import ProviderPage from '@/pages/Admin/Provider';
 import DetailProvider from '@/pages/Admin/Provider/detail';
 import DetailOffer from '@/pages/Admin/Provider/detail-offer';
 import DetailService from '@/pages/Admin/Provider/detail-service';
+import Quotations from '@/pages/Admin/Quotations';
+import DetailQuotations from '@/pages/Admin/Quotations/Detail';
+import Request from '@/pages/Admin/Request';
+import DetailRequest from '@/pages/Admin/Request/Detail';
 import ReviewsPage from '@/pages/Admin/Reviews';
 import DetailReviews from '@/pages/Admin/Reviews/detail';
 import BasketPage from '@/pages/Admin/Shoping Basket';
@@ -122,6 +126,22 @@ export default function AppRouter() {
         {
           path:'/sa-basket/details',
           element:<DetailBasketShop/>
+        },
+        {
+          path:'/admin-manage-quotation',
+          element:<Quotations/>
+        },
+        {
+          path:'/sa-quotations/detail',
+          element:<DetailQuotations/>
+        },
+        {
+          path:'/admin-manage-request',
+          element:<Request/>
+        },
+        {
+          path:'/sa-request/detail',
+          element:<DetailRequest/>
         }
         
       ]
