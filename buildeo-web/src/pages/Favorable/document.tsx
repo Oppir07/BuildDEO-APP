@@ -32,7 +32,6 @@ export default function DocumentPage() {
   const [categories, setCategories] = useState<Category[]>([]); // State to store fetched categories
   const [selectedCategory, setSelectedCategory] = useState<string>(""); // State to store selected category
   const [description, setDescription] = useState<string>(""); // State to store description
-  const [documentUrl, setDocumentUrl] = useState<string>(""); // State to temporarily store document URL
   const [loading, setLoading] = useState<boolean>(false); // Loading state
   const navigate = useNavigate();
 

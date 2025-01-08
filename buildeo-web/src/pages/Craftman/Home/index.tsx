@@ -128,15 +128,6 @@ export default function HomeCompanyPage() {
       }
     };
 
-    const fetchAllUsers = async () => {
-      try {
-        const response = await fetch("http://127.0.0.1:8080/users");
-        const data = await response.json();
-        setUsers(data);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
 
     const fetchSellerServices = async () => {
       if (token && userId) {
