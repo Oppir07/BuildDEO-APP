@@ -14,15 +14,17 @@ import LoginModals from "../../../Components/Ui/login";
 import API_BASE_URL from "../../../api/config"; // Import the API base URL
 import cover from "../../../../public/cover.png";
 import Check from "/Auth/check.png";
+import logo from "../../../../public/logoOrange.png";
 
 export default function DetailMenuPage() {
-  const { id } = useParams(); // Get service ID from URL
-  const [showModal] = useState(false);
-  const [serviceDetails, setServiceDetails] = useState<any>(null); // Store fetched service details
+  const { id } = useParams();
+  const [serviceDetails, setServiceDetails] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [showAlert, setShowAlert] = useState(false); // Tetap gunakan ini jika perlu
+
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch service details from API
     const fetchServiceDetails = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/services/${id}`);
@@ -47,12 +49,7 @@ export default function DetailMenuPage() {
   }
 
   const { title, description, price, photos } = serviceDetails;
-  const servicePhoto = photos && photos.length > 0 ? photos[0] : cover; // Use service photo if available
-
-  //alert wishlist
-  //
-  const [showAlert, setShowAlert] = useState(false);
-  const navigate = useNavigate();
+  const servicePhoto = photos && photos.length > 0 ? photos[0] : cover;
 
   const handleAlertClose = () => {
     setShowAlert(false);
@@ -66,7 +63,7 @@ export default function DetailMenuPage() {
   return (
     <>
       <div className="">
-        <NavbarSearch text="red" />
+        <NavbarSearch text="black" color="black" logoOrange={logo} />
         <div className="md:pl-[82px] md:pr-[82px] pl-4 pr-4 flex flex-col justify-center items-center">
           <div className="grid md:grid-cols-3 gap-6 w-full">
             <div className="flex items-center justify-center">
@@ -77,7 +74,7 @@ export default function DetailMenuPage() {
               />
             </div>
             <div className="">
-              <div className="text-[32px] font-bold">{title} iu</div>
+              <div className="text-[32px] font-bold">{title}</div>
               <div className="flex text-[16px]">
                 <div className="mr-8">30 Offerings</div>
                 <div className="">4.8 (20 Rating)</div>
@@ -86,21 +83,20 @@ export default function DetailMenuPage() {
               <div className="text-[16px] text-justify leading-[23px]">
                 {description}
               </div>
-              <button className="flex items-center justify-center bg-[#FFFFFF] w-full text-[#E31E24] font-bold border border-[1.5px] border-[#E31E24] rounded-[40px] mt-2 p-[7px]">
+              <button
+                className="flex items-center justify-center bg-[#FFFFFF] w-full text-[#E31E24] font-bold border border-[1.5px] border-[#E31E24] rounded-[40px] mt-2 p-[7px]"
+              >
                 <MessageIcon width={24} color="#E31E24" /> &nbsp; Ask About
                 Product Detail
               </button>
-              <button className="flex items-center justify-center bg-[#FFFFFF] w-full text-[#E31E24] font-bold border border-[1.5px] border-[#E31E24] rounded-[40px] mt-2 p-[7px]">
-                See more about company
-              </button>
+             
 
-              {/* //have login */}
               {showAlert && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                   <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
                     <img src={Check} alt="" className="w-[100px] fade-in" />
                     <p className="mt-2 text-center">
-                      Services Succsessfully added to wislist
+                      Services Succsessfully added to wishlist
                     </p>
                     <div className="mt-4 ">
                       <button
@@ -109,20 +105,10 @@ export default function DetailMenuPage() {
                       >
                         Back
                       </button>
-                      <button className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]">
+                      <button className="bg-[#E31E24] text-white w-[250px] mt-2 p-2 rounded-[15px]">
                         Continue to Wishlist
                       </button>
                     </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Not login/regist */}
-
-              {showModal && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                  <div className=" p-6 rounded-lg shadow-lg">
-                    <LoginModals />
                   </div>
                 </div>
               )}
@@ -141,7 +127,7 @@ export default function DetailMenuPage() {
                 </div>
                 <div className="text-[20px] mt-[50px] font-bold text-center text-white">
                   <Link to={"/payment"}>
-                    <button className="bg-[#FF460A] rounded-[40px] p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200">
+                    <button className="bg-[#E31E24] rounded-[40px] p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200">
                       Offer
                     </button>
                   </Link>
@@ -154,12 +140,10 @@ export default function DetailMenuPage() {
                 </div>
               </div>
             </div>
-          </div>
-
-          {/* Reviews Section */}
+          </div> {/* Reviews Section */}
           <div className="mt-[80px] mb-10">
             <div className="text-[32px] font-bold">Review and Rates</div>
-            <div className="flex flex-wrap">
+            <div className="flex">
               <div className="mr-4">
                 <Avatar>
                   <AvatarImage
@@ -189,8 +173,38 @@ export default function DetailMenuPage() {
                 </div>
               </div>
             </div>
-            {/* Add more reviews similarly */}
+            <div className="flex mt-2">
+              <div className="mr-4">
+                <Avatar>
+                  <AvatarImage
+                    src="https://github.com/shadcn.png"
+                    className="w-[50px] mr-10"
+                  />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+              </div>
+              <div className="">
+                <div className="text-[20px] font-bold">Maria Natalie</div>
+                <div className="flex items-center">
+                  <div className="mr-[20px]">
+                    <DynamicRating defaultValue={4.5} readOnly={true} />
+                  </div>
+                  <div className="text-[16px] text-[#9586A8]">Jan 1 2024</div>
+                </div>
+                <div className="text-justify">
+                  So lovely paint! I couldn't be happier with the results. The
+                  painters were professional, punctual, and meticulous in their
+                  work. They transformed my living room with vibrant colors,
+                  making it feel fresh and inviting. The attention to detail was
+                  impressive, and they ensured everything was cleaned up
+                  afterward. I highly recommend their services to anyone looking
+                  for a top-quality painting job. The entire experience was
+                  smooth and stress-free. Five stars all the way!
+                </div>
+              </div>
+            </div>
           </div>
+
         </div>
 
         <Footer />
@@ -198,3 +212,4 @@ export default function DetailMenuPage() {
     </>
   );
 }
+

@@ -20,7 +20,6 @@ interface FormData {
 }
 
 export default function RegisterPage() {
-  const [isCraftman, setIsCraftman] = useState(false); // Default to buyer registration
   const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
@@ -37,17 +36,6 @@ export default function RegisterPage() {
     createdBy: 1, // you may set it dynamically
     updatedBy: 1, // you may set it dynamically
   });
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const newRole = isCraftman ? "buyer" : "seller"; // Toggle role
-    setIsCraftman(!isCraftman);
-    setFormData({
-      ...formData,
-      role: newRole, // Update role in formData
-    });
-    console.log("role = " + newRole);
-  };
 
   const handleAlertClose = () => {
     setShowAlert(false);
@@ -144,7 +132,7 @@ export default function RegisterPage() {
   return (
     <>
       <div className="bg">
-        <div className="md:flex flex justify-center items-center">
+        <div className="md:flex flex justify-start items-center">
           <div className="hidden md:block  bg-black md:w-2/3 bg-opacity-40 h-screen md:flex md:flex-col md:items-center justify-center">
             <img src={logo} alt="Logo" className="w-[150px]" />
             <div className="text-[30px] text-white font-bold w-[350px] mt-[49px] pl-[50px] leading-tight">
@@ -160,13 +148,7 @@ export default function RegisterPage() {
               </div>
               <div className="text-[14px] text-center mt-[15px] mb-[15px]">
                 <div>
-                  Want to register in another role?&nbsp;
-                  <button
-                    className="text-[#E31E24] bg-transparent font-bold border-none cursor-pointer"
-                    onClick={handleClick}
-                  >
-                    {isCraftman ? "Register as buyer" : "Register as craftman"}
-                  </button>
+                Create an account today and start your journey with us.
                 </div>
               </div>
               <form onSubmit={handleSubmit}>

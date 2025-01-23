@@ -13,7 +13,7 @@ const PaymentMethod = () => {
   ];
 
   return (
-    <div className="grid md:grid-cols-3  gap-4">
+    <div className="w-[400px] mb-[50px]">
       {paymentMethods.map((method) => (
         <div
           key={method.id}

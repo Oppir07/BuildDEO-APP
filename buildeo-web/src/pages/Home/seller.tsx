@@ -37,7 +37,7 @@ interface Seller {
   phone: string;
 }
 
-export default function HomeBuyer() {
+export default function HomeSeller() {
   const [categories, setCategories] = useState<Category[]>([]); // State to hold categories data
   const [sellers, setSellers] = useState<{ [key: number]: Seller }>({}); // State to hold seller data (keyed by seller_id)
   const [filteredCategories, setFilteredCategories] = useState<Category[]>([]); // For handling search/filter

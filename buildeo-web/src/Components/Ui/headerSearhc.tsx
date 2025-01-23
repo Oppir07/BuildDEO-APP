@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import MenuIcon from "../Icon/MenuIcon";
 import ProfileIcon from "../Icon/ProfileIcon";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faSearch, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { Input } from "./input";
 import MessageIcon from "../Icon/MessageIcon";
 import logow from "../../../public/Buildeo.png";
+import { useLocation } from "react-router-dom";
 import {
   Menubar,
   MenubarContent,
@@ -32,7 +33,7 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
   const [user, setUser] = useState<any>(null); // User data
   const [showLogoutModal, setShowLogoutModal] = useState(false); // State for controlling modal
   const navigate = useNavigate();
-
+  const location = useLocation();
   // Fetch user data if logged in
   useEffect(() => {
     if (isLoggedIn) {
@@ -83,9 +84,8 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
 
   return (
     <div
-      className={`navbar flex flex-wrap items-center justify-between pl-4 pr-4 ${
-        text ? text : "text-white"
-      } text-[12px] z-[9] ${bg ? bg : "bg-[#FFFFFF]"}`}
+      className={`navbar flex flex-wrap items-center justify-between pl-4 pr-4 ${text ? text : "text-white"
+        } text-[12px] z-[9] ${bg ? bg : "bg-[#FFFFFF]"}`}
     >
       <div className="md:flex p-1 md:items w-full">
         <div className="flex mb-4 md:mr-20 items-right justify-end align-items-end">
@@ -118,10 +118,10 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
         </div>
         <div className="mb-6 flex items-center justify-end self-center ml-[300px]">
           <div className="flex flex-col gap-[50px] text-left md:text-right text-[17px] md:flex md:items-center space-x-0 md:flex-row">
-            {isLoggedIn ? (
+            {isLoggedIn && location.pathname != "/home" ? (
               <>
                 <div className="flex justify-center mt-[20px]">
-                  <div className="relative w-[400px]">
+                  <div className="relative w-[350px]">
                     <FontAwesomeIcon
                       icon={faSearch}
                       className="absolute top-[13px] left-[20px] "
@@ -136,26 +136,74 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
               </>
             ) : (
               <>
-                <div></div>
+                <div className="flex justify-center mt-[20px]">
+                  <div className="relative w-[300px]">
+                  </div></div>
               </>
             )}
 
             <div className="md:mt-5">
-              <Link to={"/home"}>Home</Link>
+              {user?.role === "buyer" ? (
+                <Link to={"/home/buyer"}>Home</Link>
+              ) : (
+                <Link to={"/home/seller"}>Home</Link>
+              )}
             </div>
-            <div className="md:mt-5">
-              <Link to={"/favorable"}>Favorable Offer</Link>
-            </div>
+
             {isLoggedIn ? (
               <>
                 <div className="md:mt-5">
-                  <Link to={""}>
+                  {user?.role === "buyer" ? (
+                    <Link to={"/orders"}>Orders</Link>
+                  ) : (
+                    <Link to={'/my-order/service'}>Orders</Link>
+                  )}
+
+                </div>
+                <div className="md:mt-5">
+                  {user?.role === "buyer" ? (
+                    <Link to={"/offers"}>Offers</Link>
+
+                  ) : (
+                    <Menubar>
+                      <MenubarMenu>
+                        <MenubarTrigger className="text-[16px]">
+                          Service
+                        </MenubarTrigger>
+                        <MenubarContent>
+                          <MenubarItem><Link to='/my-service'> My Service</Link></MenubarItem>
+                          <MenubarItem><Link to={'/add-service'}>My Request</Link></MenubarItem>
+                        </MenubarContent>
+                      </MenubarMenu>
+                    </Menubar>
+                  )}
+
+
+                </div>
+                {user?.role === "buyer" ? (
+                  <div className="md:mt-5">
+                    <Link to={'/cart'}>
+                      <FontAwesomeIcon
+                        icon={faShoppingCart}
+                        className=""
+                        color={`${color ? color : "white"}`}
+                      />
+                    </Link>
+                  </div>
+                ) : (
+                  <div className=""></div>
+                )}
+
+                <div className="md:mt-5">
+                  <Link to={"/chat"}>
                     <MessageIcon
                       width={20}
                       color={`${color ? color : "white"}`}
                     />
                   </Link>
                 </div>
+
+
 
                 {/* Menubar Trigger for Profile Icon */}
                 <div className="md:mt-5">
@@ -169,26 +217,20 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
                       </MenubarTrigger>
                       <MenubarContent>
                         <MenubarItem>
-                          {user && (
-                            <div>
-                              <div className="font-bold">
-                                {user.firstname} {user.lastname}
+                          <Link to={'/profile'}>
+                            {user && (
+                              <div>
+                                <div className="font-bold">
+                                  {user.firstname} {user.lastname}
+                                </div>
+                                <div className="text-[10px] text-[#616161] mt-[-8px]">
+                                  {user.email}
+                                </div>
                               </div>
-                              <div className="font-bold text-left ml-0 mt-2">
-                                {user.email}
-                              </div>
-                            </div>
-                          )}
+                            )}
+                          </Link>
                         </MenubarItem>
-                        <MenubarItem>
-                          <Link to="/profile">Personal Information</Link>
-                        </MenubarItem>
-                        <MenubarItem><Link to='/orders'> Orders</Link></MenubarItem>
-                        <MenubarItem><Link to={'/offers'}>Offers</Link></MenubarItem>
-                        <MenubarItem>Open Application</MenubarItem>
-                        <MenubarItem>Inquiry Form</MenubarItem>
-                        <MenubarItem>Refer Friends</MenubarItem>
-                        <MenubarItem>My Reviews</MenubarItem>
+
                         <MenubarItem onClick={handleLogoutClick}>
                           Sign Out
                         </MenubarItem>

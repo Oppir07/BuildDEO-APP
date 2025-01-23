@@ -2,12 +2,14 @@ import { Link } from 'react-router-dom'
 import Footer from '../../../Components/Ui/footer'
 import NavbarSearch from '../../../Components/Ui/headerSearhc'
 import cover from '/cover.png'
+import logo from "../../../../public/logoOrange.png";
+
 export default function ConfirmPayPage() {
 
      return (
           <>
                <div className="">
-                    <NavbarSearch text='balck' />
+                    <NavbarSearch text="black" color="black" logoOrange={logo} />
                     <div className="md:pl-[80px] md:pr-[80px] ml-4 mr-4">
                          <div className="flex flex-wrap justify-between">
                               <div className="flex flex-wrap">

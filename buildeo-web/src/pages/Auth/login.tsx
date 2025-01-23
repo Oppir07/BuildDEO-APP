@@ -5,8 +5,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../api/config"; // Import the API base URL
 import { Alert, Stack } from "@mui/material";
+import Swal from "sweetalert2";
+
 export default function LoginPage() {
-  const [isCraftman, setIsCraftman] = useState(false);
   const navigate = useNavigate();
 
   // Manage form input state for email and password
@@ -48,23 +49,29 @@ export default function LoginPage() {
         localStorage.setItem("user", JSON.stringify(data.user));
 
         // Navigate based on user role
-        if (data.user.role === "seller") {
-          navigate("/home/craftman"); // Redirect to craftman home
-        } else {
-          navigate("/home"); // Redirect to buyer home
-        }
+        Swal.fire({
+          title: "Login Successful",
+          text: "You have successfully logged in!",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+           
+          if (data.user.role === "seller") {
+            navigate("/home/seller");  
+          } else {
+            navigate("/home/buyer");  
+          }
+        });
       }
     } catch (err) {
       setError("Login failed. Please try again.");
-      navigate("/");
+      Swal.fire({
+      title: "Login Failed",
+      text: "An error occurred while logging in. Please try again.",
+      icon: "error",
+      confirmButtonText: "OK",
+    });
     }
-  };
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    const newRole = isCraftman ? "buyer" : "seller"; // Toggle role
-    setIsCraftman(!isCraftman);
-    console.log("role = " + newRole);
   };
 
   const regist = () => {
@@ -91,14 +98,7 @@ export default function LoginPage() {
               </div>
               <div className="text-[14px] text-center mt-[15px]">
                 <div>
-                  Already registered in another role,&nbsp;
-                  <button
-                    className="text-[#E31E24] bg-transparent font-bold border-none cursor-pointer"
-                    onClick={handleClick}
-                    //spinner
-                  >
-                    {isCraftman ? "Login as craftman" : "Login as buyer"}
-                  </button>
+                Please log in to continue and enjoy our services to the fullest.
                 </div>
               </div>
 

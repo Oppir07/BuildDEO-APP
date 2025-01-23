@@ -1,12 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/Auth/login";
 import RegisterPage from "./pages/Auth/register";
-import Home from "./pages/Home";
 import MenuPage from "./pages/buyer/Menu";
 import DetailMenuPage from "./pages/buyer/Menu/detail";
 import PaymentPage from "./pages/buyer/payment/payment";
-import ProfilePage from "./pages/Profile";
-import OrdersPage from "./pages/Profile/order/orders";
+import OrdersPage from "./pages/buyer/order/orders";
 import ResultPage from "./pages/Profile/Review/result";
 import ReviewPage from "./pages/Profile/Review/review";
 import EditPage from "./pages/Profile/Review/edit";
@@ -17,18 +15,26 @@ import EditProductPage from "./pages/Craftman/Product/edit";
 import RatingPage from "./pages/Craftman/Home/detailRating";
 import DetailBuyerPage from "./pages/Craftman/Home/detailBuyer";
 import ConfirmPayPage from "./pages/buyer/payment/confirmPay";
-import FavorablePage from "./pages/Favorable";
 import DocumentPage from "./pages/Favorable/document";
-import OfferBuyerPage from "./pages/buyer/Favorable";
 import OfferBuyerEditPage from "./pages/buyer/Favorable/edit";
 import OfferBuyerDetailPage from "./pages/buyer/Favorable/detail";
 import OrderOfferPage from "./pages/buyer/Favorable/order";
-import DetailOrderPage from "./pages/Profile/order/detail";
 import DetailPortfolioPage from "./pages/Craftman/Protfolio/detail";
 import CreatePortfolio from "./pages/Craftman/Protfolio/create";
 import EditPortfolio from "./pages/Craftman/Protfolio/edit";
 import HomeCompanyPage from "./pages/Craftman/Home/index";
 import OffersPage from "./pages/buyer/offers/index";
+import CartPage from "./pages/buyer/Menu/cart";
+import FormNegotiationPage from "./pages/buyer/payment/form-negotiable";
+import OfferFormPage from "./pages/buyer/Favorable";
+import ProfilePage from "./pages/buyer/Profile";
+import ChatPage from "./pages/buyer/chat";
+import HomeBuyer from "./pages/Home";
+import HomeSeller from "./pages/Home/seller";
+import ServicePage from "./pages/seller/service/my_service";
+import AddServicePage from "./pages/seller/service/add-new";
+import DetailService from "./pages/seller/service/detail";
+import MyOrderPage from "./pages/seller/order/order-my-service";
 
 
 
@@ -38,35 +44,50 @@ export default function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/home" element={<Home />} />
+        <Route path="/home/buyer" element={<HomeBuyer />} />
+        <Route path="/home/seller" element={<HomeSeller />} />
         <Route path="/menu" element={<MenuPage />} />
         <Route path="/services/:id" element={<DetailMenuPage />} />
 
         {/* buyer */}
-        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/checkout" element={<PaymentPage />} />
         <Route path="/payment-confirm" element={<ConfirmPayPage />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/orders" element={<OrdersPage />} />
-        <Route path="/orders/detail" element={<DetailOrderPage />} />
         <Route path="/orders/review" element={<ReviewPage />} />
         <Route path="/orders/review/result" element={<ResultPage />} />
         <Route path="/orders/review/edit" element={<EditPage />} />
 
+        {/* cart  */}
+        <Route path="/cart" element={<CartPage/>} />
+
+        {/* Negotiation  */}
+        <Route path="/negotiable" element={<FormNegotiationPage/>} />
+
         {/* offres  */}
         <Route path="/offers" element={<OffersPage />} />
+        <Route path="/offer/form" element={<OfferFormPage/>} />
+
+        {/* chat  */}
+        <Route path="/chat" element={<ChatPage/>} />
+
+
+        {/* seller  */}
+        <Route path="/my-service" element={<ServicePage/>} />
+        <Route path="/add-service" element={<AddServicePage/>} />
+        <Route path="/detail-service" element={<DetailService/>} />
+        <Route path="/my-order/service" element={<MyOrderPage/>} />
 
 
         {/* favorable */}
         {/* unauthenticated user */}
-        <Route path="/favorable" element={<FavorablePage/>} />
+        {/* <Route path="/offers" element={<FavorablePage/>} /> */}
         <Route path="/favorable/document" element={<DocumentPage/>} />
         <Route path="/favorable/document/profile/" element={<OrderOfferPage/>} />
         
         
-        <Route path="/favorable/document-buyer" element={<OfferBuyerPage/>} />
         <Route path="/favorable/document-buyer/edit/" element={<OfferBuyerEditPage/>} />
         <Route path="/favorable/document-buyer/detail/" element={<OfferBuyerDetailPage/>} />
-        <Route path="/favorable/document-buyer/d-auth/" element={<OrderOfferPage/>} />
 
 
         {/* craft */}

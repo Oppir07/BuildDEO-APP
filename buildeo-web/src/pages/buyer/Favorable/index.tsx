@@ -3,14 +3,17 @@ import Footer from "../../../Components/Ui/footer";
 import NavbarSearch from "../../../Components/Ui/headerSearhc";
 import FileIcon from "../../../Components/Icon/FilIcon";
 import Check from '/Auth/check.png'
+import logo from "../../../../public/logoOrange.png";
+
 import { useNavigate } from "react-router-dom";
-export default function OfferBuyerPage() {
+import { Input } from "../../../Components/Ui/input";
+export default function OfferFormPage() {
      const [showAlert, setShowAlert] = useState(false);
      const navigate = useNavigate();
 
      const handleAlertClose = () => {
           setShowAlert(false);
-          navigate("/profile");
+          navigate("/offers");
      };
      const handleAdd = () => {
           setShowAlert(true);
@@ -27,7 +30,6 @@ export default function OfferBuyerPage() {
           }
      };
 
-     // Handle drag-and-drop functionality
      const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
           event.preventDefault();
           const file = event.dataTransfer.files?.[0];
@@ -36,90 +38,155 @@ export default function OfferBuyerPage() {
           }
      };
 
-     // Prevent default to allow dropping
      const handleDragOver = (event: React.DragEvent<HTMLDivElement>) => {
           event.preventDefault();
      };
+     const [isPageOne, setIsPageOne] = useState(true); 
+     const toNext = () => setIsPageOne(false);
+     // const goToPreviousPage = () => setIsPageOne(true);
+
      return (
           <div>
-               <NavbarSearch text="black" />
-               <div className="md:ml-[80px] md:mr-[80px] ml-4 mr-4">
-                    <div className="">
-                         <div className="md:text-[32px] text-[20px] font-bold">
-                              Offer Infromation
-                         </div>
-                         <div className="">Descript ypur project information to the provider</div>
-                         <div className="">
-                              <select name="provide" id="" className="w-full border border-[#E31E24] p-2 rounded mt-2">
-                                   <option value="provider 1">Provider 1</option>
-                                   <option value="provider 1">Provider 2</option>
-                                   <option value="provider 1">Provider 3</option>
-                                   <option value="provider 1">Provider 4</option>
-                              </select>
-                         </div>
-                         <textarea placeholder='Short description of your project' name="" id="" rows={7} className='border border-[#E31E24] w-full p-2 rounded mt-2'>
-
-                         </textarea>
-                         <div className="mb-10">
-                              <div
-                                   className="border border-dashed border-[#E31E24] rounded mt-4 w-full p-6 text-[18px] flex flex-col items-center justify-center"
-                                   onDrop={handleDrop}  // Handle drop event
-                                   onDragOver={handleDragOver} // Handle drag-over event
-                              >
-                                   <FileIcon color='#E31E24' height={58} width={68} />
-                                   <div>Drag and Drop File here</div>
-                                   <div>Or</div>
-                                   <div>
-                                        <input
-                                             type="file"
-                                             id="fileInput"
-                                             className="hidden"  // Hidden input for file browsing
-                                             onChange={handleFileChange}
-                                        />
-                                        <label htmlFor="fileInput">
-                                             <button className='bg-[#E31E24] pl-4 pr-4 p-2 text-white rounded-[45px]'>
-                                                  Browse File
-                                             </button>
-                                        </label>
+               <NavbarSearch text="black" color="black" logoOrange={logo} />
+               {isPageOne ? (
+                    <div>
+                         {/* form one  */}
+                         <div className="md:ml-[80px] md:mr-[80px] ml-4 mr-4">
+                              <div className="">
+                                   <div className="md:text-[32px] text-[20px] font-bold">
+                                        Do you already have an offer?
                                    </div>
-                                   <div>
-                                        Formats: zip, jpg, png, pdf, or ms.word
-                                   </div>
+                                   <div className="text-[#808080] font-medium">upload your offer below!</div>
+                                   <div className="mb-10">
+                                        <div
+                                             className="border border-dashed border-[#E31E24] rounded mt-4 w-full p-6 text-[18px] flex flex-col items-center justify-center"
+                                             onDrop={handleDrop}
+                                             onDragOver={handleDragOver}
+                                        >
+                                             <FileIcon color='#E31E24' height={58} width={68} />
+                                             <div>Drag and Drop File here</div>
+                                             <div>Or</div>
+                                             <div>
+                                                  <input
+                                                       type="file"
+                                                       id="fileInput"
+                                                       className="hidden"
+                                                       onChange={handleFileChange}
+                                                  />
+                                                  <label htmlFor="fileInput">
+                                                       <button className='bg-[#E31E24] pl-4 pr-4 p-2 text-white rounded-[45px]'>
+                                                            Browse File
+                                                       </button>
+                                                  </label>
+                                             </div>
+                                             <div>
+                                                  Formats: zip, jpg, png, pdf, or ms.word
+                                             </div>
 
-                                   {/* Show the name of the selected file if it exists */}
-                                   {selectedFile && (
-                                        <div className="mt-4 text-[#E31E24]">
-                                             Selected File: {selectedFile.name}
+                                             {/* Show the name of the selected file if it exists */}
+                                             {selectedFile && (
+                                                  <div className="mt-4 text-[#E31E24]">
+                                                       Selected File: {selectedFile.name}
+                                                  </div>
+                                             )}
                                         </div>
-                                   )}
-                              </div>
-                              <div className=" flex flex-col md:items-end items-center mt-4 md:justify-end justify-center">
-                                   <div className="flex font-bold">
-                                        <button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-[150px] p-[7px]'>Cancel</button>
-                                        <button className='bg-[#E31E24] text-white rounded-[40px] w-[150px] p-[7px] ml-10' onClick={handleAdd}>Send offer</button>
+                                        <div className="md:text-[32px] text-[20px] font-bold">
+                                             No offer yet? What are you planning to do?
+                                        </div>
+                                        <div className="text-[#808080] font-medium">Short description of your project.</div>
+                                        <div className="text-[20px] mt-[22px]">
+                                             <textarea placeholder='Describe your offer' className='p-[20px] border rounded-[10px] text-[20px] mt-[15px] w-full' >
+
+                                             </textarea>
+                                        </div>
+                                        <div className="text-[20px] mt-[22px]">
+                                             <Input placeholder='€ Offer price' type='number' className='p-[30px] text-[20px] mt-[15px]' />
+                                        </div>
+                                        <div className=" flex flex-col md:items-center items-center mt-4 md:justify-center justify-center">
+                                             <button className='bg-[#E31E24] text-white rounded-[40px] w-[250px] p-[10px] ml-10' onClick={toNext}>Next</button>
+                                        </div>
                                    </div>
                               </div>
+                              {showAlert && (
+                                   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                        <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
+                                             <img src={Check} alt="" className="w-[100px] fade-in" />
+                                             <p className="mt-2 text-center">
+                                                  Your offer successfuly added
+                                             </p>
+                                             <div className="mt-4 ">
+                                                  <button
+                                                       onClick={handleAlertClose}
+                                                       className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
+                                                  >
+                                                       Continue
+                                                  </button>
+                                             </div>
+                                        </div>
+                                   </div>
+                              )}
                          </div>
+                       
                     </div>
-                    {showAlert && (
-                         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                              <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
-                                   <img src={Check} alt="" className="w-[100px] fade-in" />
-                                   <p className="mt-2 text-center">
-                                        Your offer successfuly added
-                                   </p>
-                                   <div className="mt-4 ">
+               ) : (
+                    <div>
+                         {/* form two  */}
+                         <div className="md:ml-[80px] md:mr-[80px] ml-4 mr-4">
+                              <div className="">
+                                   <div className="md:text-[32px] text-[20px] font-bold">
+                                        Do you already have an offer?
+                                   </div>
+                                   <div className="text-[#808080] font-medium">upload your offer below!</div>
+                                   <div className="text-[20px] mt-[22px]">
+                                        <div className="font-bold">Your Name</div>
+                                        <Input placeholder='your full name' className='p-[30px] text-[20px] mt-[15px]' />
+                                   </div>
+                                   <div className="text-[20px] mt-[22px]">
+                                        <div className="font-bold">Street</div>
+                                        <Input placeholder='Street' className='p-[30px] text-[20px] mt-[15px]' />
+                                   </div>
+                                   <div className="text-[20px] mt-[22px]">
+                                        <div className="font-bold">City & zip code</div>
+                                        <Input type='text' placeholder='City & zip code' className='p-[30px] text-[20px] mt-[15px]' />
+                                   </div>
+                                   <div className="text-[20px] mt-[22px]">
+                                        <div className="font-bold">Telp. Number</div>
+                                        <Input placeholder='Telp. Number' className='p-[30px] text-[20px] mt-[15px]' />
+                                   </div>
+                                   <div className="text-[20px] mt-[22px]">
+                                        <div className="font-bold">Email</div>
+                                        <Input type="email" placeholder='say@example.com' className='p-[30px] text-[20px] mt-[15px]' />
+                                   </div>
+                                   <div className="mt-10 flex justify-center">
                                         <button
-                                             onClick={handleAlertClose}
-                                             className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
+                                             onClick={handleAdd}
+                                             className="bg-[#E31E24] text-white w-[250px] p-3 rounded-[15px]"
                                         >
                                              Continue
                                         </button>
                                    </div>
+                                   {showAlert && (
+                                   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                        <div className="flex flex-col items-center bg-white p-6 rounded-lg w-[300px]">
+                                             <img src={Check} alt="" className="w-[100px] fade-in" />
+                                             <p className="mt-2 text-center">
+                                                  Your offer successfuly added
+                                             </p>
+                                             <div className="mt-4 ">
+                                                  <button
+                                                       onClick={handleAlertClose}
+                                                       className="bg-[#E31E24] text-white w-[250px] p-2 rounded-[15px]"
+                                                  >
+                                                       Continue
+                                                  </button>
+                                             </div>
+                                        </div>
+                                   </div>
+                              )}
                               </div>
                          </div>
-                    )}
-               </div>
+                    </div>
+               )}
                <Footer />
           </div>
      )

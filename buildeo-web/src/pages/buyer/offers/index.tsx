@@ -1,46 +1,121 @@
 import Footer from '../../../Components/Ui/footer'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import media from '/Media.png';
 import NavbarSearch from '../../../Components/Ui/headerSearhc';
-import { Link } from 'react-router-dom';
-import logo from "/logoOrange.png";
+import logo from "../../../../public/logoOrange.png";
+import { useState } from 'react';
+import { Box, Tab, Tabs } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export default function OffersPage() {
-     return (
-          <>
-               <div className="">
-                    <NavbarSearch text='black'logoOrange={logo} color="black" />
-                    <div className="md:ml-[80px] md:mr-[80px] mr-4 ml-4">
-                         <div className="text-[32px] font-bold">Offers</div>
-                         <div className="flex flex-wrap mt-10">
-                              <div className="md:mr-10 "><FontAwesomeIcon icon={faShoppingCart} color='#E31E24' size='9x' /></div>
-                              <div className="flex flex-col justify-between">
-                                   <div className="text-[20px] font-bold">Your Offers</div>
-                                   <div className="text-[20px]">Uppsie you dont have any orders right now</div>
-                                   <div className=""><Link to='/favorable'><button className='bg-[#E31E24] rounded-[40px] text-white font-bold p-[11px] w-full'>Place an offers</button></Link> </div>
-                              </div>
-                         </div>
-                         {/* <div className="text-[32px] font-bold mt-[90px] mb-10" >Order History</div>
-                         <div className="flex flex-wrap justify-between bg-white shadow p-4 rounded-[5px]">
-                              <div className=""><img src={media} alt="" className='md:w-[200px] h-[150px] rounded-[10px]' /></div>
-                              <div className="text-[14px] flex flex-col justify-between mt-4 md:mt-0">
-                                   <div className="font-bold text-[20px] ">Lay LVT: up to 20 m²</div>
-                                   <div className="flex justify-between text-[#9586A8] "><div className="">Item : 1</div><div className="">Price :  119€</div></div>
-                                   <div className="text-[#9586A8] mt-2 md:mt-[50px]">Total Price</div>
-                                   <div className="text-[20px] font-bold  ">119€</div>
-                              </div>
-                              <div className="mt-3 md:mt-0 text-[16px]  flex flex-col items-center justify-center">
-                                   <div className="flex flex-wrap items-center font-bold">
-                                        <Link to={'/orders/detail'}><button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-full md:w-[120px] p-[7px] '>View Detail</button></Link>
-                                        <Link to={'/orders/review'}><button className='bg-[#FFFFFF] text-[#E31E24] border border-[#E31E24] rounded-[40px] w-full md:w-[120px] p-[7px] mt-2 md:mt-0 md:ml-2'>Give a Review</button></Link>
-                                        <button className='bg-[#E31E24] text-white rounded-[40px] w-full md:w-[150px] p-[7px] mt-2 md:mt-0 md:ml-2'>Re-Order</button>
-                                        <div className="text-[#9586A8] text-center font-medium md:ml-6 mt-2 md:mt-0">Status : <b>Accepted</b></div>
-                                   </div>
-                              </div>
-                         </div> */}
-                    </div>
-                    <Footer />
-               </div>
-          </>
-     )
+
+  const [value, setValue] = useState('one');
+  const navigate = useNavigate();
+  const handleChange = (_event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+  const toComplete = () => {
+            Swal.fire({
+                 title: " Successful",
+                 text: "You have successfully complete service!",
+                 icon: "success",
+                 confirmButtonText: "OK",
+            }).then(() => {
+                 setValue('three');
+  
+            });
+       };
+       const toOnprogrss = () => {
+            Swal.fire({
+                 title: " Successful",
+                 text: "You have successfully start service!",
+                 icon: "success",
+                 confirmButtonText: "OK",
+            }).then(() => {
+                 setValue('two');
+  
+            });
+       };
+  const toOffers = () => {
+    navigate('/offer/form');
+  }
+  return (
+    <>
+      <div className="">
+        <NavbarSearch text="black" color="black" logoOrange={logo} />
+        <div className="md:ml-[80px] md:mr-[80px] mr-4 ml-4">
+          <div className="flex justify-between items-center">
+            <div className="text-[32px] font-bold">Offers</div>
+            <div className=""><button onClick={toOffers} className='text-white bg-[#E31E24] rounded-[10px] md:w-[150px] p-2'>+Add Offers</button></div>
+          </div>
+          <Box sx={{ width: '100%' }}>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              TabIndicatorProps={{
+                style: {
+                  backgroundColor: '#FF460A',
+                  color: '#FF460A'
+                },
+              }}
+              sx={{
+                '& .MuiTab-root': {
+                  color: '#9A9A9D',
+                },
+                '& .Mui-selected': {
+                  color: '#FF460A',
+                },
+              }}
+              indicatorColor="secondary"
+            >
+              <Tab value="one" label="Pending" />
+              <Tab value="two" label="On progress" />
+              <Tab value="three" label="Completed" />
+            </Tabs>
+            {value === 'one' &&
+              <div className='grid grid-cols-5'>
+                <div className="flex flex-col justify-center p-2 bg-white rounded shadow ">
+                  <div className=""><img src={media} alt="" className='w-full h-[150px] rounded-[10px]' /></div>
+                  <div className="font-bold text-[16px] mt-2">Lay LVT: up to 20 m²</div>
+                  <div className="text-[12px] text-[#9A9A9D]">Painter Company</div>
+                  <div className="font-bold text-[#E31E24]">119€</div>
+                  <div className=" w-full flex justify-end mt-4">
+                    <button onClick={toOnprogrss} className='border w-[100px] text-[#E31E24] border-[#E31E24] rounded p-2'>Start</button>
+                  </div>
+                </div>
+              </div>
+            }
+            {value === 'two' &&
+              <div className="grid grid-cols-5">
+                <div className="flex flex-col justify-center p-2 bg-white rounded shadow ">
+                  <div className=""><img src={media} alt="" className='w-full h-[150px] rounded-[10px]' /></div>
+                  <div className="font-bold text-[16px] mt-2">Lay LVT: up to 20 m²</div>
+                  <div className="text-[12px] text-[#9A9A9D]">Painter Company</div>
+                  <div className="font-bold text-[#E31E24]">119€</div>
+                  <div className=" w-full flex justify-end mt-4">
+                    <button onClick={toComplete} className='border w-[100px] text-[#E31E24] border-[#E31E24] rounded p-2'>Completed</button>
+                  </div>
+                </div>
+              </div>
+            }{
+              value === 'three' &&
+              <div className="grid grid-cols-5">
+                <div className="flex flex-col justify-center p-2 bg-white rounded shadow ">
+                  <div className=""><img src={media} alt="" className='w-full h-[150px] rounded-[10px]' /></div>
+                  <div className="font-bold text-[16px] mt-2">Lay LVT: up to 20 m²</div>
+                  <div className="text-[12px] text-[#9A9A9D]">Painter Company</div>
+                  <div className="font-bold text-[#E31E24]">119€</div>
+                  <div className=" w-full flex justify-end mt-4">
+                    <button className='border w-[100px] text-[#E31E24] border-[#E31E24] rounded p-2'>Start</button>
+                  </div>
+                </div>
+              </div>
+            }
+          </Box>
+
+        </div>
+        <Footer />
+      </div>
+    </>
+  )
 }
