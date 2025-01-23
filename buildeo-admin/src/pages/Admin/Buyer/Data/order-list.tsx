@@ -23,30 +23,59 @@ import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } fro
 import { Link } from 'react-router-dom';
 interface Data {
      id: number;
-     user_id: number;
-     payment: string;
-     basket_id: number;
-     category_id: number;
+     service: string;
+     total_service: number;
+     amount: string;
+     payment_method: string;
+     status: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     user_id: number,
-     basket_id: number,
-     payment: string,
-     category_id: number,
+     service: string,
+     total_service: number,
+     amount: string,
+     payment_method: string,
+     status: string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          user_id,
-          basket_id,
-          action,
-          payment,
-          category_id
+          service,
+          total_service,
+          amount,
+          payment_method,
+          status,
+          action
      };
 }
+
+const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
+     if(status == 'Done'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#4CAF50',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }else if(status == 'On Progress'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#FA7A5D',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }
+   };
 
 const Action = () => (
      <Menubar >
@@ -66,11 +95,8 @@ const Action = () => (
 
 // Dummy data
 const rows = [
-     createData(1,1,1,'Credit Card',1, <Action />),
-     createData(1,1,1,'Credit Card',1, <Action />),
-     createData(1,1,1,'Credit Card',1, <Action />),
-     createData(1,1,1,'Credit Card',1, <Action />),
-
+     createData(1, 'Painter',2,'357E','Bank Transfer','Done', <Action />),
+     createData(2, 'Floor Layers',1,'119E','Bank Transfer','On Progress', <Action />),
 ];
 
 
@@ -87,12 +113,11 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
-     { id: 'user_id', numeric: true, disablePadding: false, label: 'User ID' },
-     { id: 'basket_id', numeric: true, disablePadding: false, label: 'Basket ID' },
-     { id: 'payment', numeric: false, disablePadding: false, label: 'Payment Methode' },
-     { id: 'category_id', numeric: true, disablePadding: false, label: 'Category ID' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Account' },
+     { id: 'service', numeric: true, disablePadding: true, label: 'Service' },
+     { id: 'total_service', numeric: true, disablePadding: false, label: 'Total Service' },
+     { id: 'amount', numeric: true, disablePadding: false, label: 'Amount' },
+     { id: 'payment_method', numeric: false, disablePadding: false, label: 'Payment Method' },
+     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
 ];
 
 interface EnhancedTableProps {
@@ -120,7 +145,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                     {headCells.map((headCell) => (
                          <TableCell
                               key={headCell.id}
-                              align={headCell.numeric ? 'center' : 'left'}
+                              align={headCell.numeric ? 'left' : 'left'}
                               padding={headCell.disablePadding ? 'none' : 'normal'}
                               sortDirection={orderBy === headCell.id ? order : false}
                               sx={{ fontWeight: 'bold', backgroundColor: '#F6F5F2' }}
@@ -172,7 +197,6 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Providers
                          </Typography>
                     )}
 
@@ -195,9 +219,9 @@ function DataTableProvider(props: DataTableProviderProps) {
      );
 }
 
-export default function DataTableTransaction() {
+export default function DataTableOrder() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('user_id');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('service');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -240,11 +264,11 @@ export default function DataTableTransaction() {
 
      const filteredRows = rows.filter(
           (row) =>
-               row.id.toString().includes(searchQuery.toLowerCase()) ||
-               row.user_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.basket_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.payment.toString().includes(searchQuery.toLowerCase()) ||
-               row.category_id.toString().includes(searchQuery),
+               row.service.toString().includes(searchQuery.toLowerCase()) ||
+               row.total_service.toString().includes(searchQuery.toLowerCase()) ||
+               row.amount.toString().includes(searchQuery.toLowerCase()) ||
+               row.payment_method.toString().includes(searchQuery.toLowerCase()) ||
+               row.status.toString().includes(searchQuery),
      );
 
 
@@ -283,18 +307,17 @@ export default function DataTableTransaction() {
                                                        <TableRow
                                                             hover
                                                             tabIndex={-1}
-                                                            key={row.id}
+                                                            // key={row.id}
                                                        >
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
                                                             <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.id}
+                                                                 {row.service}
                                                             </TableCell>
-                                                            <TableCell align="center">{row.user_id}</TableCell>
-                                                            <TableCell align="center">{row.basket_id}</TableCell>
-                                                            <TableCell align="center">{row.payment}</TableCell>
-                                                            <TableCell align="center">{row.category_id}</TableCell>
-                                                            <TableCell align="center">{row.action}</TableCell>
+                                                            <TableCell style={{ fontWeight: 'bold', color: '#E31E24' }}>{row.total_service}</TableCell>
+                                                            <TableCell>{row.amount}</TableCell>
+                                                            <TableCell>{row.payment_method}</TableCell>
+                                                            <TableCell><StatusLabel status={row.status}/></TableCell>
                                                        </TableRow>
                                                   );
                                              })

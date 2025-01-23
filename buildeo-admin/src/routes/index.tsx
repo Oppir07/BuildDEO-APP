@@ -4,6 +4,10 @@ import DetailOfferBuyer from '@/pages/Admin/Buyer/Detail Data/offer-detail';
 import DetailTransactionBuyer from '@/pages/Admin/Buyer/Detail Data/transaction-detail';
 import OffersPage from '@/pages/Admin/Offers';
 import DetailOffers from '@/pages/Admin/Offers/detail-offers';
+import OrdersDonePage from '@/pages/Admin/order/order-done';
+import DetailOrderDone from '@/pages/Admin/order/order-done/detail_order_done';
+import OrdersPendingPage from '@/pages/Admin/order/order-pending';
+import DetailOrderPending from '@/pages/Admin/order/order-pending/detail_order_pending';
 import ProviderPage from '@/pages/Admin/Provider';
 import DetailProvider from '@/pages/Admin/Provider/detail';
 import DetailOffer from '@/pages/Admin/Provider/detail-offer';
@@ -14,6 +18,8 @@ import Request from '@/pages/Admin/Request';
 import DetailRequest from '@/pages/Admin/Request/Detail';
 import ReviewsPage from '@/pages/Admin/Reviews';
 import DetailReviews from '@/pages/Admin/Reviews/detail';
+import ManageServicePage from '@/pages/Admin/service/manage-service';
+import RequestServicePage from '@/pages/Admin/service/request-service';
 import BasketPage from '@/pages/Admin/Shoping Basket';
 import DetailBasketShop from '@/pages/Admin/Shoping Basket/Detail';
 import TransactionPage from '@/pages/Admin/Transaction';
@@ -142,8 +148,31 @@ export default function AppRouter() {
         {
           path:'/sa-request/detail',
           element:<DetailRequest/>
+        },
+        {
+          path:'/admin-order-done',
+          element:<OrdersDonePage/>
+        },
+        {
+          path:'/admin-detail-order-done',
+          element:<DetailOrderDone/>
+        },
+        {
+          path:'/admin-order-pending',
+          element:<OrdersPendingPage/>
+        },
+        {
+          path:'/admin-detail-order-pending',
+          element:<DetailOrderPending/>
+        },
+        {
+          path:'/admin-manage-service',
+          element:<ManageServicePage/>
+        },
+        {
+          path:'/admin-request-service',
+          element:<RequestServicePage/>
         }
-        
       ]
     }
   ];

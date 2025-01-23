@@ -38,31 +38,33 @@ export default function DashboardNav({
       <TooltipProvider>
         {items.map((item, index) => {
           const Icon = Icons[item.icon || 'arrowRight'];
+          const isActive = item.href && (path === item.href || path.startsWith(item.href));
+
           return (
             item.href && (
               <Tooltip key={index}>
                 <TooltipTrigger asChild>
-                  <Link
-                    to={item.disabled ? '/' : item.href}
-                    className={cn(
-                      'flex items-center gap-2 overflow-hidden rounded-md py-2 text-sm font-medium hover:text-muted-foreground',
-                      path === item.href
-                        ? 'bg-white text-black hover:text-black'
-                        : 'transparent',
-                      item.disabled && 'cursor-not-allowed opacity-80'
-                    )}
-                    onClick={() => {
-                      if (setOpen) setOpen(false);
-                    }}
-                  >
-                    <Icon className={`ml-2.5 size-5`} />
+                <Link
+                  to={item.disabled ? '/' : item.href}
+                  className={cn(
+                    'flex items-center gap-2 overflow-hidden rounded-md py-2 text-sm font-medium text-gray-500 hover:text-gray-700', // Ubah ke text-gray-500
+                    path === item.href
+                      ? 'bg-red-100 text-red-500 hover:text-red-500'
+                      : 'transparent',
+                    item.disabled && 'cursor-not-allowed opacity-80'
+                  )}
+                  onClick={() => {
+                    if (setOpen) setOpen(false);
+                  }}
+                >
+                  <Icon className={`ml-2.5 size-5`} />
+                  {isMobileNav || (!isMinimized && !isMobileNav) ? (
+                    <span className="mr-2 truncate">{item.title}</span>
+                  ) : (
+                    ''
+                  )}
+                </Link>
 
-                    {isMobileNav || (!isMinimized && !isMobileNav) ? (
-                      <span className="mr-2 truncate">{item.title}</span>
-                    ) : (
-                      ''
-                    )}
-                  </Link>
                 </TooltipTrigger>
                 <TooltipContent
                   align="center"

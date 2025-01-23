@@ -21,62 +21,139 @@ import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
 import { Link } from 'react-router-dom';
+import { Eye, PencilLine, Trash2, FileUp } from 'lucide-react';
 interface Data {
      id: number;
-     service_id: number;
-     request_id: number;
-     seller_id: number;
-     price: number;
-     description:string;
-     status:string;
+     service: string;
+     offer_file: JSX.Element;
+     offer_price: string;
+     payment_method: string;
+     status: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     service_id: number,
-     seller_id: number,
-     request_id: number,
-     price: number,
-     description:string,
-     status:string,
+     service: string,
+     offer_file: JSX.Element,
+     offer_price: string,
+     payment_method: string,
+     status: string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          service_id,
-          seller_id,
-          action,
-          request_id,
-          price,
-          description,
-          status
+          service,
+          offer_file,
+          offer_price,
+          payment_method,
+          status,
+          action
      };
 }
 
-const Action = () => (
-     <Menubar >
-          <MenubarMenu>
-               <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
-               <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-buyer/offer-details/'}>View</Link>
-                    </MenubarItem>
+const OfferFileIcon: React.FC = () => {
+     const styles: React.CSSProperties = {
+       display: 'flex',
+       justifyContent: 'center',
+       alignItems: 'center',
+       width: '40px',
+       height: '40px',
+       borderRadius: '8px',
+       backgroundColor: '#FFECEC',
+       cursor: 'pointer',
+     };
+   
+     return (
+       <div style={styles}>
+         <FileUp color="#FF0000" size={24} />
+       </div>
+     );
+   };
+   
 
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
-               </MenubarContent>
-          </MenubarMenu>
-     </Menubar>
+const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
+     if(status == 'Done'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#4CAF50',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }else if(status == 'On Progress'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#FA7A5D',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }
+   };
 
-)
+const ActionButtons = () => (
+     <div style={{ display: 'flex', gap: '10px' }}>
+       <Link to={'/sa-buyer/details'}>
+       <button
+         style={{
+           backgroundColor: '#00CFFF',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Eye color="white" size={20} />
+       </button>
+       </Link>
+       <button
+         style={{
+           backgroundColor: '#FFA500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <PencilLine color="white" size={20} />
+       </button>
+       <button
+         style={{
+           backgroundColor: '#FF4500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Trash2 color="white" size={20} />
+       </button>
+     </div>
+   );
 
 // Dummy data
 const rows = [
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-
+     createData(1,'Painter',<OfferFileIcon />,'357E','Bank Transfer','Done', <ActionButtons />),
+     createData(1,'Floor Layers',<OfferFileIcon />,'357E','Bank Transfer','On Progress', <ActionButtons />),
 ];
 
 
@@ -93,14 +170,12 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
-     { id: 'service_id', numeric: true, disablePadding: false, label: 'User ID' },
-     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Basket ID' },
-     { id: 'request_id', numeric: false, disablePadding: false, label: 'Payment Methode' },
-     { id: 'price', numeric: true, disablePadding: false, label: 'Category ID' },
-     { id: 'description', numeric: true, disablePadding: false, label: 'Description' },
+     { id: 'service', numeric: true, disablePadding: false, label: 'Service' },
+     { id: 'offer_file', numeric: true, disablePadding: false, label: 'Offer File' },
+     { id: 'offer_price', numeric: false, disablePadding: false, label: 'Offer Price' },
+     { id: 'payment_method', numeric: true, disablePadding: false, label: 'Payment Method' },
      { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Offers' },
+     { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 ];
 
 interface EnhancedTableProps {
@@ -128,7 +203,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                     {headCells.map((headCell) => (
                          <TableCell
                               key={headCell.id}
-                              align={headCell.numeric ? 'center' : 'left'}
+                              align={headCell.numeric ? 'left' : 'left'}
                               padding={headCell.disablePadding ? 'none' : 'normal'}
                               sortDirection={orderBy === headCell.id ? order : false}
                               sx={{ fontWeight: 'bold', backgroundColor: '#F6F5F2' }}
@@ -180,7 +255,6 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Providers
                          </Typography>
                     )}
 
@@ -205,7 +279,7 @@ function DataTableProvider(props: DataTableProviderProps) {
 
 export default function DataTableOffer() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('service_id');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('service');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -249,12 +323,11 @@ export default function DataTableOffer() {
      const filteredRows = rows.filter(
           (row) =>
                row.id.toString().includes(searchQuery.toLowerCase()) ||
-               row.service_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.seller_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.request_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.description.toString().includes(searchQuery.toLowerCase()) ||
-               row.status.toString().includes(searchQuery.toLowerCase()) ||
-               row.price.toString().includes(searchQuery),
+               row.service.toString().includes(searchQuery.toLowerCase()) ||
+               row.offer_file.toString().includes(searchQuery.toLowerCase()) ||
+               row.offer_price.toString().includes(searchQuery.toLowerCase()) ||
+               row.payment_method.toString().includes(searchQuery.toLowerCase()) ||
+               row.status.toString().includes(searchQuery.toLowerCase())
      );
 
 
@@ -297,16 +370,12 @@ export default function DataTableOffer() {
                                                        >
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
-                                                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.id}
-                                                            </TableCell>
-                                                            <TableCell align="center">{row.service_id}</TableCell>
-                                                            <TableCell align="center">{row.seller_id}</TableCell>
-                                                            <TableCell align="center">{row.request_id}</TableCell>
-                                                            <TableCell align="center">{row.price}</TableCell>
-                                                            <TableCell align="center">{row.description}</TableCell>
-                                                            <TableCell align="center">{row.status}</TableCell>
-                                                            <TableCell align="center">{row.action}</TableCell>
+                                                            <TableCell>{row.service}</TableCell>
+                                                            <TableCell>{row.offer_file}</TableCell>
+                                                            <TableCell>{row.offer_price}</TableCell>
+                                                            <TableCell>{row.payment_method}</TableCell>
+                                                            <TableCell><StatusLabel status={row.status}/></TableCell>
+                                                            <TableCell>{row.action}</TableCell>
                                                        </TableRow>
                                                   );
                                              })

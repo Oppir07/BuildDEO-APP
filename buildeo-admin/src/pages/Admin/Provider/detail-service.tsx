@@ -7,7 +7,7 @@ import {
      BreadcrumbPage, 
      BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import Service from '../../../../public/service.png'
-import DataTableReviewSerices from "./data-detail/table-list-review-services";
+import ListReview from "./data-detail/table-list-review-services";
 
 export default function DetailService() {
      return (
@@ -19,11 +19,11 @@ export default function DetailService() {
                               <Breadcrumb >
                                    <BreadcrumbList>
                                         <BreadcrumbItem>
-                                             <BreadcrumbLink className="text-[16px]" href="provider-manage/details">Manage Provider</BreadcrumbLink>
+                                             <BreadcrumbLink className="text-[16px]" href="provider-manage/details">Manage Seller</BreadcrumbLink>
                                         </BreadcrumbItem>
                                         <BreadcrumbSeparator className="text-[16px]" />
                                         <BreadcrumbItem>
-                                             <BreadcrumbLink className="text-[16px]" aria-disabled={true}>Service Provider</BreadcrumbLink>
+                                             <BreadcrumbLink className="text-[16px]" aria-disabled={true}>Service Seller</BreadcrumbLink>
                                         </BreadcrumbItem>
                                         <BreadcrumbSeparator />
                                         <BreadcrumbItem>
@@ -35,7 +35,7 @@ export default function DetailService() {
                          </h3>
                     </div>
                     <div className="flex flex-wrap text-black mt-10 mb-10">
-                         <div className="md:w-1/3">
+                         <div className="md:w-1/5">
                               <img src={Service} alt="" className="md:w-[200px] sm:w-[100px]" />
                          </div>
                          <div className="md:w-2/3">
@@ -59,8 +59,8 @@ export default function DetailService() {
                               </div>
                          </div>
                     </div>
-                    <div className="text-[16px] font-medium underline  text-black">Review</div>
-                    <DataTableReviewSerices/>
+                    <div className="text-[25px] font-bold text-black">Review and Rates</div>
+                    <ListReview/>
                </div>
           </>
      )

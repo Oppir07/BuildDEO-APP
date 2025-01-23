@@ -19,14 +19,14 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
+import { Eye, PencilLine, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 interface Data {
      id: number;
-     email: string;
-     phone: string;
      name: string;
-     created_at:string;
+     email: string;
+     role: string;
+     created_at: string;
      action: JSX.Element;
 }
 
@@ -34,50 +34,96 @@ function createData(
      id: number,
      name: string,
      email: string,
-     phone: string,
-     created_at:string,
+     role: string,
+     created_at: string,
      action: JSX.Element,
 ): Data {
      return {
           id,
           name,
           email,
-          phone,
+          role,
           created_at,
           action,
      };
 }
 
-const Action = () => (
-     <Menubar >
-          <MenubarMenu>
-               <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
-               <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-buyer/details'}>View</Link>
-                    </MenubarItem>
+const RoleLabel: React.FC<{ role: string }> = ({ role }) => {
+     const styles: React.CSSProperties = {
+       display: 'inline-block',
+       padding: '5px 10px',
+       borderRadius: '8px',
+       backgroundColor: '#FFECEC',
+       color: '#FF0000',
+       fontWeight: 'bold',
+       fontSize: '14px',
+       textAlign: 'center' as const,
+     };
+   
+     return <span style={styles}>{role}</span>;
+   };
 
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
-               </MenubarContent>
-          </MenubarMenu>
-     </Menubar>
-
-)
+const ActionButtons = () => (
+     <div style={{ display: 'flex', gap: '10px' }}>
+       <Link to={'/sa-buyer/details'}>
+       <button
+         style={{
+           backgroundColor: '#00CFFF',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Eye color="white" size={20} />
+       </button>
+       </Link>
+       <button
+         style={{
+           backgroundColor: '#FFA500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <PencilLine color="white" size={20} />
+       </button>
+       <button
+         style={{
+           backgroundColor: '#FF4500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Trash2 color="white" size={20} />
+       </button>
+     </div>
+   );
 
 // Dummy data
 const rows = [
-     createData(1, 'Cupcake', 'cupcake@example.com', 'lorwm etsha hyysa hsdsb shdshj','Date here', <Action />),
-     createData(1, 'Cupcake', 'cupcake@example.com', 'lorwm etsha hyysa hsdsb shdshj','Date here', <Action />),
-     createData(1, 'Cupcake', 'cupcake@example.com', 'lorwm etsha hyysa hsdsb shdshj','Date here', <Action />),
-     createData(1, 'Cupcake', 'cupcake@example.com', 'lorwm etsha hyysa hsdsb shdshj','Date here', <Action />),
-
+     createData(1, 'Edward Panjaitan', 'edward@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1, 'William Situmorang', 'william@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1, 'Josep Napitupulu', 'josep@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1, 'Gilbert Marpaung', 'gilbert@example.com', 'Buyer','17 Jan 2025, 17:04', <ActionButtons />),
 ];
 
-
-
 type Order = 'asc' | 'desc';
-
-
 
 interface HeadCell {
      disablePadding: boolean;
@@ -89,8 +135,8 @@ interface HeadCell {
 const headCells: readonly HeadCell[] = [
      { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
      { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
-     { id: 'phone', numeric: true, disablePadding: false, label: 'Comment' },
-     { id: 'created_at', numeric: false, disablePadding: false, label: 'Created_at'},
+     { id: 'role', numeric: true, disablePadding: false, label: 'Role' },
+     { id: 'created_at', numeric: true, disablePadding: false, label: 'Register At' },
      { id: 'action', numeric: true, disablePadding: false, label: 'Manage Account' },
 ];
 
@@ -171,7 +217,6 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Providers
                          </Typography>
                     )}
 
@@ -241,14 +286,13 @@ export default function DataTableBuyer() {
           (row) =>
                row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                row.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.created_at.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.phone.toString().includes(searchQuery),
+               row.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.created_at.toString().includes(searchQuery),
      );
 
 
      const emptyRows =
           page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
-
 
      //load data
      return (
@@ -289,7 +333,7 @@ export default function DataTableBuyer() {
                                                                  {row.name}
                                                             </TableCell>
                                                             <TableCell align="center">{row.email}</TableCell>
-                                                            <TableCell align="center">{row.phone}</TableCell>
+                                                            <TableCell align="center"><RoleLabel role={row.role} /></TableCell>
                                                             <TableCell align="center">{row.created_at}</TableCell>
                                                             <TableCell align="center">{row.action}</TableCell>
                                                        </TableRow>

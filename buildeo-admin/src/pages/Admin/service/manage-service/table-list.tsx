@@ -19,113 +19,71 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
+import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
 import { Link } from 'react-router-dom';
-import { Eye, PencilLine, Trash2 } from 'lucide-react';
 interface Data {
      id: number;
-     name: string;
-     email: string;
-     role: string;
-     created_at: string;
+     service_id: number;
+     request_id: number;
+     seller_id: number;
+     price: number;
+     description:string;
+     status:string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     name: string,
-     email: string,
-     role: string,
-     created_at: string,
+     service_id: number,
+     seller_id: number,
+     request_id: number,
+     price: number,
+     description:string,
+     status:string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          name,
-          email,
-          role,
-          created_at,
+          service_id,
+          seller_id,
           action,
+          request_id,
+          price,
+          description,
+          status
      };
 }
 
-const RoleLabel: React.FC<{ role: string }> = ({ role }) => {
-     const styles: React.CSSProperties = {
-       display: 'inline-block',
-       padding: '5px 10px',
-       borderRadius: '8px',
-       backgroundColor: '#FFECEC',
-       color: '#FF0000',
-       fontWeight: 'bold',
-       fontSize: '14px',
-       textAlign: 'center' as const,
-     };
-   
-     return <span style={styles}>{role}</span>;
-   };
+const Action = () => (
+     <Menubar >
+          <MenubarMenu>
+               <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
+               <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
+                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
+                         <Link to={'/sa-offers/detail-offers/'}>View</Link>
+                    </MenubarItem>
 
-const ActionButtons = () => (
-     <div style={{ display: 'flex', gap: '10px' }}>
-       <Link to={'/provider-manage/details'}>
-       <button
-         style={{
-           backgroundColor: '#00CFFF',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <Eye color="white" size={20} />
-       </button>
-       </Link>
-       <button
-         style={{
-           backgroundColor: '#FFA500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <PencilLine color="white" size={20} />
-       </button>
-       <button
-         style={{
-           backgroundColor: '#FF4500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <Trash2 color="white" size={20} />
-       </button>
-     </div>
-   );
+                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
+               </MenubarContent>
+          </MenubarMenu>
+     </Menubar>
+
+)
 
 // Dummy data
 const rows = [
-     createData(1, 'Edward Panjaitan', 'edward@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'William Situmorang', 'william@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'Josep Napitupulu', 'josep@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'Gilbert Marpaung', 'gilbert@example.com', 'Buyer','17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1,1,1,1,1,'description','Acc', <Action />),
+     createData(1,1,1,1,1,'description','Acc', <Action />),
+     createData(1,1,1,1,1,'description','Acc', <Action />),
+     createData(1,1,1,1,1,'description','Acc', <Action />),
+
 ];
 
 
 
 type Order = 'asc' | 'desc';
+
+
 
 interface HeadCell {
      disablePadding: boolean;
@@ -135,11 +93,14 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-     { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
-     { id: 'role', numeric: true, disablePadding: false, label: 'Role' },
-     { id: 'created_at', numeric: true, disablePadding: false, label: 'Register At' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Account' },
+     { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
+     { id: 'service_id', numeric: true, disablePadding: false, label: 'Service ID' },
+     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Seller ID' },
+     { id: 'request_id', numeric: false, disablePadding: false, label: 'Request ID' },
+     { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
+     { id: 'description', numeric: true, disablePadding: false, label: 'Description' },
+     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
+     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Offers' },
 ];
 
 interface EnhancedTableProps {
@@ -219,7 +180,7 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Seller
+                              Data Account Providers
                          </Typography>
                     )}
 
@@ -242,9 +203,9 @@ function DataTableProvider(props: DataTableProviderProps) {
      );
 }
 
-export default function DataTableprovider() {
+export default function DataTableManageService() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('email');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('service_id');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -287,10 +248,13 @@ export default function DataTableprovider() {
 
      const filteredRows = rows.filter(
           (row) =>
-               row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.created_at.toString().includes(searchQuery),
+               row.id.toString().includes(searchQuery.toLowerCase()) ||
+               row.service_id.toString().includes(searchQuery.toLowerCase()) ||
+               row.seller_id.toString().includes(searchQuery.toLowerCase()) ||
+               row.request_id.toString().includes(searchQuery.toLowerCase()) ||
+               row.description.toString().includes(searchQuery.toLowerCase()) ||
+               row.status.toString().includes(searchQuery.toLowerCase()) ||
+               row.price.toString().includes(searchQuery),
      );
 
 
@@ -334,11 +298,14 @@ export default function DataTableprovider() {
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
                                                             <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.name}
+                                                                 {row.id}
                                                             </TableCell>
-                                                            <TableCell align="center">{row.email}</TableCell>
-                                                            <TableCell align="center"><RoleLabel role={row.role} /></TableCell>
-                                                            <TableCell align="center">{row.created_at}</TableCell>
+                                                            <TableCell align="center">{row.service_id}</TableCell>
+                                                            <TableCell align="center">{row.seller_id}</TableCell>
+                                                            <TableCell align="center">{row.request_id}</TableCell>
+                                                            <TableCell align="center">{row.price}$</TableCell>
+                                                            <TableCell align="center">{row.description}</TableCell>
+                                                            <TableCell align="center">{row.status}</TableCell>
                                                             <TableCell align="center">{row.action}</TableCell>
                                                        </TableRow>
                                                   );

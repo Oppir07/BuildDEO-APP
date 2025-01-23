@@ -28,7 +28,14 @@ import {
   User,
   User2Icon,
   UserX2Icon,
-  X
+  X,
+  ShoppingBag,
+  Hourglass,
+  ThumbsUp,
+  Send,
+  Tag,
+  DollarSign,
+  MessageSquare
 } from 'lucide-react';
 
 export type Icon = LucideIcon;
@@ -60,6 +67,14 @@ export const Icons = {
   sun: SunMedium,
   moon: Moon,
   laptop: Laptop,
+  seller: ShoppingBag,
+  orderPending: Hourglass,
+  orderDone: ThumbsUp,
+  manageService: Settings,
+  requestService: Send,
+  offer: Tag,
+  quatation: DollarSign,
+  review: MessageSquare,
   gitHub: ({ ...props }: LucideProps) => (
     <svg
       aria-hidden="true"

@@ -8,84 +8,59 @@ export const navItems: NavItem[] = [
     label: 'Dashboard'
   },
   {
-    title: 'Manage Admin',
-    href: '/sudent',
+    title: 'Buyer',
+    href: '/admin-manage-buyer',
     icon: 'settings',
     label: 'Manage Admin'
   },
   {
-    title: 'Admin Request',
-    href: '/admin-request',
-    icon: 'user',
-    label: 'Admin Request'
-  },
-  {
-    title: 'Manage Provier',
+    title: 'Seller',
     href: '/provider-manage',
-    icon: 'user',
+    icon: 'seller',
     label: 'Manage Provier'
   },
   {
-    title: 'Provider Category',
-    href: '/provider-category',
-    icon: 'user',
-    label: 'Provider Category'
+    title: 'Order Pending',
+    href: '/admin-order-pending',
+    icon: 'orderPending',
+    label: 'Order Pending'
   },
   {
-    title: 'Manage Buyer',
-    href: '/admin-manage-buyer',
-    icon: 'user',
-    label: 'Manage Buyer'
+    title: 'Order Done',
+    href: '/admin-order-done',
+    icon: 'orderDone',
+    label: 'Order Done'
   },
   {
-    title: 'Transaction',
-    href: '/admin-manage-transaction',
-    icon: 'user',
-    label: 'Transaction'
+    title: 'Manage Service',
+    href: '/admin-manage-service',
+    icon: 'manageService',
+    label: 'Manage Service'
+  },
+  {
+    title: 'Request Service',
+    href: '/admin-request-service',
+    icon: 'requestService',
+    label: 'Request Service'
   },
   {
     title: 'Offers',
-    href: 'admin-manage-offers',
-    icon: 'user',
+    href: '/admin-manage-offers',
+    icon: 'offer',
     label: 'Offers'
-  },
-  {
-    title: 'Request',
-    href: '/admin-manage-request',
-    icon: 'user',
-    label: 'Request'
   },
   {
     title: 'Quotation',
     href: '/admin-manage-quotation',
-    icon: 'user',
+    icon: 'quatation',
     label: 'Quotation'
   },
   {
     title: 'Reviews',
     href: '/admin-manage-reviews',
-    icon: 'user',
+    icon: 'review',
     label: 'Reviews'
   },
-  {
-    title: 'Reviews Basket',
-    href: 'admin-manage-shopbasket',
-    icon: 'user',
-    label: 'Reviews Basket'
-  },
-  {
-    title: 'Chat',
-    href: '/admin-manage-that',
-    icon: 'user',
-    label: 'Chat'
-  },
-
-  {
-    title: 'Login',
-    href: '/login',
-    icon: 'login',
-    label: 'Login'
-  }
 ];
 
 export const users = [

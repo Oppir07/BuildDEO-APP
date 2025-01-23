@@ -1,12 +1,8 @@
 import PageHead from "@/components/shared/page-head";
 import Profil from '../../../../public/profil.png'
-import { Label } from "@radix-ui/react-label";
-import { Switch } from "@/components/ui/switch";
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DataTableService from "./data-detail/table-list-service";
-import DataTableOffer from "./data-detail/table-list-offer";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
+import ListService from "./data-detail/table-list-service";
 export default function DetailProvider() {
      return (
           <>
@@ -17,11 +13,11 @@ export default function DetailProvider() {
                          <Breadcrumb >
                                    <BreadcrumbList>
                                         <BreadcrumbItem>
-                                             <BreadcrumbLink className="text-[16px]" href="/provider-manage">Manage Provider</BreadcrumbLink>
+                                             <BreadcrumbLink className="text-[16px]" href="/provider-manage">Manage Seller</BreadcrumbLink>
                                         </BreadcrumbItem>
                                         <BreadcrumbSeparator className="text-[16px]" />
                                         <BreadcrumbItem>
-                                             <BreadcrumbPage className="text-black text-[16px]">Detail Provider</BreadcrumbPage>
+                                             <BreadcrumbPage className="text-black text-[16px]">Detail Seller</BreadcrumbPage>
                                         </BreadcrumbItem>
                                    </BreadcrumbList>
                               </Breadcrumb>
@@ -29,60 +25,42 @@ export default function DetailProvider() {
                          </h2>
                     </div>
                     <div className="flex flex-wrap bg-[#ffffff] text-black !mt-10">
-                         <div className="w-1/4">
-                              <img src={Profil} className="rounded-[75px]" alt="" />
+                         <div className="w-1/6">
+                              <img src={Profil} className="rounded-[10px]" alt="" />
                          </div>
                          <div className="">
-                              <div className="font-bold text-black text-[16px]">Painter Company</div>
-                              <table className="text-[#9586A8]">
+                              <table className="text-black">
+                                   <tr>
+                                        <td>Name</td>
+                                        <td>&nbsp;Edward Tua Panjaitan</td>
+                                   </tr>
                                    <tr>
                                         <td>Email</td>
-                                        <td>&nbsp;: Data sample</td>
+                                        <td>&nbsp;edu@gmail.com</td>
                                    </tr>
                                    <tr>
-                                        <td>Phone Number</td>
-                                        <td>&nbsp;: Data sample</td>
+                                        <td>No.telp</td>
+                                        <td>&nbsp;+49 05745 09056</td>
                                    </tr>
                                    <tr>
-                                        <td>Type</td>
-                                        <td>&nbsp;: Data sample</td>
+                                        <td>Post Name</td>
+                                        <td>&nbsp;22411</td>
                                    </tr>
                                    <tr>
-                                        <td>City</td>
-                                        <td>&nbsp;: Data sample</td>
-                                   </tr>
-                                   <tr>
-                                        <td>Longtitude</td>
-                                        <td>&nbsp;: Data sample</td>
-                                   </tr>
-                                   <tr>
-                                        <td>Status</td>
-                                        <td> <div className="flex items-center space-x-2">&nbsp;:&nbsp;
-                                             <Switch id="airplane-mode" className="bg-[#2FB142]" />
-                                             <Label htmlFor="airplane-mode" className="text-[12px] font-bold">Active</Label>
-                                        </div></td>
+                                        <td>Street</td>
+                                        <td>&nbsp;No 15 uti street off ovie palace road effurun delta state</td>
                                    </tr>
                               </table>
-                              <div className="mt-4">
-                                   <button className="flex items-center justify-center text-center font-medium border rounded-[45px] w-full p-2 hover:bg-[#9586A8] hover:text-white hover:border-[#9586A8]">
-                                    <MailOutlineIcon color={"black"} className="mr-2"/>Send Message
-                                   </button>
-                              </div>
                          </div>
                     </div>
                      {/* content tab  */}
                      <Tabs defaultValue="cs">
                               <TabsList>
-                                   <TabsTrigger value="cs" className="p-2 font-medium  mr-2">Company Service</TabsTrigger>
-                                   <TabsTrigger value="" disabled={true}>|</TabsTrigger>
-                                   <TabsTrigger value="offer" className="p-2 font-medium mr-2">Offers</TabsTrigger>
+                                   <TabsTrigger value="cs" className="p-2 font-medium  mr-2">Service List</TabsTrigger>
                               </TabsList>
-                              <hr className="w-[220px] mt-2"/>
+                              <hr className="w-[100px] mt-2"/>
                               <TabsContent value="cs">
-                                   <DataTableService/>
-                              </TabsContent>
-                              <TabsContent value="offer">
-                                   <DataTableOffer/>
+                                   <ListService/>
                               </TabsContent>
                          </Tabs>
                </div>
