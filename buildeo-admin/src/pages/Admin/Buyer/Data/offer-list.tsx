@@ -19,9 +19,8 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
-import { Link } from 'react-router-dom';
-import { Eye, PencilLine, Trash2, FileUp } from 'lucide-react';
+import { FileUp } from 'lucide-react';
+
 interface Data {
      id: number;
      service: string;
@@ -29,7 +28,6 @@ interface Data {
      offer_price: string;
      payment_method: string;
      status: string;
-     action: JSX.Element;
 }
 
 function createData(
@@ -39,7 +37,6 @@ function createData(
      offer_price: string,
      payment_method: string,
      status: string,
-     action: JSX.Element,
 ): Data {
      return {
           id,
@@ -48,7 +45,6 @@ function createData(
           offer_price,
           payment_method,
           status,
-          action
      };
 }
 
@@ -98,62 +94,10 @@ const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
      }
    };
 
-const ActionButtons = () => (
-     <div style={{ display: 'flex', gap: '10px' }}>
-       <Link to={'/sa-buyer/details'}>
-       <button
-         style={{
-           backgroundColor: '#00CFFF',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <Eye color="white" size={20} />
-       </button>
-       </Link>
-       <button
-         style={{
-           backgroundColor: '#FFA500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <PencilLine color="white" size={20} />
-       </button>
-       <button
-         style={{
-           backgroundColor: '#FF4500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <Trash2 color="white" size={20} />
-       </button>
-     </div>
-   );
-
 // Dummy data
 const rows = [
-     createData(1,'Painter',<OfferFileIcon />,'357E','Bank Transfer','Done', <ActionButtons />),
-     createData(1,'Floor Layers',<OfferFileIcon />,'357E','Bank Transfer','On Progress', <ActionButtons />),
+     createData(1,'Painter',<OfferFileIcon />,'357E','Bank Transfer','Done'),
+     createData(1,'Floor Layers',<OfferFileIcon />,'357E','Bank Transfer','On Progress'),
 ];
 
 
@@ -175,7 +119,6 @@ const headCells: readonly HeadCell[] = [
      { id: 'offer_price', numeric: false, disablePadding: false, label: 'Offer Price' },
      { id: 'payment_method', numeric: true, disablePadding: false, label: 'Payment Method' },
      { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 ];
 
 interface EnhancedTableProps {
@@ -375,7 +318,6 @@ export default function DataTableOffer() {
                                                             <TableCell>{row.offer_price}</TableCell>
                                                             <TableCell>{row.payment_method}</TableCell>
                                                             <TableCell><StatusLabel status={row.status}/></TableCell>
-                                                            <TableCell>{row.action}</TableCell>
                                                        </TableRow>
                                                   );
                                              })

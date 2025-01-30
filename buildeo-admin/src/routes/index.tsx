@@ -2,6 +2,8 @@ import BuyerPage from '@/pages/Admin/Buyer';
 import DetailBuyer from '@/pages/Admin/Buyer/detail';
 import DetailOfferBuyer from '@/pages/Admin/Buyer/Detail Data/offer-detail';
 import DetailTransactionBuyer from '@/pages/Admin/Buyer/Detail Data/transaction-detail';
+import DividendPage from '@/pages/Admin/dividend';
+import FormDividendPage from '@/pages/Admin/dividend/form_dividend';
 import OffersPage from '@/pages/Admin/Offers';
 import DetailOffers from '@/pages/Admin/Offers/detail-offers';
 import OrdersDonePage from '@/pages/Admin/order/order-done';
@@ -19,6 +21,7 @@ import DetailRequest from '@/pages/Admin/Request/Detail';
 import ReviewsPage from '@/pages/Admin/Reviews';
 import DetailReviews from '@/pages/Admin/Reviews/detail';
 import ManageServicePage from '@/pages/Admin/service/manage-service';
+import AddCategory from '@/pages/Admin/service/manage-service/add_category';
 import RequestServicePage from '@/pages/Admin/service/request-service';
 import BasketPage from '@/pages/Admin/Shoping Basket';
 import DetailBasketShop from '@/pages/Admin/Shoping Basket/Detail';
@@ -154,6 +157,14 @@ export default function AppRouter() {
           element:<OrdersDonePage/>
         },
         {
+          path:'/admin-dividend',
+          element:<DividendPage/>
+        },
+        {
+          path:'/admin-dividend-form',
+          element:<FormDividendPage/>
+        },
+        {
           path:'/admin-detail-order-done',
           element:<DetailOrderDone/>
         },
@@ -166,8 +177,12 @@ export default function AppRouter() {
           element:<DetailOrderPending/>
         },
         {
-          path:'/admin-manage-service',
+          path:'/admin-manage-category',
           element:<ManageServicePage/>
+        },
+        {
+          path:'/admin-add-category',
+          element:<AddCategory/>
         },
         {
           path:'/admin-request-service',

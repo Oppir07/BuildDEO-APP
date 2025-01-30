@@ -21,6 +21,8 @@ import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
 import { Eye, PencilLine, Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
+
 interface Data {
      id: number;
      name: string;
@@ -98,6 +100,7 @@ const ActionButtons = () => (
          <PencilLine color="white" size={20} />
        </button>
        <button
+          onClick={showConfirmationModal}
          style={{
            backgroundColor: '#FF4500',
            border: 'none',
@@ -114,6 +117,26 @@ const ActionButtons = () => (
        </button>
      </div>
    );
+
+const showConfirmationModal = async () => {
+        const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: "Are you sure want to delete this seller?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#2FB142',
+          cancelButtonColor: '#808080',
+          confirmButtonText: 'Approve'
+        });
+      
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Deleted!',
+            'Seller successfully deleted.',
+            'success'
+          );
+        }
+      };
 
 // Dummy data
 const rows = [
@@ -219,7 +242,7 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Seller
+                              
                          </Typography>
                     )}
 

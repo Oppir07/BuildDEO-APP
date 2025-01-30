@@ -19,71 +19,146 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
+import { Eye, PencilLine, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+
 interface Data {
      id: number;
-     service_id: number;
-     request_id: number;
-     seller_id: number;
-     price: number;
-     description:string;
-     status:string;
+     category_name: string;
+     created_at: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     service_id: number,
-     seller_id: number,
-     request_id: number,
-     price: number,
-     description:string,
-     status:string,
+     category_name: string,
+     created_at: string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          service_id,
-          seller_id,
+          category_name,
+          created_at,
           action,
-          request_id,
-          price,
-          description,
-          status
      };
 }
 
-const Action = () => (
-     <Menubar >
-          <MenubarMenu>
-               <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
-               <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-offers/detail-offers/'}>View</Link>
-                    </MenubarItem>
+const ActionButtons = () => (
+     <div style={{ display: 'flex', gap: '10px' }}>
+       <button
+          onClick={showModalDetail}
+         style={{
+           backgroundColor: '#00CFFF',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Eye color="white" size={20} />
+       </button>
+       <button
+         style={{
+           backgroundColor: '#FFA500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <PencilLine color="white" size={20} />
+       </button>
+       <button
+          onClick={showConfirmationModal}
+         style={{
+           backgroundColor: '#FF4500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Trash2 color="white" size={20} />
+       </button>
+     </div>
+   );
 
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
-               </MenubarContent>
-          </MenubarMenu>
-     </Menubar>
+const showConfirmationModal = async () => {
+        const result = await Swal.fire({
+          title: 'Are you sure?',
+          text: "Are you sure want to delete this category?",
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#2FB142',
+          cancelButtonColor: '#808080',
+          confirmButtonText: 'Delete'
+        });
+      
+        if (result.isConfirmed) {
+          Swal.fire(
+            'Deleted!',
+            'Category successfully deleted.',
+            'success'
+          );
+        }
+      };
 
-)
+const showModalDetail = () => {
+  Swal.fire({
+    title: '<strong>Painters</strong>',
+    html: `
+      <p style="margin: 0; color: #333;">17 Jan 2025, 17:04<br></br></p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Total Surface Area to Be Painted: </strong>Helps in estimating the amount of paint and labor required.</p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Type of Surfaces:</strong> Different surfaces (e.g., drywall, wood, metal) require specific preparation and paint types.</p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Condition of Surfaces:</strong> Identifying issues like peeling paint, cracks, or mold informs necessary prep work like sanding or priming.</p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Color Choices and Finishes:</strong> Determines the type of paint and number of coats needed.</p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Special Techniques:</strong> Techniques like faux finishes or murals may require specialized skills or additional time.</p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Preferred Paint Brands or Eco-friendly Options:</strong> Some clients may have brand preferences or desire low-VOC paints.</p>
+      <p style="margin: 0; color: #333; text-align: left;"><strong>Project Timeline and Access Availability:</strong> Scheduling ensures minimal disruption to the client's routine.</p>
+    `,
+    confirmButtonText: 'OK',
+    background: '#fff',
+    confirmButtonColor: '#2FB142',
+    customClass: {
+      title: 'swal-title',
+      htmlContainer: 'swal-text'
+    },
+    width: 600,
+    padding: '3em',
+    color: '#333',
+    showCloseButton: true
+  });
+};
+
+
+
 
 // Dummy data
 const rows = [
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
+     createData(1,'Painters','17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1,'Floor Layer','17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1,'Drywaller','17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1,'Heating installer','17 Jan 2025, 17:04', <ActionButtons />),
 
 ];
 
 
-
 type Order = 'asc' | 'desc';
-
-
 
 interface HeadCell {
      disablePadding: boolean;
@@ -93,14 +168,9 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
-     { id: 'service_id', numeric: true, disablePadding: false, label: 'Service ID' },
-     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Seller ID' },
-     { id: 'request_id', numeric: false, disablePadding: false, label: 'Request ID' },
-     { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
-     { id: 'description', numeric: true, disablePadding: false, label: 'Description' },
-     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Offers' },
+     { id: 'category_name', numeric: true, disablePadding: false, label: 'Category Name' },
+     { id: 'created_at', numeric: true, disablePadding: false, label: 'Created At' },
+     { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 ];
 
 interface EnhancedTableProps {
@@ -128,7 +198,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                     {headCells.map((headCell) => (
                          <TableCell
                               key={headCell.id}
-                              align={headCell.numeric ? 'center' : 'left'}
+                              align={headCell.numeric ? 'left' : 'left'}
                               padding={headCell.disablePadding ? 'none' : 'normal'}
                               sortDirection={orderBy === headCell.id ? order : false}
                               sx={{ fontWeight: 'bold', backgroundColor: '#F6F5F2' }}
@@ -180,7 +250,7 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Providers
+                              
                          </Typography>
                     )}
 
@@ -192,12 +262,29 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </IconButton>
                     </Tooltip>
                ) : (
-                    <TextField
-                         variant="outlined"
-                         size="small"
-                         placeholder="Search..."
-                         onChange={onSearchChange}
-                    />
+                    <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+                         <TextField
+                              variant="outlined"
+                              size="small"
+                              placeholder="Search..."
+                              onChange={onSearchChange}
+                         />
+                         <Link to={'/admin-add-category'}>
+                              <button
+                                   style={{
+                                        backgroundColor: '#E31E24',
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        padding: '8px 16px',
+                                        cursor: 'pointer',
+                                        fontSize: '16px'
+                                   }}
+                              >
+                                   + Add category
+                              </button>
+                         </Link>
+                    </div>
                )}
           </Toolbar>
      );
@@ -205,7 +292,7 @@ function DataTableProvider(props: DataTableProviderProps) {
 
 export default function DataTableManageService() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('service_id');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('category_name');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -249,18 +336,26 @@ export default function DataTableManageService() {
      const filteredRows = rows.filter(
           (row) =>
                row.id.toString().includes(searchQuery.toLowerCase()) ||
-               row.service_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.seller_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.request_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.description.toString().includes(searchQuery.toLowerCase()) ||
-               row.status.toString().includes(searchQuery.toLowerCase()) ||
-               row.price.toString().includes(searchQuery),
+               row.category_name.toString().includes(searchQuery.toLowerCase()) ||
+               row.created_at.toString().includes(searchQuery.toLowerCase())
      );
 
 
      const emptyRows =
           page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
 
+     const location = useLocation();
+
+     useEffect(() => {
+          if (location.state?.categoryAdded) {
+               Swal.fire({
+                    title: 'Success!',
+                    text: 'Category has been successfully added.',
+                    icon: 'success',
+                    confirmButtonText: 'Ok'
+               });
+          }
+     }, [location.state]);
 
      //load data
      return (
@@ -297,16 +392,9 @@ export default function DataTableManageService() {
                                                        >
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
-                                                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.id}
-                                                            </TableCell>
-                                                            <TableCell align="center">{row.service_id}</TableCell>
-                                                            <TableCell align="center">{row.seller_id}</TableCell>
-                                                            <TableCell align="center">{row.request_id}</TableCell>
-                                                            <TableCell align="center">{row.price}$</TableCell>
-                                                            <TableCell align="center">{row.description}</TableCell>
-                                                            <TableCell align="center">{row.status}</TableCell>
-                                                            <TableCell align="center">{row.action}</TableCell>
+                                                            <TableCell align="left">{row.category_name}</TableCell>
+                                                            <TableCell align="left">{row.created_at}</TableCell>
+                                                            <TableCell align="left">{row.action}</TableCell>
                                                        </TableRow>
                                                   );
                                              })

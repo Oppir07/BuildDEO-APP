@@ -32,8 +32,14 @@ export const navItems: NavItem[] = [
     label: 'Order Done'
   },
   {
-    title: 'Manage Service',
-    href: '/admin-manage-service',
+    title: 'Dividend',
+    href: '/admin-dividend',
+    icon: 'orderDone',
+    label: 'Order Done'
+  },
+  {
+    title: 'Manage Category',
+    href: '/admin-manage-category',
     icon: 'manageService',
     label: 'Manage Service'
   },

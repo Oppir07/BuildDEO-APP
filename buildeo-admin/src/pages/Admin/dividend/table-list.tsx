@@ -19,55 +19,56 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Eye, PencilLine, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { Eye} from 'lucide-react';
 import Swal from 'sweetalert2';
 
 interface Data {
      id: number;
-     name: string;
-     email: string;
-     role: string;
-     created_at: string;
+     service: string;
+     total_service: number;
+     amount: string;
+     status: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     name: string,
-     email: string,
-     role: string,
-     created_at: string,
+     service: string,
+     total_service: number,
+     amount: string,
+     status:string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          name,
-          email,
-          role,
-          created_at,
+          service,
+          total_service,
+          amount,
+          status,
           action,
      };
 }
 
-const RoleLabel: React.FC<{ role: string }> = ({ role }) => {
-     const styles: React.CSSProperties = {
-       display: 'inline-block',
-       padding: '5px 10px',
-       borderRadius: '8px',
-       backgroundColor: '#FFECEC',
-       color: '#FF0000',
-       fontWeight: 'bold',
-       fontSize: '14px',
-       textAlign: 'center' as const,
-     };
-   
-     return <span style={styles}>{role}</span>;
-   };
+// const Action = () => (
+//      <Menubar >
+//           <MenubarMenu>
+//                <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
+//                <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
+//                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
+//                          <Link to={'/sa-offers/detail-offers/'}>View</Link>
+//                     </MenubarItem>
+
+//                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
+//                </MenubarContent>
+//           </MenubarMenu>
+//      </Menubar>
+
+// )
 
 const ActionButtons = () => (
      <div style={{ display: 'flex', gap: '10px' }}>
-       <Link to={'/sa-buyer/details'}>
+       <Link to={'/admin-detail-order-pending'}>
        <button
          style={{
            backgroundColor: '#00CFFF',
@@ -84,67 +85,64 @@ const ActionButtons = () => (
          <Eye color="white" size={20} />
        </button>
        </Link>
+       <Link to={'/admin-dividend-form'}>
        <button
-         style={{
-           backgroundColor: '#FFA500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <PencilLine color="white" size={20} />
-       </button>
-       <button
-          onClick={showConfirmationModal}
-         style={{
-           backgroundColor: '#FF4500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <Trash2 color="white" size={20} />
-       </button>
+          style={{
+          backgroundColor: '#2FB142',
+          border: 'none',
+          borderRadius: '8px',
+          width: 'auto',
+          height: '40px',
+          padding: '0 16px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          }}
+          >
+          <Eye color="white" size={20} style={{ marginRight: '8px' }} />
+          Dividend
+        </button>
+       </Link>
      </div>
    );
 
-const showConfirmationModal = async () => {
-     const result = await Swal.fire({
-       title: 'Are you sure?',
-       text: "Are you sure want to delete this buyer?",
-       icon: 'warning',
-       showCancelButton: true,
-       confirmButtonColor: '#2FB142',
-       cancelButtonColor: '#808080',
-       confirmButtonText: 'Approve'
-     });
-   
-     if (result.isConfirmed) {
-       Swal.fire(
-         'Deleted!',
-         'Buyer successfully deleted.',
-         'success'
-       );
+const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
+     if(status == 'Done'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#4CAF50',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }else if(status == 'On Progress'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#FA7A5D',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
      }
    };
 
 // Dummy data
 const rows = [
-     createData(1, 'Edward Panjaitan', 'edward@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'William Situmorang', 'william@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'Josep Napitupulu', 'josep@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'Gilbert Marpaung', 'gilbert@example.com', 'Buyer','17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1,'Painter', 2, '238', 'On Progress',<ActionButtons />),
+     createData(2,'Floor Layers', 1, '119', 'On Progress',<ActionButtons />),
 ];
+
+
 
 type Order = 'asc' | 'desc';
 
@@ -156,11 +154,11 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-     { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
-     { id: 'role', numeric: true, disablePadding: false, label: 'Role' },
-     { id: 'created_at', numeric: true, disablePadding: false, label: 'Register At' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Account' },
+     { id: 'service', numeric: true, disablePadding: false, label: 'Service' },
+     { id: 'total_service', numeric: true, disablePadding: false, label: 'Total Service' },
+     { id: 'amount', numeric: false, disablePadding: false, label: 'Amount' },
+     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
+     { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 ];
 
 interface EnhancedTableProps {
@@ -188,7 +186,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                     {headCells.map((headCell) => (
                          <TableCell
                               key={headCell.id}
-                              align={headCell.numeric ? 'center' : 'left'}
+                              align={headCell.numeric ? 'left' : 'left'}
                               padding={headCell.disablePadding ? 'none' : 'normal'}
                               sortDirection={orderBy === headCell.id ? order : false}
                               sx={{ fontWeight: 'bold', backgroundColor: '#F6F5F2' }}
@@ -240,6 +238,7 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
+
                          </Typography>
                     )}
 
@@ -262,9 +261,9 @@ function DataTableProvider(props: DataTableProviderProps) {
      );
 }
 
-export default function DataTableBuyer() {
+export default function DataTableDividend() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('email');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('service');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -307,15 +306,17 @@ export default function DataTableBuyer() {
 
      const filteredRows = rows.filter(
           (row) =>
-               row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.created_at.toString().includes(searchQuery),
+               row.id.toString().includes(searchQuery.toLowerCase()) ||
+               row.service.toString().includes(searchQuery.toLowerCase()) ||
+               row.total_service.toString().includes(searchQuery.toLowerCase()) ||
+               row.amount.toString().includes(searchQuery.toLowerCase()) ||
+               row.status.toString().includes(searchQuery.toLowerCase())
      );
 
 
      const emptyRows =
           page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
+
 
      //load data
      return (
@@ -352,13 +353,11 @@ export default function DataTableBuyer() {
                                                        >
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
-                                                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.name}
-                                                            </TableCell>
-                                                            <TableCell align="center">{row.email}</TableCell>
-                                                            <TableCell align="center"><RoleLabel role={row.role} /></TableCell>
-                                                            <TableCell align="center">{row.created_at}</TableCell>
-                                                            <TableCell align="center">{row.action}</TableCell>
+                                                            <TableCell>{row.service}</TableCell>
+                                                            <TableCell>{row.total_service}</TableCell>
+                                                            <TableCell style={{ fontWeight: 'bold', color: '#E31E24' }}>{row.amount}$</TableCell>
+                                                            <TableCell><StatusLabel status={row.status}/></TableCell>
+                                                            <TableCell>{row.action}</TableCell>
                                                        </TableRow>
                                                   );
                                              })

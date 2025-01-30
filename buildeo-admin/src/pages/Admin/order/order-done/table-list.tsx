@@ -53,22 +53,6 @@ function createData(
      };
 }
 
-// const Action = () => (
-//      <Menubar >
-//           <MenubarMenu>
-//                <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
-//                <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
-//                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-//                          <Link to={'/sa-offers/detail-offers/'}>View</Link>
-//                     </MenubarItem>
-
-//                     <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
-//                </MenubarContent>
-//           </MenubarMenu>
-//      </Menubar>
-
-// )
-
 const ActionButtons = () => (
      <div style={{ display: 'flex', gap: '10px' }}>
        <Link to={'/admin-detail-order-done'}>
