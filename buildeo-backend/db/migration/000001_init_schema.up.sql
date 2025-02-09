@@ -158,6 +158,49 @@ CREATE TABLE `quotations` (
   `updated_by` BIGINT NOT NULL
 );
 
+CREATE TABLE `orders` (
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `user_id` BIGINT NOT NULL,
+  `file_payment` VARCHAR(255) NOT NULL,
+  `method_payment` VARCHAR(255) NOT NULL,
+  `status_payment` VARCHAR(255) NOT NULL COMMENT 'pending, in_progress, completed, or cancelled',
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `items_order` (
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `order_id` BIGINT NOT NULL,
+  `seller_id` BIGINT NOT NULL,
+  `quantity` BIGINT NOT NULL,
+  `price` BIGINT NOT NULL,
+  `status_service` VARCHAR(255) NOT NULL COMMENT 'pending, in_progress, completed',
+  `start_date` DATETIME NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `negotiation`(
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `items_order_id` BIGINT NOT NULL,
+  `items_offer_id` BIGINT NOT NULL,
+  `status_negotiation` VARCHAR(255) NOT NULL COMMENT 'pending, accepted, cancelled',
+  `final_price` BIGINT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE `cart`(
+  `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+  `service_id` BIGINT NOT NULL,
+  `seller_id` BIGINT NOT NULL,
+  `category_id` BIGINT NOT NULL,
+  `quantity` BIGINT NOT NULL,
+  `price` BIGINT NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 CREATE INDEX `idx_users_email` ON `users` (`email`);
 CREATE INDEX `idx_users_role` ON `users` (`role`);
 CREATE INDEX `idx_categories_name` ON `categories` (`name`);

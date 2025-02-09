@@ -92,6 +92,10 @@ func (server *Server) setupRouter() {
 	authRoutes.PUT("/services/photos/:id", server.updateServicePhoto)
 	authRoutes.DELETE("/services/photos/:id", server.deleteServicePhoto)
 
+	// oerder management
+	authRoutes.POST("/orders", server.createOrder)
+
+	
 	// Get the current working directory for serving static files
 	cwd, err := os.Getwd()
 	if err != nil {
