@@ -30,6 +30,7 @@ CREATE TABLE `services` (
   `category_id` BIGINT NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT,
+  `quantity` BIGINT NOT NULL,
   `price` BIGINT NOT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `created_by` BIGINT NOT NULL,

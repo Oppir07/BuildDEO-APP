@@ -67,7 +67,7 @@ func (q *Queries) GetCategory(ctx context.Context, id int64) (Category, error) {
 }
 
 const listCategory = `-- name: ListCategory :many
-SELECT c.id, name, c.description, c.created_at, c.created_by, c.updated_at, c.updated_by, s.id, seller_id, category_id, title, s.description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
+SELECT c.id, name, c.description, c.created_at, c.created_by, c.updated_at, c.updated_by, s.id, seller_id, category_id, title, s.description, quantity, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
 FROM categories c
 INNER JOIN services s
 ON c.id = s.category_id
@@ -89,6 +89,7 @@ type ListCategoryRow struct {
 	CategoryID    int64          `json:"category_id"`
 	Title         string         `json:"title"`
 	Description_2 sql.NullString `json:"description_2"`
+	Quantity      int64          `json:"quantity"`
 	Price         int64          `json:"price"`
 	CreatedAt_2   time.Time      `json:"created_at_2"`
 	CreatedBy_2   int64          `json:"created_by_2"`
@@ -125,6 +126,7 @@ func (q *Queries) ListCategory(ctx context.Context) ([]ListCategoryRow, error) {
 			&i.CategoryID,
 			&i.Title,
 			&i.Description_2,
+			&i.Quantity,
 			&i.Price,
 			&i.CreatedAt_2,
 			&i.CreatedBy_2,

@@ -164,6 +164,7 @@ type Service struct {
 	CategoryID  int64          `json:"category_id"`
 	Title       string         `json:"title"`
 	Description sql.NullString `json:"description"`
+	Quantity    int64          `json:"quantity"`
 	Price       int64          `json:"price"`
 	CreatedAt   time.Time      `json:"created_at"`
 	CreatedBy   int64          `json:"created_by"`

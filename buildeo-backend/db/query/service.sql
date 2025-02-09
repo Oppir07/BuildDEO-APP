@@ -1,6 +1,6 @@
 -- name: CreateService :execresult
 INSERT INTO services (
-  seller_id, category_id, title, description, price, created_by, updated_by
+  seller_id, category_id, title,quantity, description, price, created_by, updated_by
 ) VALUES (
   ?, ?, ?, ?, ?, ?, ?
 );

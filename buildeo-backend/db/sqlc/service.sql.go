@@ -51,7 +51,7 @@ func (q *Queries) DeleteService(ctx context.Context, id int64) error {
 }
 
 const getServiceByCategory = `-- name: GetServiceByCategory :many
-SELECT id, seller_id, category_id, title, description, price, created_at, created_by, updated_at, updated_by 
+SELECT id, seller_id, category_id, title, description, quantity, price, created_at, created_by, updated_at, updated_by 
 FROM services
 WHERE category_id = ?
 ORDER BY updated_at DESC
@@ -72,6 +72,7 @@ func (q *Queries) GetServiceByCategory(ctx context.Context, categoryID int64) ([
 			&i.CategoryID,
 			&i.Title,
 			&i.Description,
+			&i.Quantity,
 			&i.Price,
 			&i.CreatedAt,
 			&i.CreatedBy,
@@ -92,7 +93,7 @@ func (q *Queries) GetServiceByCategory(ctx context.Context, categoryID int64) ([
 }
 
 const getServiceByID = `-- name: GetServiceByID :one
-SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
+SELECT s.id, seller_id, category_id, title, description, quantity, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by 
 FROM services s
 LEFT JOIN service_photos sp
 ON s.id = sp.service_id
@@ -106,6 +107,7 @@ type GetServiceByIDRow struct {
 	CategoryID  int64          `json:"category_id"`
 	Title       string         `json:"title"`
 	Description sql.NullString `json:"description"`
+	Quantity    int64          `json:"quantity"`
 	Price       int64          `json:"price"`
 	CreatedAt   time.Time      `json:"created_at"`
 	CreatedBy   int64          `json:"created_by"`
@@ -129,6 +131,7 @@ func (q *Queries) GetServiceByID(ctx context.Context, id int64) (GetServiceByIDR
 		&i.CategoryID,
 		&i.Title,
 		&i.Description,
+		&i.Quantity,
 		&i.Price,
 		&i.CreatedAt,
 		&i.CreatedBy,
@@ -146,7 +149,7 @@ func (q *Queries) GetServiceByID(ctx context.Context, id int64) (GetServiceByIDR
 }
 
 const getServiceBySeller = `-- name: GetServiceBySeller :many
-SELECT s.id, seller_id, category_id, title, s.description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by, c.id, name, c.description, c.created_at, c.created_by, c.updated_at, c.updated_by 
+SELECT s.id, seller_id, category_id, title, s.description, quantity, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by, c.id, name, c.description, c.created_at, c.created_by, c.updated_at, c.updated_by 
 FROM services s
 LEFT JOIN service_photos sp
 ON s.id = sp.service_id
@@ -162,6 +165,7 @@ type GetServiceBySellerRow struct {
 	CategoryID    int64          `json:"category_id"`
 	Title         string         `json:"title"`
 	Description   sql.NullString `json:"description"`
+	Quantity      int64          `json:"quantity"`
 	Price         int64          `json:"price"`
 	CreatedAt     time.Time      `json:"created_at"`
 	CreatedBy     int64          `json:"created_by"`
@@ -198,6 +202,7 @@ func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Get
 			&i.CategoryID,
 			&i.Title,
 			&i.Description,
+			&i.Quantity,
 			&i.Price,
 			&i.CreatedAt,
 			&i.CreatedBy,
@@ -232,7 +237,7 @@ func (q *Queries) GetServiceBySeller(ctx context.Context, sellerID int64) ([]Get
 }
 
 const listService = `-- name: ListService :many
-SELECT s.id, seller_id, category_id, title, description, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by
+SELECT s.id, seller_id, category_id, title, description, quantity, price, s.created_at, s.created_by, s.updated_at, s.updated_by, sp.id, service_id, photo_url, sp.created_at, sp.created_by, sp.updated_at, sp.updated_by
 FROM services s
 INNER JOIN service_photos sp
 ON s.id = sp.service_id
@@ -245,6 +250,7 @@ type ListServiceRow struct {
 	CategoryID  int64          `json:"category_id"`
 	Title       string         `json:"title"`
 	Description sql.NullString `json:"description"`
+	Quantity    int64          `json:"quantity"`
 	Price       int64          `json:"price"`
 	CreatedAt   time.Time      `json:"created_at"`
 	CreatedBy   int64          `json:"created_by"`
@@ -274,6 +280,7 @@ func (q *Queries) ListService(ctx context.Context) ([]ListServiceRow, error) {
 			&i.CategoryID,
 			&i.Title,
 			&i.Description,
+			&i.Quantity,
 			&i.Price,
 			&i.CreatedAt,
 			&i.CreatedBy,
