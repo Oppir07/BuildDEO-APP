@@ -2,7 +2,7 @@
 INSERT INTO services (
   seller_id, category_id, title,quantity, description, price, created_by, updated_by
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?
 );
 
 -- name: GetServiceBySeller :many
@@ -38,7 +38,7 @@ ORDER BY s.id;
 
 -- name: UpdateService :execresult
 UPDATE services
-SET seller_id = ?, category_id = ?, title = ?, description = ?, price = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+SET seller_id = ?,quantity = ?, category_id = ?, title = ?, description = ?, price = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?;
 
 -- name: DeleteService :exec

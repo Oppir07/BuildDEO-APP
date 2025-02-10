@@ -10,6 +10,7 @@ import (
 )
 
 type Querier interface {
+	AddToCart(ctx context.Context, arg AddToCartParams) (sql.Result, error)
 	CreateCategory(ctx context.Context, arg CreateCategoryParams) (sql.Result, error)
 	CreateItemOrder(ctx context.Context, arg CreateItemOrderParams) (sql.Result, error)
 	CreateNegotiation(ctx context.Context, arg CreateNegotiationParams) (sql.Result, error)
@@ -18,6 +19,7 @@ type Querier interface {
 	CreateService(ctx context.Context, arg CreateServiceParams) (sql.Result, error)
 	CreateServicePhoto(ctx context.Context, arg CreateServicePhotoParams) (sql.Result, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (sql.Result, error)
+	DeleteCartItem(ctx context.Context, id int64) error
 	DeleteCategory(ctx context.Context, id int64) error
 	DeleteItemOrder(ctx context.Context, id int64) error
 	DeleteNegotiation(ctx context.Context, id int64) error
@@ -26,6 +28,7 @@ type Querier interface {
 	DeleteService(ctx context.Context, id int64) error
 	DeleteServicePhoto(ctx context.Context, serviceID int64) error
 	DeleteUser(ctx context.Context, id int64) error
+	GetCartItem(ctx context.Context, id int64) (Cart, error)
 	GetCategory(ctx context.Context, id int64) (Category, error)
 	GetItemOrderByID(ctx context.Context, id int64) (ItemsOrder, error)
 	GetNegotiationByID(ctx context.Context, id int64) (Negotiation, error)
@@ -40,6 +43,7 @@ type Querier interface {
 	GetServicePhotosByServiceID(ctx context.Context, serviceID int64) (ServicePhoto, error)
 	GetUser(ctx context.Context, email string) (User, error)
 	GetUserByID(ctx context.Context, id int64) (User, error)
+	ListCartItems(ctx context.Context) ([]Cart, error)
 	ListCategory(ctx context.Context) ([]ListCategoryRow, error)
 	ListItemOrders(ctx context.Context) ([]ItemsOrder, error)
 	ListNegotiations(ctx context.Context) ([]Negotiation, error)
@@ -48,6 +52,7 @@ type Querier interface {
 	ListService(ctx context.Context) ([]ListServiceRow, error)
 	ListServicePhotos(ctx context.Context) ([]ServicePhoto, error)
 	ListUsers(ctx context.Context) ([]User, error)
+	UpdateCartItem(ctx context.Context, arg UpdateCartItemParams) (sql.Result, error)
 	UpdateCategory(ctx context.Context, arg UpdateCategoryParams) (sql.Result, error)
 	UpdateItemOrderStatus(ctx context.Context, arg UpdateItemOrderStatusParams) (sql.Result, error)
 	UpdateNegotiation(ctx context.Context, arg UpdateNegotiationParams) (sql.Result, error)

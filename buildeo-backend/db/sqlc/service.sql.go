@@ -13,9 +13,9 @@ import (
 
 const createService = `-- name: CreateService :execresult
 INSERT INTO services (
-  seller_id, category_id, title, description, price, created_by, updated_by
+  seller_id, category_id, title,quantity, description, price, created_by, updated_by
 ) VALUES (
-  ?, ?, ?, ?, ?, ?, ?
+  ?, ?, ?, ?, ?, ?, ?, ?
 )
 `
 
@@ -23,6 +23,7 @@ type CreateServiceParams struct {
 	SellerID    int64          `json:"seller_id"`
 	CategoryID  int64          `json:"category_id"`
 	Title       string         `json:"title"`
+	Quantity    int64          `json:"quantity"`
 	Description sql.NullString `json:"description"`
 	Price       int64          `json:"price"`
 	CreatedBy   int64          `json:"created_by"`
@@ -34,6 +35,7 @@ func (q *Queries) CreateService(ctx context.Context, arg CreateServiceParams) (s
 		arg.SellerID,
 		arg.CategoryID,
 		arg.Title,
+		arg.Quantity,
 		arg.Description,
 		arg.Price,
 		arg.CreatedBy,
@@ -309,12 +311,13 @@ func (q *Queries) ListService(ctx context.Context) ([]ListServiceRow, error) {
 
 const updateService = `-- name: UpdateService :execresult
 UPDATE services
-SET seller_id = ?, category_id = ?, title = ?, description = ?, price = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
+SET seller_id = ?,quantity = ?, category_id = ?, title = ?, description = ?, price = ?, updated_by = ?, updated_at = CURRENT_TIMESTAMP
 WHERE id = ?
 `
 
 type UpdateServiceParams struct {
 	SellerID    int64          `json:"seller_id"`
+	Quantity    int64          `json:"quantity"`
 	CategoryID  int64          `json:"category_id"`
 	Title       string         `json:"title"`
 	Description sql.NullString `json:"description"`
@@ -326,6 +329,7 @@ type UpdateServiceParams struct {
 func (q *Queries) UpdateService(ctx context.Context, arg UpdateServiceParams) (sql.Result, error) {
 	return q.db.ExecContext(ctx, updateService,
 		arg.SellerID,
+		arg.Quantity,
 		arg.CategoryID,
 		arg.Title,
 		arg.Description,
