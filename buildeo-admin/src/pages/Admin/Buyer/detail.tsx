@@ -58,9 +58,9 @@ export default function DetailBuyer() {
                      {/* content tab  */}
                      <Tabs defaultValue="cs">
                               <TabsList>
-                                   <TabsTrigger value="cs" className="p-2 font-medium  mr-2">Company Service</TabsTrigger>
+                                   <TabsTrigger value="cs" className="p-2 font-medium  mr-2">Order List</TabsTrigger>
                                    <TabsTrigger value="" disabled={true}>|</TabsTrigger>
-                                   <TabsTrigger value="offer" className="p-2 font-medium mr-2">Offers</TabsTrigger>
+                                   <TabsTrigger value="offer" className="p-2 font-medium mr-2">Offer List</TabsTrigger>
                               </TabsList>
                               <hr className="w-[220px] mt-2"/>
                               <TabsContent value="cs">

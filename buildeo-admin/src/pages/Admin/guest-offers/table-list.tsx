@@ -20,30 +20,32 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
 import { Link } from 'react-router-dom';
-import { Eye} from 'lucide-react';
-
+import { Eye, Send , FileUp } from 'lucide-react';
 interface Data {
      id: number;
-     service: string;
-     total_service: number;
-     amount: string;
+     name: string;
+     file: JSX.Element;
+     price: string;
+     created_at: string;
      status: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     service: string,
-     total_service: number,
-     amount: string,
-     status:string,
+     name: string,
+     file: JSX.Element,
+     price: string,
+     created_at: string,
+     status: string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          service,
-          total_service,
-          amount,
+          name,
+          file,
+          price,
+          created_at,
           status,
           action,
      };
@@ -51,7 +53,7 @@ function createData(
 
 const ActionButtons = () => (
      <div style={{ display: 'flex', gap: '10px' }}>
-       <Link to={'/admin-dividend-detail'}>
+       <Link to={'/admin-manage-detail-guest-offers'}>
        <button
          style={{
            backgroundColor: '#00CFFF',
@@ -68,30 +70,42 @@ const ActionButtons = () => (
          <Eye color="white" size={20} />
        </button>
        </Link>
-       <Link to={'/admin-dividend-form'}>
        <button
-          style={{
-          backgroundColor: '#2FB142',
-          border: 'none',
-          borderRadius: '8px',
-          width: 'auto',
-          height: '40px',
-          padding: '0 16px',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          cursor: 'pointer',
-          color: 'white',
-          fontSize: '16px',
-          fontWeight: 'bold',
-          }}
-          >
-          <Eye color="white" size={20} style={{ marginRight: '8px' }} />
-          Dividend
-        </button>
-       </Link>
+         style={{
+           backgroundColor: '#FF4500',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Send color="white" size={20} />
+       </button>
      </div>
    );
+
+const OfferFileIcon: React.FC = () => {
+     const styles: React.CSSProperties = {
+       display: 'flex',
+       justifyContent: 'center',
+       alignItems: 'center',
+       width: '40px',
+       height: '40px',
+       borderRadius: '8px',
+       backgroundColor: '#FFECEC',
+       cursor: 'pointer',
+     };
+   
+     return (
+       <div style={styles}>
+         <FileUp color="#FF0000" size={24} />
+       </div>
+     );
+   };
 
 const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
      if(status == 'Done'){
@@ -121,13 +135,16 @@ const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
 
 // Dummy data
 const rows = [
-     createData(1,'Painter', 2, '238', 'On Progress',<ActionButtons />),
-     createData(2,'Floor Layers', 1, '119', 'On Progress',<ActionButtons />),
+     createData(1, 'Edward Panjaitan', <OfferFileIcon/>, '357', '17 Jan 2025, 17:04', 'Done', <ActionButtons />),
+     createData(1, 'William Situmorang', <OfferFileIcon/>, '357', '17 Jan 2025, 17:04', 'Done',<ActionButtons />),
+     createData(1, 'Josep Napitupulu', <OfferFileIcon/>,'321', '17 Jan 2025, 17:04', 'Done', <ActionButtons />),
+     createData(1, 'Gilbert Marpaung', <OfferFileIcon/>, '350','17 Jan 2025, 17:04', 'Done', <ActionButtons />),
 ];
 
 
-
 type Order = 'asc' | 'desc';
+
+
 
 interface HeadCell {
      disablePadding: boolean;
@@ -137,11 +154,12 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'service', numeric: true, disablePadding: false, label: 'Service' },
-     { id: 'total_service', numeric: true, disablePadding: false, label: 'Total Service' },
-     { id: 'amount', numeric: false, disablePadding: false, label: 'Amount' },
+     { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
+     { id: 'file', numeric: true, disablePadding: false, label: 'Offer File' },
+     { id: 'price', numeric: true, disablePadding: false, label: 'Offer Price' },
+     { id: 'created_at', numeric: true, disablePadding: false, label: 'Register At' },
      { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
+     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Account' },
 ];
 
 interface EnhancedTableProps {
@@ -221,7 +239,6 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-
                          </Typography>
                     )}
 
@@ -244,9 +261,9 @@ function DataTableProvider(props: DataTableProviderProps) {
      );
 }
 
-export default function DataTableDividend() {
+export default function DataTableGuestOffers() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('service');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('name');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -289,13 +306,11 @@ export default function DataTableDividend() {
 
      const filteredRows = rows.filter(
           (row) =>
-               row.id.toString().includes(searchQuery.toLowerCase()) ||
-               row.service.toString().includes(searchQuery.toLowerCase()) ||
-               row.total_service.toString().includes(searchQuery.toLowerCase()) ||
-               row.amount.toString().includes(searchQuery.toLowerCase()) ||
-               row.status.toString().includes(searchQuery.toLowerCase())
+               row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.created_at.toString().includes(searchQuery),
      );
-
 
      const emptyRows =
           page > 0 ? Math.max(0, (1 + page) * rowsPerPage - filteredRows.length) : 0;
@@ -336,9 +351,12 @@ export default function DataTableDividend() {
                                                        >
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
-                                                            <TableCell>{row.service}</TableCell>
-                                                            <TableCell>{row.total_service}</TableCell>
-                                                            <TableCell style={{ fontWeight: 'bold', color: '#E31E24' }}>{row.amount}$</TableCell>
+                                                            <TableCell component="th" id={labelId} scope="row" padding="none">
+                                                                 {row.name}
+                                                            </TableCell>
+                                                            <TableCell>{row.file}</TableCell>
+                                                            <TableCell>{row.price}€</TableCell>
+                                                            <TableCell>{row.created_at}</TableCell>
                                                             <TableCell><StatusLabel status={row.status}/></TableCell>
                                                             <TableCell>{row.action}</TableCell>
                                                        </TableRow>

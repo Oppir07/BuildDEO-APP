@@ -96,8 +96,8 @@ const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
 
 // Dummy data
 const rows = [
-     createData(1,'Painter',<OfferFileIcon />,'357E','Bank Transfer','Done'),
-     createData(1,'Floor Layers',<OfferFileIcon />,'357E','Bank Transfer','On Progress'),
+     createData(1,'Painter',<OfferFileIcon />,'357','Bank Transfer','Done'),
+     createData(1,'Floor Layers',<OfferFileIcon />,'357','Bank Transfer','On Progress'),
 ];
 
 
@@ -265,12 +265,10 @@ export default function DataTableOffer() {
 
      const filteredRows = rows.filter(
           (row) =>
-               row.id.toString().includes(searchQuery.toLowerCase()) ||
                row.service.toString().includes(searchQuery.toLowerCase()) ||
-               row.offer_file.toString().includes(searchQuery.toLowerCase()) ||
                row.offer_price.toString().includes(searchQuery.toLowerCase()) ||
                row.payment_method.toString().includes(searchQuery.toLowerCase()) ||
-               row.status.toString().includes(searchQuery.toLowerCase())
+               row.status.toString().includes(searchQuery),
      );
 
 

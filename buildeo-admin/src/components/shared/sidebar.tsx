@@ -35,13 +35,13 @@ export default function Sidebar({ className }: SidebarProps) {
         )}
       >
         {!isMinimized && <h1 className="text-2xl font-bold text-black">Logo</h1>}
-        <ChevronsLeft
+        {/* <ChevronsLeft
           className={cn(
             'size-8 cursor-pointer rounded-full border bg-background text-foreground',
             isMinimized && 'rotate-180'
           )}
           onClick={handleToggle}
-        />
+        /> */}
       </div>
       <div className="space-y-4 py-4">
         <div className="px-2 py-2">
