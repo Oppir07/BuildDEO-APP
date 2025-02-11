@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import NavbarSearch from "../../../Components/Ui/headerSearhc";
 import Footer from "../../../Components/Ui/footer";
-import API_BASE_URL from "../../../api/config";
+import { API_BASE_URL } from "../../../api/config";
 import Check from "../../../../public/Auth/check.png";
 import { useNavigate } from "react-router-dom";
 

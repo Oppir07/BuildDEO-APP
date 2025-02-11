@@ -4,7 +4,7 @@ import { Input } from "../../../Components/Ui/input";
 import { useNavigate } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Check from "/Auth/check.png";
-import API_BASE_URL from "../../../api/config"; // Import API base URL
+import { API_BASE_URL } from "../../../api/config";
 
 export default function OrderOfferPage() {
   const navigate = useNavigate();

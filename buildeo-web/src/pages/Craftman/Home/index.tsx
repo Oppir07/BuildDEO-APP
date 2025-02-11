@@ -15,7 +15,7 @@ import NotestIcon from "../../../Components/Icon/NotesIcon";
 import TrashIcon from "../../../Components/Icon/TrashIcon";
 import PaymentMethod from "../../../Components/Ui/payment";
 import { Link, useNavigate } from "react-router-dom";
-import API_BASE_URL from "../../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../../api/config";
 import { useEffect, useState } from "react";
 
 interface Quotation {

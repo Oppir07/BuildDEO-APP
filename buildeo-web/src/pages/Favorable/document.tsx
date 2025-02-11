@@ -3,7 +3,7 @@ import NavbarSearch from "../../Components/Ui/headerSearhc";
 import FileIcon from "../../Components/Icon/FilIcon";
 import { useNavigate } from "react-router-dom";
 import logo from "/logoOrange.png";
-import API_BASE_URL from "../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../api/config";
 import React, { useEffect, useState } from "react";
 
 interface Category {

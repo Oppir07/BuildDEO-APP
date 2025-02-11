@@ -3,7 +3,7 @@ import logo from "../../../public/logo.png";
 import { Input } from "../../Components/Ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import API_BASE_URL from "../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../api/config";
 import { Alert, Stack } from "@mui/material";
 import Swal from "sweetalert2";
 
@@ -47,30 +47,20 @@ export default function LoginPage() {
         const data = await response.json();
         localStorage.setItem("access_token", data.access_token);
         localStorage.setItem("user", JSON.stringify(data.user));
-
-        // Navigate based on user role
-        Swal.fire({
-          title: "Login Successful",
-          text: "You have successfully logged in!",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-           
-          if (data.user.role === "seller") {
-            navigate("/home/seller");  
-          } else {
-            navigate("/home/buyer");  
-          }
-        });
+        if (data.user.role === "seller") {
+          navigate("/home/seller");
+        } else {
+          navigate("/home/buyer");
+        }
       }
     } catch (err) {
       setError("Login failed. Please try again.");
       Swal.fire({
-      title: "Login Failed",
-      text: "An error occurred while logging in. Please try again.",
-      icon: "error",
-      confirmButtonText: "OK",
-    });
+        title: "Login Failed",
+        text: "An error occurred while logging in. Please try again.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   };
 
@@ -98,7 +88,7 @@ export default function LoginPage() {
               </div>
               <div className="text-[14px] text-center mt-[15px]">
                 <div>
-                Please log in to continue and enjoy our services to the fullest.
+                  Please log in to continue and enjoy our services to the fullest.
                 </div>
               </div>
 

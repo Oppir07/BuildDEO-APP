@@ -9,7 +9,7 @@ import DynamicRating from "../../../Components/Ui/rating";
 import cover from "../../../../public/cover.png";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import API_BASE_URL from "../../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../../api/config";
 import logo from "../../../../public/logoOrange.png";
 
 export default function DetailProduct() {

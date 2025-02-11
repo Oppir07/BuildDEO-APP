@@ -16,7 +16,7 @@ import {
   MenubarMenu,
   MenubarTrigger,
 } from "./menu";
-import API_BASE_URL from "../../api/config";
+import { API_BASE_URL } from "../../api/config";
 import LogoutConfirmation from "./LogoutConfirmation";
 
 interface BgProps {
@@ -118,7 +118,7 @@ export default function NavbarSearch({ bg, text, color, logoOrange }: BgProps) {
         </div>
         <div className="mb-6 flex items-center justify-end self-center ml-[300px]">
           <div className="flex flex-col gap-[50px] text-left md:text-right text-[17px] md:flex md:items-center space-x-0 md:flex-row">
-            {isLoggedIn && location.pathname != "/home" ? (
+            {isLoggedIn && location.pathname != "/home/buyer" && location.pathname != "/home/seller" ? (
               <>
                 <div className="flex justify-center mt-[20px]">
                   <div className="relative w-[350px]">

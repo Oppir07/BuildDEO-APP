@@ -6,8 +6,14 @@ import { useNavigate } from 'react-router-dom'
 import logo from "../../../../public/logoOrange.png";
 import media from '/Media.png'
 import Swal from 'sweetalert2'
+import { useCart } from '../../../utils/CartContext'
 export default function PaymentPage() {
      const [selectedFile, setSelectedFile] = useState<File | null>(null);
+     const { order } = useCart();
+     const totalPrice = order.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0
+        );
 
      // Handle file selection  
      const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +43,7 @@ export default function PaymentPage() {
      const toOrder = () => {
           Swal.fire({
                title: " Successful",
-               text: "You have successfully send negotiable!",
+               text: "You have successfully orders services!",
                icon: "success",
                confirmButtonText: "OK",
           }).then(() => {
@@ -55,23 +61,32 @@ export default function PaymentPage() {
                               <div className="flex justify-between mt-4">
                                    <div className="shadow p-6">
                                         <div className="shadow">
-                                             <div className="flex justify-between border-b-[2px] p-6">
-                                                  <div className="flex items-center ">
-                                                       <img src={media} alt="" width={150} />
-                                                  </div>
-                                                  <div className="w-[500px] ml-6">
-                                                       <div className="text-[22px] font-bold  ">LVT verlegen: 20 m²</div>
-                                                       <div className="text-[#808080] text-[18px]"> Painter Company</div>
-                                                       <div className="flex justify-between items-center mt-2">
-                                                            <div className="font-bold text-start text-[#E31E24] text-[22px]">119€</div>
-                                                            <div className="text-[#808080] text-[18px]">1X</div>
+                                             {order.map((item) => (
+                                                  <div className="">
+                                                       <div key={item.id} className="border-b-[2px] p-6">
+                                                            <div className="flex justify-between">
+                                                                 <div className="flex items-center">
+                                                                      <img src={item.img} alt={item.name} width={150} />
+                                                                 </div>
+                                                                 <div className="w-[500px] ml-6">
+                                                                      <div className="text-[22px] font-bold">{item.name}</div>
+                                                                      <div className="text-[#808080] text-[18px]">{item.company}</div>
+                                                                      <div className="flex justify-between items-center mt-2">
+                                                                           <div className="font-bold text-start text-[#E31E24] text-[22px]">
+                                                                                {item.price}€
+                                                                           </div>
+                                                                           <div className="text-[#808080] text-[18px]">{item.quantity}X</div>
+                                                                      </div>
+                                                                 </div>
+                                                            </div>
+                                                       </div>
+                                                       <div className="flex justify-between p-6 text-[15px] border-b-[2px]">
+                                                            <div className="text-[#E31E24]"><a href="/negotiable">Negotiation</a></div>
+                                                            <div className="text-[#808080]">Filling out the form</div>
                                                        </div>
                                                   </div>
-                                             </div>
-                                             <div className="flex justify-between p-6 text-[15px] border-b-[2px]">
-                                                  <div className="text-[#E31E24]"><a href="/negotiable">Negotiation</a></div>
-                                                  <div className="text-[#808080]">Filling out the form</div>
-                                             </div>
+
+                                             ))}
                                         </div>
                                         <div className="shadow">
                                              <div className="flex justify-between border-b-[2px] p-6">
@@ -79,7 +94,7 @@ export default function PaymentPage() {
                                                        <img src={media} alt="" width={150} />
                                                   </div>
                                                   <div className="w-[500px] ml-6">
-                                                       <div className="text-[22px] font-bold  ">LVT verlegen: 20 m²</div>
+                                                       <div className="text-[22px] font-bold  ">Painter </div>
                                                        <div className="text-[#808080] text-[18px]"> Painter Company</div>
                                                        <div className="flex justify-between items-center mt-2">
                                                             <div className="font-bold text-start text-[#E31E24] text-[22px]">119€</div>
@@ -92,12 +107,31 @@ export default function PaymentPage() {
                                                   <div className="text-[#ffffff] bg-[#4CAF50] rounded-[20px] text-[10px] p-2 w-[90px] text-center">Approve</div>
                                              </div>
                                         </div>
+                                        <div className="shadow">
+                                             <div className="flex justify-between border-b-[2px] p-6">
+                                                  <div className="flex items-center ">
+                                                       <img src={media} alt="" width={150} />
+                                                  </div>
+                                                  <div className="w-[500px] ml-6">
+                                                       <div className="text-[22px] font-bold  ">Painter </div>
+                                                       <div className="text-[#808080] text-[18px]"> Painter Company</div>
+                                                       <div className="flex justify-between items-center mt-2">
+                                                            <div className="font-bold text-start text-[#E31E24] text-[22px]">119€</div>
+                                                            <div className="text-[#808080] text-[18px]">1X</div>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                             <div className="flex justify-between p-6 text-[15px] border-b-[2px]">
+                                                  <div className="text-[#E31E24]"><a href="/negotiable">Negotiation</a></div>
+                                                  <div className="text-[#ffffff] bg-[#FF854D] rounded-[20px] text-[10px] p-2 w-[100px] text-center">Pending approval</div>
+                                             </div>
+                                        </div>
                                    </div>
                                    <div className="">
                                         <div className="shadow md:w-[400px] p-[30px]">
                                              <div className="flex justify-between">
                                                   <div className="font-bold text-[22px]">Total Payment</div>
-                                                  <div className="text-[22px] text-[#E31E24]">238€</div>
+                                                  <div className="text-[22px] text-[#E31E24]">{totalPrice}€</div>
                                              </div>
                                              <hr />
 
@@ -110,7 +144,7 @@ export default function PaymentPage() {
                                                   <div className="text-[#E31E24] text-[18px]">DE 89 37040044 05320130</div>
                                                   <div className="text-[18px] text-[#28A745]"><a href=''> Copy </a></div>
                                              </div>
-                                             <div className="text-[#105FCE] text-[13px] mt-2"><a href=''> Changes Payment Method</a> </div>
+                                             <div className="text-[#105FCE] text-[13px] mt-2"><a href='/cart'> Changes Payment Method</a> </div>
 
                                         </div>
                                    </div>

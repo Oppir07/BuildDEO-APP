@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 const NumberInput = () => {
-     const [value, setValue] = useState(0);
+     const [value, setValue] = useState(1);
 
      const handleDecrement = () => {
           if (value > 0) {
@@ -31,6 +31,7 @@ const NumberInput = () => {
                     className="text-center text-[16px] w-[50px] pl-4 font-medium"
                     value={value}
                     onChange={handleChange}
+                    disabled
                />
                <button
                     className="border border-[#FF460A] text-[16px] border-[1.5px] text-[#FF460A] font-bold py-2 px-4 rounded

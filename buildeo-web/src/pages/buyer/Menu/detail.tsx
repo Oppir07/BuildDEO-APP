@@ -1,7 +1,5 @@
-import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import NavbarSearch from "../../../Components/Ui/headerSearhc";
-import NumberInput from "../../../Components/Ui/inputNumber";
 import {
   Avatar,
   AvatarFallback,
@@ -10,54 +8,174 @@ import {
 import DynamicRating from "../../../Components/Ui/rating";
 import Footer from "../../../Components/Ui/footer";
 import MessageIcon from "../../../Components/Icon/MessageIcon";
-import LoginModals from "../../../Components/Ui/login";
-import API_BASE_URL from "../../../api/config"; // Import the API base URL
-import cover from "../../../../public/cover.png";
 import Check from "/Auth/check.png";
 import logo from "../../../../public/logoOrange.png";
+import { useEffect, useState } from "react";
+import { API_BASE_URL, API_LOCAL } from "../../../api/config";
+import NumberInputCart from "../../../Components/Ui/numberInputCart";
+
+interface Service {
+  id: number;
+  title: string;
+  price: number;
+  category: string;
+  img: string;
+  description?: string;
+  created_at?: string;
+}
 
 export default function DetailMenuPage() {
   const { id } = useParams();
-  const [serviceDetails, setServiceDetails] = useState<any>(null);
+  const [service, setServices] = useState<Service | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [totalPrice, setTotalPrice] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [showAlert, setShowAlert] = useState(false); // Tetap gunakan ini jika perlu
 
+  const [showAlert, setShowAlert] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchServiceDetails = async () => {
+
+    const serviceDetail = async () => {
       try {
-        const response = await fetch(`${API_BASE_URL}/services/${id}`);
-        const data = await response.json();
-        setServiceDetails(data);
-      } catch (error) {
-        console.error("Error fetching service details:", error);
-      } finally {
-        setLoading(false);
+        const detail = await fetch(`${API_BASE_URL}/services/${id}`);
+        if (!detail.ok) {
+          throw new Error(`Error : ${detail.status}`);
+        }
+        const detailData = await detail.json();
+
+        const categoryDetail = await fetch(
+          `${API_BASE_URL}/categories/${detailData.category_id}`
+        )
+        const categoryData = categoryDetail.ok ? await categoryDetail.json() : { name: " " }
+
+        const photoDetail = await fetch(
+          `${API_BASE_URL}/services/photos/${id}`
+        )
+        const photoData = photoDetail.ok ? await photoDetail.json() : { photo_url: " " }
+
+        setServices({
+          ...detailData,
+          category: categoryData.name,
+          img: photoData.photo_url
+        })
+        setTotalPrice(detailData.price);
+        console.log(id);
+      } catch (err) {
+        setLoading(false)
+
       }
-    };
 
-    fetchServiceDetails();
-  }, [id]);
+    }
+    serviceDetail()
+  }, [id])
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  const handleCart = async () => {
+    try {
+      const userId = JSON.parse(localStorage.getItem("user") || "{}").id;
 
-  if (!serviceDetails) {
-    return <div>Service not found.</div>;
-  }
+      const payload = {
+        user_id: userId,
+        service_id: service?.id,
+        quantity: quantity,
+        price: totalPrice,
+        created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+        updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+      };
 
-  const { title, description, price, photos } = serviceDetails;
-  const servicePhoto = photos && photos.length > 0 ? photos[0] : cover;
+      console.log("Payload yang dikirim:", payload);
+
+      const response = await fetch(`${API_LOCAL}/add-service`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Order successful:", result);
+      setShowAlert(true);
+    } catch (error) {
+      console.error("Failed to place order:", error);
+    }
+  };
+
+
+  const handleOrder = async () => {
+    try {
+      const user = localStorage.getItem("user");
+      if (!user) {
+        alert("User not found. Please login first.");
+        return;
+      }
+
+      const userId = JSON.parse(user).id;
+
+      if (!service) {
+        alert("Service data is not loaded yet.");
+        return;
+      }
+
+      const calculatedPrice = service.price * quantity;
+
+      const payload = {
+        user_id: userId,
+        status_payment: "N",
+        negotiable_id: null,
+        file_payment: null,
+        created_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+        updated_at: new Date().toISOString().slice(0, 19).replace("T", " "),
+        items: [  // ✅ Array untuk menyesuaikan dengan backend
+          {
+            service_id: service.id,
+            quantity: quantity,
+            price: calculatedPrice
+          }
+        ]
+      };
+
+      console.log("Payload yang dikirim:", payload);
+
+      const response = await fetch(`${API_LOCAL}/create-order`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Order successful:", result);
+      setShowAlert(true);
+      navigate('/checkout');
+    } catch (error) {
+      console.error("Failed to place order:", error);
+      alert("Failed to create order. Please try again.");
+    }
+  };
+
+
+
+
 
   const handleAlertClose = () => {
     setShowAlert(false);
-    navigate("/payment");
+
   };
 
-  const send = () => {
-    setShowAlert(true);
+  const handleQuantityChange = (newQuantity: number) => {
+    setQuantity(newQuantity);
+
+    setTotalPrice(service?.price! * newQuantity);
   };
 
   return (
@@ -68,28 +186,27 @@ export default function DetailMenuPage() {
           <div className="grid md:grid-cols-3 gap-6 w-full">
             <div className="flex items-center justify-center">
               <img
-                src={servicePhoto}
-                className="h-[350px] w-[270px] mr-0 pr-0"
+                src={service?.img}
+                className="h-[350px] w-[300px] mr-0 pr-0"
                 alt="Service cover"
               />
             </div>
             <div className="">
-              <div className="text-[32px] font-bold">{title}</div>
+              <div className="text-[32px] font-bold">{service?.title}</div>
               <div className="flex text-[16px]">
                 <div className="mr-8">30 Offerings</div>
                 <div className="">4.8 (20 Rating)</div>
               </div>
-              <div className="text-[32px] orange font-bold">{price}€</div>
+              <div className="text-[32px] orange font-bold">{service?.price}€</div>
               <div className="text-[16px] text-justify leading-[23px]">
-                {description}
+                {service?.description}
               </div>
-              <button
+              <button onClick={() => navigate('/chat')}
                 className="flex items-center justify-center bg-[#FFFFFF] w-full text-[#E31E24] font-bold border border-[1.5px] border-[#E31E24] rounded-[40px] mt-2 p-[7px]"
               >
                 <MessageIcon width={24} color="#E31E24" /> &nbsp; Ask About
                 Product Detail
               </button>
-             
 
               {showAlert && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
@@ -105,9 +222,6 @@ export default function DetailMenuPage() {
                       >
                         Back
                       </button>
-                      <button className="bg-[#E31E24] text-white w-[250px] mt-2 p-2 rounded-[15px]">
-                        Continue to Wishlist
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -121,21 +235,18 @@ export default function DetailMenuPage() {
                 </div>
                 <div className="flex justify-between">
                   <div className="">
-                    <NumberInput />
+                    <NumberInputCart value={quantity} onChange={handleQuantityChange} />
                   </div>
-                  <div className="text-[32px] font-bold">{price}€</div>
+                  <div className="text-[32px] font-bold">{totalPrice}€</div>
                 </div>
                 <div className="text-[20px] mt-[50px] font-bold text-center text-white">
-                  <Link to={"/payment"}>
-                    <button className="bg-[#E31E24] rounded-[40px] p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200">
-                      Offer
-                    </button>
-                  </Link>
-                  <button
-                    onClick={send}
+                  <button onClick={handleOrder} className="bg-[#E31E24] rounded-[40px] p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200">
+                    Order
+                  </button>
+                  <button onClick={handleCart}
                     className="bg-[#FFFFFF] w-full text-[#E31E24] font-bold border border-[1.5px] border-[#E31E24] rounded-[40px] mt-2 p-[11px] w-full hover:bg-[#ffffff] hover:border hover:border-[1.5px] hover:border-[#ff460a] hover:text-[#ff460a] transition-colors duration-200"
                   >
-                    Add to Wishlist
+                    Add to Cart
                   </button>
                 </div>
               </div>

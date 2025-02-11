@@ -5,15 +5,44 @@ import logo from "/logoOrange.png";
 import { faCaretDown, faCircleQuestion, faPen } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrinciplePage from "./principle";
+import { API_BASE_URL } from "../../../api/config";
 export default function ProfilePage() {
      const [show, setShow] = useState(false);
+     const [user, setUser] = useState<any>(null)
 
-     const toShow = () =>{
+     useEffect(() =>{
+          const fetchUserData = async () =>{
+               const token = localStorage.getItem("access_token");
+               const userId = JSON.parse(localStorage.getItem("user") || "{}").id;
+
+               if(token && userId){
+                    try{
+                         const response = await fetch(`${API_BASE_URL}/users/${userId}`,{
+                              headers:{
+                                   Authorization:`Bearer ${token}`,
+                              },
+                         });
+                         const data = await response.json();
+                         setUser(data);
+                    }catch(err){
+                         console.error("error :", err);
+                    }
+
+               }
+          };
+          fetchUserData();
+     }, [])
+
+     if (!user) {
+          return <div>Loading...</div>;  
+        }
+      
+     
+const toShow = () =>{
           setShow(!show)
      }
-
      
 
      return (
@@ -34,24 +63,24 @@ export default function ProfilePage() {
                                         <table className="w-full">
                                              <tr className="">
                                                   <td>Name:</td>
-                                                  <td>Edward Panjaitan</td>
+                                                  <td>{user.firstname} &nbsp;{user.lastname}</td>
                                                   <td className="flex justify-center items-center border border-[2px] border-r-[#ffffff] border-t-[#ffffff] border-b-[#E31E24] border-l-[#E31E24]"><button><FontAwesomeIcon icon={faPen} color="#E31E24"/></button></td>
                                              </tr>
                                              <tr>
                                                   <td>Email:</td>
-                                                  <td >edu29@gmail.com</td>
+                                                  <td >{user.email}</td>
                                              </tr>
                                              <tr>
                                                   <td>No.Telp:</td>
-                                                  <td >+49 05745 09056</td>
+                                                  <td >{user.phone}</td>
                                              </tr>
                                              <tr>
                                                   <td>Post name:</td>
-                                                  <td >22411</td>
+                                                  <td >{user.post_number}</td>
                                              </tr>
                                              <tr>
                                                   <td>Street:</td>
-                                                  <td >No 15 uti street off ovie palace road effurun delta state</td>
+                                                  <td >{user.street}</td>
                                              </tr>
                                         </table>
                                    </div>

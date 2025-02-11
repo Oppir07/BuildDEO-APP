@@ -2,7 +2,7 @@ import NavbarSearch from "../../../Components/Ui/headerSearhc";
 import Footer from "../../../Components/Ui/footer";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import React, { useEffect, useState } from "react";
-import API_BASE_URL from "../../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../../api/config";
 import cover from "../../../../public/cover.png";
 import Check from "../../../../public/Auth/check.png"; // Ensure to import the check image
 

@@ -7,7 +7,7 @@ import { Box, Tab, Tabs } from '@mui/material';
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Swal from 'sweetalert2';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import FormRating from './rating';
 export default function OrdersPage() {
      const [value, setValue] = useState('one');
@@ -46,6 +46,17 @@ export default function OrdersPage() {
 
           });
      };
+     const toDetail = () => {
+          Swal.fire({
+               title: " Successful",
+               text: "You have successfully complete service!",
+               icon: "success",
+               confirmButtonText: "OK",
+          }).then(() => {
+               setValue('three');
+
+          });
+     };
 
      return (
           <>
@@ -54,7 +65,7 @@ export default function OrdersPage() {
                     <div className="md:ml-[80px] md:mr-[80px] mr-4 ml-4">
                          <div className="flex justify-between items-center">
                               <div className="text-[32px] font-bold">Orders</div>
-                              <div className=""><button className='text-white bg-[#E31E24] rounded-[10px] md:w-[150px] p-2'>+Add Order</button></div>
+                              <div className=""><button onClick={() => navigate('/menu')} className='text-white bg-[#E31E24] rounded-[10px] md:w-[150px] p-2'>+Add Order</button></div>
                          </div>
                          <Box sx={{ width: '100%' }}>
                               <Tabs
@@ -172,6 +183,22 @@ export default function OrdersPage() {
                                                   </div>
                                              </div>
                                         }
+                                         <a onClick={toDetail} className='cursor-pointer'>
+                                         <div className="flex mt-2  bg-white shadow p-6 rounded-[5px]">
+                                                  <div className="mr-10"><img src={media} alt="" className='w-[186px] h-[150px] rounded-[10px]' /></div>
+                                                  <div className="w-full flex flex-col justify-between">
+                                                       <div className="flex justify-between items-center">
+                                                            <div className="font-bold text-[24px]">Services order 2</div>
+                                                            <div className="text-[#808080]">1x</div>
+                                                       </div>
+                                                       <div className="text-[#808080]">17 January 2025</div>
+                                                       <div className="flex justify-between items-center">
+                                                            <div className="font-bold text-[#E31E24] text-[24px]">Total 338€</div>
+                                                            <div className="text-[#808080]"><button onClick={toComplete} className='border text-[#E31E24] border-[#E31E24] p-2 w-[100px] rounded-[5px]'>End</button></div>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                         </a>
                                         <div className="flex mt-2  bg-white shadow p-6 rounded-[5px]">
                                              <div className="mr-10"><img src={media} alt="" className='w-[186px] h-[150px] rounded-[10px]' /></div>
                                              <div className="w-full flex flex-col justify-between">

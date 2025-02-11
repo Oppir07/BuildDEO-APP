@@ -3,7 +3,7 @@ import logo from "../../../public/logo.png";
 import { Input } from "../../Components/Ui/input";
 import { useNavigate } from "react-router-dom";
 import Check from "../../../public/Auth/check.png";
-import API_BASE_URL from "../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../api/config";
 
 // Define an interface for the formData
 interface FormData {

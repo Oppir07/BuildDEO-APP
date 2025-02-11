@@ -16,12 +16,14 @@ const Card: React.FC<CardProps> = ({ title, company, price, img, link }) => (
       <div className="font-bold text-[18px] mt-[12px]">{title}</div>
       <div className="text-[12px] text-[#9586A8] mt-[4px]">
         {company
-          ? company.charAt(0).toUpperCase() + company.slice(1) + " Company"
+          ? company.charAt(0).toUpperCase() + company.slice(1) + ""
           : "Unknown Company"}
       </div>
-
-      <div className="text-[12px] text-[#9586A8] mt-[20px]">start from:</div>
-      <div className="font-bold text-[18px] text-[#FF460A]">{price}</div>
+      
+      <div className=" flex items-center mt-2">
+        <div className="text-[14px] text-[#9586A8]">From:</div>
+         <div className=" font-bold text-[18px] text-[#FF460A]">&nbsp;{price}</div>
+        </div>
     </div>
   </Link>
 );

@@ -5,7 +5,7 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import Card from "../../Components/Ui/cardMenu";
 import cover from "../../../public/cover.png";
 import React, { useEffect, useState } from "react";
-import API_BASE_URL from "../../api/config"; // Import the API base URL
+import { API_BASE_URL } from "../../api/config";
 import NavbarSearch from "../../Components/Ui/headerSearhc";
 
 interface Service {

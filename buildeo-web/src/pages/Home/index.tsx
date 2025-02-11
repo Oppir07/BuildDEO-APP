@@ -1,100 +1,48 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Footer from '../../Components/Ui/footer';
+import Footer from "../../Components/Ui/footer";
 import { Input } from "../../Components/Ui/input";
 import { faSearch } from "@fortawesome/free-solid-svg-icons/faSearch";
 import Card from "../../Components/Ui/cardMenu";
 import cover from "../../../public/cover.png";
-import React, { useEffect, useState } from "react";
-import API_BASE_URL from "../../api/config"; // Import the API base URL
+import  { useEffect, useState } from "react";
 import NavbarSearch from "../../Components/Ui/headerSearhc";
-
-interface Service {
-  id: number;
-  seller_id: number;
-  category_id: number;
-  title: string;
-  description: string;
-  price: number;
-  photo: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Category {
-  id: number;
-  name: string;
-  description: string;
-  services: Service[];
-  created_at: string;
-  updated_at: string;
-}
-
-interface Seller {
-  id: number;
-  firstname: string;
-  lastname: string;
-  email: string;
-  phone: string;
-}
-
+import { API_BASE_URL } from "../../api/config";
 export default function HomeBuyer() {
-  const [categories, setCategories] = useState<Category[]>([]); // State to hold categories data
-  const [sellers, setSellers] = useState<{ [key: number]: Seller }>({}); // State to hold seller data (keyed by seller_id)
-  const [filteredCategories, setFilteredCategories] = useState<Category[]>([]); // For handling search/filter
-  const [searchQuery, setSearchQuery] = useState(""); // For search functionality
+  const [services, setService] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch categories with services
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/categories`); // API call to fetch categories with services
-        const data: Category[] = await response.json(); // Define the type of data
-        setCategories(data); // Set categories data
-        setFilteredCategories(data); // Initially, filtered categories are the same as all categories
-
-        // Fetch seller information for each service
-        const sellerPromises = data.flatMap((category) =>
-          category.services.map(async (service) => {
-            if (!sellers[service.seller_id]) {
-              // Fetch seller details if not already fetched
-              const sellerResponse = await fetch(`${API_BASE_URL}/users/${service.seller_id}`);
-              const sellerData: Seller = await sellerResponse.json();
-              return { [service.seller_id]: sellerData };
-            }
-            return null;
-          })
-        );
-
-        const fetchedSellers = await Promise.all(sellerPromises);
-        // Combine all fetched sellers into one object
-        const sellersData = fetchedSellers.reduce((acc, seller) => {
-          return seller ? { ...acc, ...seller } : acc;
-        }, {});
-        setSellers((prev) => ({ ...prev, ...sellersData })); // Update state with sellers
-      } catch (error) {
-        console.error("Error fetching categories or sellers:", error);
+  useEffect(() =>{
+    fetch(`${API_BASE_URL}/services`)
+    .then((response) =>{
+      if(!response.ok){
+        throw new Error(`Error ${response.status}`)
       }
-    };
-    fetchCategories();
-  }, []);
+      return response.json();
+    })
+    .then(async (data) =>{
+      const img = await Promise.all(
+        data.map( async (service) =>{
+          const imgService = await fetch(
+            `${API_BASE_URL}/services/photos/${service.id}`
+          )
+          const imgData = imgService.ok ? await imgService.json() : {photo_url: " "}
 
-  // Handle search input changes
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const query = event.target.value.toLowerCase();
-    setSearchQuery(query);
+          const categoryService = await fetch(
+            `${API_BASE_URL}/categories/${service.category_id}`
+          )
+          const categoryData = categoryService.ok ? await categoryService.json() : {category : "  "}
 
-    // Filter categories based on the search query
-    const filtered = categories.filter(
-      (category) =>
-        category.name.toLowerCase().includes(query) ||
-        category.services.some(
-          (service) =>
-            service.title.toLowerCase().includes(query) ||
-            service.description.toLowerCase().includes(query)
-        )
-    );
-    setFilteredCategories(filtered);
-  };
+          return {
+            ...service, img: imgData.photo_url, category: categoryData.name
+          }
+        })
+      )
+      setService(img)
+      setLoading(false)
+    })
+  },[])
+
+  if(loading) return <p>loading</p>
 
   return (
     <>
@@ -114,8 +62,7 @@ export default function HomeBuyer() {
               color="grey"
             />
             <Input
-              value={searchQuery}
-              onChange={handleSearchChange} // Update the input handler
+              value={''}
               placeholder="Search for services..."
               className="pl-[29px] rounded-[10px] h-[47px]"
             />
@@ -123,35 +70,23 @@ export default function HomeBuyer() {
         </div>
       </div>
 
-      {/* Render Categories with Services */}
-      {filteredCategories.map((category, index) => (
-        <div
-          key={category.id}
-          className={
-            index % 2 === 0
-              ? "bg-[#FFDED2] pl-16 pr-16 pb-16"
-              : "bg-[#4A9AEB] pl-16 pr-16 pb-16"
-          }
-        >
-          <div className={index % 2 === 0 ? "text-black" : "text-white"}>
-            <div className="font-bold text-[28px] pt-6">{category.name}</div>
-            <div className="text-[16px] font-medium">{category.description}</div>
-          </div>
-          <div className="mt-[20px] flex flex-wrap gap-[20px]">
-            {category.services.map((service) => (
-              <Card
-                key={service.id}
-                title={service.title}
-                company={sellers[service.seller_id]?.firstname || "Loading..."} // Use seller's firstname
-                price={service.price.toString()}
-                img={service.photo || cover}
-                link={`/services/${service.id}`}
-              />
-            ))}
-          </div>
-          <br />
+      {/* Render Services */}
+     
+      <div className="p-6">
+      <div className="font-bold text-[24px]">All Service</div>
+        <div className="grid grid-cols-5 md:grid-cols-5 lg:grid-cols-5 gap-3 mt-4">
+          {services.map((service) => (
+            <Card
+              key={service.id}
+              title={service.name}
+              company={service.category}
+              price={` ${service.price.toLocaleString()}€`}
+              img={service.img || cover}
+              link={`/services/${service.id}`}  
+            />
+          ))}
         </div>
-      ))}
+      </div>
       <Footer />
     </>
   );
