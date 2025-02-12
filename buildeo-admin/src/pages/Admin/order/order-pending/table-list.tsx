@@ -109,7 +109,7 @@ const ActionButtons = () => (
    );
 
 const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
-     if(status == 'Done'){
+     if(status == 'Approved'){
           const styles: React.CSSProperties = {
                display: 'inline-block',
                padding: '5px 10px',
@@ -120,12 +120,24 @@ const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
                textAlign: 'center' as const,
              };
           return <span style={styles}>{status}</span>;
-     }else if(status == 'On Progress'){
+     }else if(status == 'On Progress'){  
           const styles: React.CSSProperties = {
                display: 'inline-block',
                padding: '5px 10px',
                borderRadius: '8px',
                color: '#FA7A5D',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }
+     else if(status == 'Waiting for payment confirmation'){ 
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#ECC117',
                fontWeight: 'bold',
                fontSize: '14px',
                textAlign: 'center' as const,
@@ -156,8 +168,9 @@ const showConfirmationModal = async () => {
 
 // Dummy data
 const rows = [
-     createData(1,'Painter', 2, '238', 'On Progress',<ActionButtons />),
+     createData(1,'Painter', 2, '238', 'Approved',<ActionButtons />),
      createData(2,'Floor Layers', 1, '119', 'On Progress',<ActionButtons />),
+     createData(3,'Floor Layers', 1, '119', 'Waiting for payment confirmation',<ActionButtons />),
 ];
 
 

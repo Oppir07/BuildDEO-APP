@@ -38,7 +38,7 @@ export default function DashboardNav({
       <TooltipProvider>
         {items.map((item, index) => {
           const Icon = Icons[item.icon || 'arrowRight'];
-          const isActive = item.href && (path === item.href || path.startsWith(item.href));
+          const isActive = item.href && (path === item.href || path.startsWith(item.href)); //1
 
           return (
             item.href && (
@@ -48,8 +48,8 @@ export default function DashboardNav({
                   to={item.disabled ? '/' : item.href}
                   className={cn(
                     'flex items-center gap-2 overflow-hidden rounded-md py-2 text-sm font-medium text-gray-500 hover:text-gray-700', // Ubah ke text-gray-500
-                    path === item.href
-                      ? 'bg-red-100 text-red-500 hover:text-red-500'
+                    path === item.href // 2
+                      ? 'bg-red-100 text-red-500 hover:text-red-500' // 3
                       : 'transparent',
                     item.disabled && 'cursor-not-allowed opacity-80'
                   )}

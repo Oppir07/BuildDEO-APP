@@ -27,8 +27,8 @@ const TabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium transition-all ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-      'data-[state=active]:bg-green-600 data-[state=active]:text-white', // Warna saat tab aktif
+      'inline-flex items-center justify-center whitespace-nowrap  px-3 py-1 text-sm font-medium transition-all ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+      'data-[state=active]:border-b-[2px] border-[#E31E24] data-[state=active]:text-[#E31E24]', // Warna saat tab aktif
       'data-[state=inactive]:bg-white-200 data-[state=inactive]:text-black', // Warna saat tab tidak aktif
       className
     )}

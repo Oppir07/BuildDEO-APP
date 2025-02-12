@@ -58,7 +58,6 @@ export default function DetailProvider() {
                               <TabsList>
                                    <TabsTrigger value="cs" className="p-2 font-medium  mr-2">Service List</TabsTrigger>
                               </TabsList>
-                              <hr className="w-[100px] mt-2"/>
                               <TabsContent value="cs">
                                    <ListService/>
                               </TabsContent>

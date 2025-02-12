@@ -62,7 +62,6 @@ export default function DetailBuyer() {
                                    <TabsTrigger value="" disabled={true}>|</TabsTrigger>
                                    <TabsTrigger value="offer" className="p-2 font-medium mr-2">Offers</TabsTrigger>
                               </TabsList>
-                              <hr className="w-[220px] mt-2"/>
                               <TabsContent value="cs">
                                    <DataTableOrder/>
                               </TabsContent>
