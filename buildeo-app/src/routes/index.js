@@ -1,5 +1,5 @@
 import React from 'react';
-import { View,Text,Image,StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -11,92 +11,66 @@ import LoginPage from '../pages/auth/loginPage';
 import RegisterPage from '../pages/auth/registerPage';
 import PrinsipPage from '../pages/Offer Info/PrinsipPage';
 import CustomHeader from '../components/ui/customHedader';
+import FormOfferD from '../pages/Offer Info/Offer d-auth/form';
+import UploadOffer from '../pages/Offer Info/Offer d-auth/uploadOffer';
+import OfferSend from '../pages/Offer Info/Offer d-auth/done';
+import Service from '../pages/Services';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Profile from '../pages/Profile';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 const Top = createMaterialTopTabNavigator();
 
-const ScreenOptions = {
-  tabBarShowLabel: false,
-  headerShown: false,
-  tabBarStyle: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    left: 0,
-    elevation: 0,
-    height: 60,
-    backgroundColor: '#fff'
-  }
-};
 
-const ScreenTopOptions = {
-  tabBarShowLabel: true,
-  tabBarLabelStyle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  tabBarIndicatorStyle: {
-    backgroundColor: '#ff4500', 
-    height: 3,
-    width:100,
-    width: 100, 
-    left: '25%',
-    marginLeft: -50,
-  },
-  tabBarStyle: {
-    right: 0,
-    left: 0,
-    elevation: 4,
-    height: 60,
-    backgroundColor: '#fff',
-    borderBottomLeftRadius: 30,
-    borderBottomRightRadius: 30,
-    overflow: 'hidden', 
-  },
-};
-
-//stack navigation
-function MainStackNavigator() {
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name='Onboarding' component={Onboarding} options={{ headerShown: false }} />
-      <Stack.Screen name='OnboardingNext' component={OnboardingNext} options={{ headerShown: false }}/>
-      <Stack.Screen name='Prinsip' component={PrinsipPage} options={{
-            header: () => <CustomHeader title="Das BUILDEO Prinzip" url="" />,
-          }}/>
-    </Stack.Navigator>
-  );
-}
-
-//bottom navigation
+// set style menu bottom 
 function BottomNavigator() {
   return (
-    <Tab.Navigator screenOptions={ScreenOptions}>
-      <Tab.Screen name="Home" component={HomePage} options={{ headerShown: false }} />
+    <Tab.Navigator
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: {
+          backgroundColor: '#ffffff',
+          borderTopWidth: 0.5,
+          borderTopColor: '#ccc',
+          height: 60,
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          marginBottom: 5,  
+        },
+        tabBarActiveTintColor: '#E31E24',  
+        tabBarInactiveTintColor: '#808080',  
+      }}
+    >
+      <Tab.Screen name="Home" component={HomePage} 
+      options={{
+        headerShown: false, 
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="home" color={color} size={size || 24}
+          />
+        ), tabBarLabel: 'Home'
+      }} />
+
+      <Tab.Screen name="Service" component={Service} 
+      options={{ 
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="shopping-cart" color={color} size={size || 24}
+          />
+        ), tabBarLabel: 'Services'
+        }} />
+        
+      <Tab.Screen name="Profile" component={Profile}
+       options={{ 
+        headerShown: false,
+        tabBarIcon: ({ color, size }) => (
+          <Icon name="user" color={color} size={size || 24}
+          />
+        ), tabBarLabel: 'Profile' 
+        }} />
     </Tab.Navigator>
   );
-}
-// Header top
-function TopNavigationWithHeader() {
-  return (
-    <View style={{ flex: 1 }}>
-      <View style={styles.headerContainer}>
-        <Image source={require('../../assets/logoText.png')} style={styles.logo} />
-      </View>
-      <TopNavigation />
-    </View>
-  );
-}
-
-//top navigation
-function TopNavigation(){
-  return(
-    <Top.Navigator screenOptions={ScreenTopOptions}>
-        <Top.Screen name='Login' component={LoginPage} options={{ headerShown: false }} />
-        <Top.Screen name='Register' component={RegisterPage} options={{ headerShown: false }} />
-    </Top.Navigator>
-  )
 }
 
 //container navigation
@@ -104,13 +78,29 @@ function RootStackNavigator() {
   return (
     <Stack.Navigator initialRouteName="Onboarding">
       <Stack.Screen name="Home" component={BottomNavigator} options={{ headerShown: false }} />
-      <Stack.Screen name="TopLogin" component={TopNavigationWithHeader} options={{ headerShown: false }} />
-      <Stack.Screen name="TopRegister" component={TopNavigation} options={{ headerShown: false }} />
+      <Stack.Screen name="Login" component={LoginPage} options={{ headerShown: false }} />
+      <Stack.Screen name="Register" component={RegisterPage} options={{ headerShown: false }} />
       <Stack.Screen name="Onboarding" component={Onboarding} options={{ headerShown: false }} />
-      <Stack.Screen name="OnboardingNext" component={OnboardingNext}  options={{ headerShown: false }}/>
-      <Stack.Screen name="Prinsip" component={PrinsipPage}  options={{
-            header: () => <CustomHeader title="Das BUILDEO Prinzip" url="" />,
-          }}/>
+      <Stack.Screen name="OnboardingNext" component={OnboardingNext} options={{ headerShown: false }} />
+      <Stack.Screen name="Prinsip" component={PrinsipPage} options={{
+        headerTitle: 'The BUILDEO principle',
+        headerTitleAlign: 'center'
+      }} />
+
+      {/* offer d-auth */}
+      <Stack.Screen name="Form-offer-d" component={FormOfferD} options={{
+        headerTitle: 'In 1 minute at the cheapest price',
+        headerTitleAlign: 'center'
+      }} />
+      <Stack.Screen name="Form-upload-offer" component={UploadOffer} options={{
+        headerTitle: 'In 1 minute at the cheapest price',
+        headerTitleAlign: 'center'
+      }} />
+      <Stack.Screen name="upload-offer-success-dauth" component={OfferSend} options={{
+        headerTitle: 'In 1 minute at the cheapest price',
+        headerTitleAlign: 'center'
+      }} />
+
     </Stack.Navigator>
   );
 }
@@ -128,7 +118,7 @@ const styles = StyleSheet.create({
     height: 150,
     resizeMode: 'contain',
     marginBottom: 10,
-    marginTop:20
+    marginTop: 20
   },
 
 });

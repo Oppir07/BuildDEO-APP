@@ -1,29 +1,35 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import logo from "../../../assets/logo.png";
+import logo from "../../../assets/pana.png";
 import { LinearGradient } from 'expo-linear-gradient';
 function OnboardingNext() {
      const navigation = useNavigation();
      return (
           <LinearGradient
-               colors={['#FF4B3A', '#FF4500']}
+               colors={['#FFFFFF', '#FFFFFF']}
                style={styles.container}>
-               <View style={styles.boxLogo}>
-                    <Image source={logo} style={styles.logo} />
-               </View>
-               <Text style={styles.subtitle}>Mehr Geld bei gleicher Leistung gefällig?</Text>
-               <View style={styles.flexGrow} />
-               <View style={styles.boxBtn}>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Prinsip')}>
-                         <Text style={styles.txtBtn}>Günstiges Angebot erhalten</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('TopLogin')}>
-                         <Text style={styles.txtBtn}>Anbieter-Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('TopLogin')}>
-                         <Text style={styles.txtBtn}>Käufer-Login</Text>
-                    </TouchableOpacity>
+               <View style={styles.box}>
+                    <Image source={logo} />
+                    <Text style={styles.title}>We are looking for builders who want to save money</Text>
+
+                    <View style={styles.btnBox}>
+                         <TouchableOpacity style={styles.btnStyle} onPress={() => navigation.navigate('Prinsip')}>
+                              <Text style={styles.txtBtn}>
+                                   Get a favorable Offer
+                              </Text>
+                         </TouchableOpacity>
+                         <TouchableOpacity style={styles.btnStyle} onPress={() => navigation.navigate('Login')}>
+                              <Text style={styles.txtBtn}>
+                                   Provider login
+                              </Text>
+                         </TouchableOpacity>
+                         <TouchableOpacity style={styles.btnStyle} onPress={() => navigation.navigate('OnboardingNext')}>
+                              <Text style={styles.txtBtn}>
+                                   Buyer login
+                              </Text>
+                         </TouchableOpacity>
+                    </View>
                </View>
           </LinearGradient>
      );
@@ -35,53 +41,43 @@ const styles = StyleSheet.create({
      container: {
           backgroundColor: '#FF0000',
           height: '100%',
-          padding: 11,
+          padding: 31,
           flex: 1,
      },
-     boxLogo: {
-          backgroundColor: '#ffffff',
-          borderRadius: 55,
-          padding: 13,
-          alignSelf: 'flex-start',
-          flexDirection: 'row',
-          marginTop: 29,
+     box:{
+          display:'flex',
+          flexDirection:'column',
+          justifyContent:'center',
+          alignItems:'center',
+          height:'100%'
      },
-     logo: {
-          width: 70,
-          height: 70,
-          resizeMode: 'contain',
+     title: {
+          color: '#E31E24',
+          fontWeight: 'bold',
+          fontSize: 20,
+          marginTop: 39,
+          textAlign: 'center'
      },
-
-     subtitle: {
-          color: '#ffffff',
-          fontSize: 58,
-          fontWeight: '700',
-          lineHeight: 55,
-          paddingTop: 39.9,
-          height: 'auto',
-     },
-     flexGrow: {
-          flex: 1,
-     },
-     boxBtn: {
-          flexDirection: 'column',
-          justifyContent: 'center',
-          alignItems: 'center',
-          marginBottom: 27,
-
-     },
-     btn: {
-          backgroundColor: '#ffffff',
-          width: 270,
-          borderRadius: 25,
-          marginVertical: 15
-     },
-     txtBtn: {
-          textAlign: 'center',
-          color: '#FF0000',
-          paddingTop: 20,
-          paddingBottom: 20,
-          fontSize: 17,
-          fontWeight: '600',
+      btnStyle:{
+           backgroundColor:'#E31E24',
+           width:'100%',
+           borderRadius:10,
+           marginTop:41
+      },
+      txtBtn:{
+           fontSize:18,
+           color:'#ffffff',
+           textAlign:'center',
+           padding:18,
+           width:'100%'
+      },
+      btnBox: {
+          zIndex: 1,
+          position:'relative',
+          bottom:-10,
+          display:'flex',
+          flexDirection:'col',
+          justifyContent:'center',
+          width:'100%'
      }
 });

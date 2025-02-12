@@ -1,15 +1,17 @@
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { I18nPrinsip } from '../../components/I18n/Prinsip'
+import { useNavigation } from "@react-navigation/native";
 
 export default function PrinsipPage() {
+     const navigation = useNavigation();
   return (
     <View style={styles.container} >
           <ScrollView>
                <View style={styles.boxImg}>
-                    <Image source={require('../../../assets/prinsip/prinzip.png')}/>
+                    <Image source={require('../../../assets/tc.png')}/>
                     <Text style={styles.txtImg}>
-                    Erhalten Sie das günstigste Angebot für Dienstleistungen und Materialien rund ums Haus
+                         Get the cheapest quote for home services and materials
                     </Text>
                </View>
                <View style={styles.boxInfo}>
@@ -45,9 +47,9 @@ export default function PrinsipPage() {
                     <Text style={styles.dPoint}>{I18nPrinsip.D_POINT_08}</Text>
                </View>
                <View style={styles.btnBox}>
-                    <TouchableOpacity style={styles.btn}>
+                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('Form-offer-d')}>
                          <Text style={styles.txtBtn}>
-                         Angebot hochladen
+                         Upload offer
                          </Text>
                     </TouchableOpacity>
                </View>
@@ -60,8 +62,7 @@ const styles = StyleSheet.create({
      container:{
           flex:1,
            backgroundColor:'#F6F6F9',
-           paddingLeft:16,
-           paddingRight:17,
+           padding:31,
            paddingBottom:20
      },
      boxImg:{
@@ -98,9 +99,9 @@ const styles = StyleSheet.create({
           
      },
      btn:{
-          backgroundColor:'#FA4A0C',
+          backgroundColor:'#E31E24',
           width:295,
-          borderRadius:30,
+          borderRadius:10,
           height:55,flexDirection:'row',
           justifyContent:'center',
           alignItems:'center'

@@ -1,23 +1,25 @@
 import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import logo from "../../../assets/logo.png"
+import logo from "../../../assets/retail.png"
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 function Onboarding() {
      const navigation = useNavigation();
      return (
           <LinearGradient
-               colors={['#FF0000', '#FF4500']}
+               colors={['#FFFFFF', '#FFFFFF']}
                style={styles.container}>
-               <View style={styles.boxLogo}>
-                    <Image source={logo} style={styles.logo} />
+               <View style={styles.box}>
+                    <Image source={logo}/>
+                    <Text style={styles.title}>
+                    Simply find a cheaper tradesman
+                    </Text>
                </View>
-               <Text style={styles.title}>BUILDEO</Text>
-               <Text style={styles.subtitle}>Build your dream</Text>
-               <View style={styles.flexGrow} />
-               <View style={styles.boxBtn}>
-                    <TouchableOpacity style={styles.btn} onPress={() => navigation.navigate('OnboardingNext')}>
-                         <Text style={styles.txtBtn}> Jetzt loslegen</Text>
+               <View style={styles.btnStart}>
+                    <TouchableOpacity style={styles.btnStyle} onPress={() => navigation.navigate('OnboardingNext')}>
+                         <Text style={styles.txtBtn}>
+                         Get started now
+                         </Text>
                     </TouchableOpacity>
                </View>
           </LinearGradient>
@@ -29,61 +31,43 @@ export default Onboarding;
 
 const styles = StyleSheet.create({
      container: {
-          backgroundColor: '#FF0000',
+          backgroundColor: '#D6D1D1',
           height: '100%',
-          padding: 11,
+          padding: 31,
           flex: 1
      },
-     boxLogo: {
-          backgroundColor: '#ffffff',
-          borderRadius: 55,
-          padding: 13,
-          alignSelf: 'flex-start',
-          flexDirection: 'row',
-          marginTop: 29
+     title:{
+          color:'#E31E24',
+          fontWeight:'bold',
+          fontSize:20,
+          marginTop:39,
+          textAlign:'center'
      },
-     logo: {
-          width: 70,
-          height: 70,
-          resizeMode: 'contain',
+     box:{
+          display:'flex',
+          flexDirection:'column',
+          justifyContent:'center',
+          alignItems:'center',
+          height:'100%'
+          
      },
-     title: {
-          color: '#ffffff',
-          fontSize: 70,
-          fontWeight: '600',
-          textAlign: 'center',
-          letterSpacing: 7,
-          marginTop: 40
-     },
-     subtitle: {
-          color: '#ffffff',
-          fontSize: 78,
-          fontWeight: '700',
-          lineHeight: 70,
-          paddingTop: 39.9,
-          height: 'auto'
-     },
-     flexGrow: {
-          flex: 1,
-     },
-     boxBtn: {
-          flexDirection: "row",
-          justifyContent: 'center',
-          marginBottom: 47
+     btnStart:{
+         zIndex:1,
+         bottom:100,
+         width:'100%'
 
      },
-     btn: {
-          backgroundColor: '#ffffff',
-          width: 270,
-          borderRadius: 25
+     btnStyle:{
+          backgroundColor:'#E31E24',
+          width:'100%',
+          borderRadius:10
 
      },
-     txtBtn: {
-          textAlign: 'center',
-          color: '#FF0000',
-          paddingTop: 20,
-          paddingBottom: 20,
-          fontSize: 17,
-          fontWeight: '600'
+     txtBtn:{
+          fontSize:18,
+          color:'#ffffff',
+          textAlign:'center',
+          padding:18
      }
+    
 })
