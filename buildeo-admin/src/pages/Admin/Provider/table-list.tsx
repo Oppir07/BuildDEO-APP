@@ -85,6 +85,7 @@ const ActionButtons = () => (
        </button>
        </Link>
        <button
+       onClick={showConfirmationEdit}
          style={{
            backgroundColor: '#FFA500',
            border: 'none',
@@ -137,6 +138,59 @@ const showConfirmationModal = async () => {
           );
         }
       };
+
+const showConfirmationEdit = async () => {
+  const { value: formValues } = await Swal.fire({
+    title: 'Edit Service',
+    html:
+      '<input id="swal-input1" class="swal2-input" placeholder="Service Category">' +
+      '<input id="swal-input2" class="swal2-input" placeholder="Service Title">' +
+      '<input id="swal-input3" class="swal2-input" placeholder="Service Price" type="number">' +
+      '<textarea id="swal-input4" class="swal2-textarea" placeholder="Overview"></textarea>',
+    focusConfirm: false,
+    preConfirm: () => {
+     const input1 = document.getElementById('swal-input1');
+     const input2 = document.getElementById('swal-input2');
+     const input3 = document.getElementById('swal-input3');
+     const input4 = document.getElementById('swal-input4');
+   
+     // Return values only if all elements exist
+     if (input1 && input2 && input3 && input4) {
+       return [
+         (input1 as HTMLInputElement).value,
+         (input2 as HTMLInputElement).value,
+         (input3 as HTMLInputElement).value,
+         (input4 as HTMLTextAreaElement).value
+       ];
+     }
+     return []; // Return an empty array or some default values if elements are null
+   },
+   
+    confirmButtonColor: '#00CFFF',
+    confirmButtonText: 'Edit',
+    showCancelButton: true,
+    cancelButtonColor: '#FF4500',
+    cancelButtonText: 'Cancel',
+    reverseButtons: true,
+    buttonsStyling: false,
+    customClass: {
+      confirmButton: 'custom-swal-button', // CSS class for confirm button
+      cancelButton: 'custom-swal-button'  // CSS class for cancel button
+    }
+  });
+
+  if (formValues) {
+    console.log('Edited values:', formValues);
+    Swal.fire({
+      title: 'Updated!',
+      text: 'Service details have been updated.',
+      icon: 'success',
+      confirmButtonColor: '#00CFFF'
+    });
+  }
+};
+
+
 
 // Dummy data
 const rows = [

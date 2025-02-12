@@ -19,54 +19,41 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
 import { Link } from 'react-router-dom';
-import { Eye, PencilLine, Trash2 } from 'lucide-react';
+import { Eye, Send , FileUp } from 'lucide-react';
 interface Data {
      id: number;
      name: string;
-     email: string;
-     role: string;
+     file: JSX.Element;
+     price: string;
      created_at: string;
+     status: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
      name: string,
-     email: string,
-     role: string,
+     file: JSX.Element,
+     price: string,
      created_at: string,
+     status: string,
      action: JSX.Element,
 ): Data {
      return {
           id,
           name,
-          email,
-          role,
+          file,
+          price,
           created_at,
+          status,
           action,
      };
 }
 
-const RoleLabel: React.FC<{ role: string }> = ({ role }) => {
-     const styles: React.CSSProperties = {
-       display: 'inline-block',
-       padding: '5px 10px',
-       borderRadius: '8px',
-       backgroundColor: '#FFECEC',
-       color: '#FF0000',
-       fontWeight: 'bold',
-       fontSize: '14px',
-       textAlign: 'center' as const,
-     };
-   
-     return <span style={styles}>{role}</span>;
-   };
-
 const ActionButtons = () => (
      <div style={{ display: 'flex', gap: '10px' }}>
-       <Link to={'/sa-buyer/details'}>
+       <Link to={'/sa-offers/detail-offers/'}>
        <button
          style={{
            backgroundColor: '#00CFFF',
@@ -85,21 +72,6 @@ const ActionButtons = () => (
        </Link>
        <button
          style={{
-           backgroundColor: '#FFA500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <PencilLine color="white" size={20} />
-       </button>
-       <button
-         style={{
            backgroundColor: '#FF4500',
            border: 'none',
            borderRadius: '8px',
@@ -111,33 +83,62 @@ const ActionButtons = () => (
            cursor: 'pointer',
          }}
        >
-         <Trash2 color="white" size={20} />
+         <Send color="white" size={20} />
        </button>
      </div>
    );
 
-const Action = () => (
-     <Menubar >
-          <MenubarMenu>
-               <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
-               <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-offers/detail-offers/'}>View</Link>
-                    </MenubarItem>
+const OfferFileIcon: React.FC = () => {
+     const styles: React.CSSProperties = {
+       display: 'flex',
+       justifyContent: 'center',
+       alignItems: 'center',
+       width: '40px',
+       height: '40px',
+       borderRadius: '8px',
+       backgroundColor: '#FFECEC',
+       cursor: 'pointer',
+     };
+   
+     return (
+       <div style={styles}>
+         <FileUp color="#FF0000" size={24} />
+       </div>
+     );
+   };
 
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
-               </MenubarContent>
-          </MenubarMenu>
-     </Menubar>
-
-)
+const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
+     if(status == 'Done'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#4CAF50',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }else if(status == 'On Progress'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#FA7A5D',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }
+   };
 
 // Dummy data
 const rows = [
-     createData(1, 'Edward Panjaitan', 'edward@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'William Situmorang', 'william@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'Josep Napitupulu', 'josep@example.com', 'Buyer', '17 Jan 2025, 17:04', <ActionButtons />),
-     createData(1, 'Gilbert Marpaung', 'gilbert@example.com', 'Buyer','17 Jan 2025, 17:04', <ActionButtons />),
+     createData(1, 'Edward Panjaitan', <OfferFileIcon/>, '357', '17 Jan 2025, 17:04', 'Done', <ActionButtons />),
+     createData(1, 'William Situmorang', <OfferFileIcon/>, '357', '17 Jan 2025, 17:04', 'Done',<ActionButtons />),
+     createData(1, 'Josep Napitupulu', <OfferFileIcon/>,'321', '17 Jan 2025, 17:04', 'Done', <ActionButtons />),
+     createData(1, 'Gilbert Marpaung', <OfferFileIcon/>, '350','17 Jan 2025, 17:04', 'Done', <ActionButtons />),
 ];
 
 
@@ -154,9 +155,10 @@ interface HeadCell {
 
 const headCells: readonly HeadCell[] = [
      { id: 'name', numeric: false, disablePadding: true, label: 'Name' },
-     { id: 'email', numeric: true, disablePadding: false, label: 'Email' },
-     { id: 'role', numeric: true, disablePadding: false, label: 'Role' },
+     { id: 'file', numeric: true, disablePadding: false, label: 'Offer File' },
+     { id: 'price', numeric: true, disablePadding: false, label: 'Offer Price' },
      { id: 'created_at', numeric: true, disablePadding: false, label: 'Register At' },
+     { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
      { id: 'action', numeric: true, disablePadding: false, label: 'Manage Account' },
 ];
 
@@ -185,7 +187,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                     {headCells.map((headCell) => (
                          <TableCell
                               key={headCell.id}
-                              align={headCell.numeric ? 'center' : 'left'}
+                              align={headCell.numeric ? 'left' : 'left'}
                               padding={headCell.disablePadding ? 'none' : 'normal'}
                               sortDirection={orderBy === headCell.id ? order : false}
                               sx={{ fontWeight: 'bold', backgroundColor: '#F6F5F2' }}
@@ -237,7 +239,6 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Providers
                          </Typography>
                     )}
 
@@ -306,8 +307,8 @@ export default function DataTableOffers() {
      const filteredRows = rows.filter(
           (row) =>
                row.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-               row.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.price.toLowerCase().includes(searchQuery.toLowerCase()) ||
+               row.status.toLowerCase().includes(searchQuery.toLowerCase()) ||
                row.created_at.toString().includes(searchQuery),
      );
 
@@ -353,10 +354,11 @@ export default function DataTableOffers() {
                                                             <TableCell component="th" id={labelId} scope="row" padding="none">
                                                                  {row.name}
                                                             </TableCell>
-                                                            <TableCell align="center">{row.email}</TableCell>
-                                                            <TableCell align="center"><RoleLabel role={row.role} /></TableCell>
-                                                            <TableCell align="center">{row.created_at}</TableCell>
-                                                            <TableCell align="center">{row.action}</TableCell>
+                                                            <TableCell>{row.file}</TableCell>
+                                                            <TableCell>{row.price}€</TableCell>
+                                                            <TableCell>{row.created_at}</TableCell>
+                                                            <TableCell><StatusLabel status={row.status}/></TableCell>
+                                                            <TableCell>{row.action}</TableCell>
                                                        </TableRow>
                                                   );
                                              })

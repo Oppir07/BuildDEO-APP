@@ -3,7 +3,10 @@ import DetailBuyer from '@/pages/Admin/Buyer/detail';
 import DetailOfferBuyer from '@/pages/Admin/Buyer/Detail Data/offer-detail';
 import DetailTransactionBuyer from '@/pages/Admin/Buyer/Detail Data/transaction-detail';
 import DividendPage from '@/pages/Admin/dividend';
+import DetailDividendPage from '@/pages/Admin/dividend/detail';
 import FormDividendPage from '@/pages/Admin/dividend/form_dividend';
+import GuestOffersPage from '@/pages/Admin/guest-offers';
+import DetailGuestOffers from '@/pages/Admin/guest-offers/detail';
 import OffersPage from '@/pages/Admin/Offers';
 import DetailOffers from '@/pages/Admin/Offers/detail-offers';
 import OrdersDonePage from '@/pages/Admin/order/order-done';
@@ -23,6 +26,7 @@ import DetailReviews from '@/pages/Admin/Reviews/detail';
 import ManageServicePage from '@/pages/Admin/service/manage-service';
 import AddCategory from '@/pages/Admin/service/manage-service/add_category';
 import RequestServicePage from '@/pages/Admin/service/request-service';
+import DetailRequestService from '@/pages/Admin/service/request-service/detail';
 import BasketPage from '@/pages/Admin/Shoping Basket';
 import DetailBasketShop from '@/pages/Admin/Shoping Basket/Detail';
 import TransactionPage from '@/pages/Admin/Transaction';
@@ -161,6 +165,10 @@ export default function AppRouter() {
           element:<DividendPage/>
         },
         {
+          path:'/admin-dividend-detail',
+          element:<DetailDividendPage/>
+        },
+        {
           path:'/admin-dividend-form',
           element:<FormDividendPage/>
         },
@@ -187,6 +195,18 @@ export default function AppRouter() {
         {
           path:'/admin-request-service',
           element:<RequestServicePage/>
+        },
+        {
+          path:'/admin-detail-request-service',
+          element:<DetailRequestService/>
+        },
+        {
+          path:'/admin-manage-guest-offers',
+          element:<GuestOffersPage/>
+        },
+        {
+          path:'/admin-manage-detail-guest-offers',
+          element:<DetailGuestOffers/>
         }
       ]
     }

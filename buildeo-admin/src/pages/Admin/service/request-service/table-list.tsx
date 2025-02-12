@@ -19,71 +19,159 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from '@radix-ui/react-menubar';
 import { Link } from 'react-router-dom';
+import { Eye} from 'lucide-react';
+import Swal from 'sweetalert2';
+
 interface Data {
      id: number;
-     service_id: number;
-     request_id: number;
-     seller_id: number;
-     price: number;
-     description:string;
-     status:string;
+     name: string;
+     category: string;
+     price: string;
+     created_at: string;
+     status: string;
      action: JSX.Element;
 }
 
 function createData(
      id: number,
-     service_id: number,
-     seller_id: number,
-     request_id: number,
-     price: number,
-     description:string,
+     name: string,
+     category: string,
+     price: string,
+     created_at: string,
      status:string,
      action: JSX.Element,
 ): Data {
      return {
           id,
-          service_id,
-          seller_id,
-          action,
-          request_id,
+          name,
+          category,
           price,
-          description,
-          status
+          created_at,
+          status,
+          action,
      };
 }
 
-const Action = () => (
-     <Menubar >
-          <MenubarMenu>
-               <MenubarTrigger className='font-bold text-[24px]'>...</MenubarTrigger>
-               <MenubarContent style={{ position: 'relative', zIndex: 1000 }} className='bg-white shadow border w-[100px] text-start p-2 rounded pointer'>
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded' >
-                         <Link to={'/sa-offers/detail-offers/'}>View</Link>
-                    </MenubarItem>
+const ActionButtons = () => (
+     <div style={{ display: 'flex', gap: '10px' }}>
+       <Link to={'/admin-detail-request-service'}>
+       <button
+         style={{
+           backgroundColor: '#00CFFF',
+           border: 'none',
+           borderRadius: '8px',
+           width: '40px',
+           height: '40px',
+           display: 'flex',
+           justifyContent: 'center',
+           alignItems: 'center',
+           cursor: 'pointer',
+         }}
+       >
+         <Eye color="white" size={20} />
+       </button>
+       </Link>
+       <button
+          onClick={showConfirmationModal}
+          style={{
+          backgroundColor: '#2FB142',
+          border: 'none',
+          borderRadius: '8px',
+          width: 'auto',
+          height: '40px',
+          padding: '0 16px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          }}
+          >
+          Approve
+        </button>
+        <button
+          onClick={showConfirmationModal}
+          style={{
+          backgroundColor: '#E31E24',
+          border: 'none',
+          borderRadius: '8px',
+          width: 'auto',
+          height: '40px',
+          padding: '0 16px',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          cursor: 'pointer',
+          color: 'white',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          }}
+          >
+          Reject
+        </button>
+     </div>
+   );
 
-                    <MenubarItem className='hover:bg-gray-700 transition duration-200 cursor-pointer hover:text-white p-2 rounded'>Delete</MenubarItem>
-               </MenubarContent>
-          </MenubarMenu>
-     </Menubar>
+const StatusLabel: React.FC<{ status: string }> = ({ status }) => {
+     if(status == 'Done'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#4CAF50',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }else if(status == 'On Progress'){
+          const styles: React.CSSProperties = {
+               display: 'inline-block',
+               padding: '5px 10px',
+               borderRadius: '8px',
+               color: '#FA7A5D',
+               fontWeight: 'bold',
+               fontSize: '14px',
+               textAlign: 'center' as const,
+             };
+          return <span style={styles}>{status}</span>;
+     }
+   };
 
-)
+const showConfirmationModal = async () => {
+  const result = await Swal.fire({
+    title: 'Are you sure?',
+    text: "Are you sure want to approve this order?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#2FB142',
+    cancelButtonColor: '#808080',
+    confirmButtonText: 'Approve'
+  });
+
+  if (result.isConfirmed) {
+    Swal.fire(
+      'Approved!',
+      'Your have successfully approved the order.',
+      'success'
+    );
+  }
+};
 
 // Dummy data
 const rows = [
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-     createData(1,1,1,1,1,'description','Acc', <Action />),
-
+     createData(1,'Aaasaks Panjaitan','Painter', '238', '17 Jan 2025, 17:04', 'On Progress',<ActionButtons />),
+     createData(1,'Edward Panjaitan','Painter', '238', '17 Jan 2025, 17:04', 'On Progress',<ActionButtons />),
+     createData(1,'Edward Panjaitan','Painter', '238', '17 Jan 2025, 17:04', 'On Progress',<ActionButtons />),
+     createData(1,'Edward Panjaitan','Painter', '238', '17 Jan 2025, 17:04', 'On Progress',<ActionButtons />),
 ];
 
 
 
 type Order = 'asc' | 'desc';
-
-
 
 interface HeadCell {
      disablePadding: boolean;
@@ -93,14 +181,12 @@ interface HeadCell {
 }
 
 const headCells: readonly HeadCell[] = [
-     { id: 'id', numeric: true, disablePadding: true, label: 'ID' },
-     { id: 'service_id', numeric: true, disablePadding: false, label: 'Service ID' },
-     { id: 'seller_id', numeric: true, disablePadding: false, label: 'Seller ID' },
-     { id: 'request_id', numeric: false, disablePadding: false, label: 'Request ID' },
-     { id: 'price', numeric: true, disablePadding: false, label: 'Price' },
-     { id: 'description', numeric: true, disablePadding: false, label: 'Description' },
+     { id: 'name', numeric: true, disablePadding: false, label: 'Name' },
+     { id: 'category', numeric: true, disablePadding: false, label: 'Category' },
+     { id: 'price', numeric: false, disablePadding: false, label: 'Price' },
+     { id: 'created_at', numeric: true, disablePadding: false, label: 'Created At' },
      { id: 'status', numeric: true, disablePadding: false, label: 'Status' },
-     { id: 'action', numeric: true, disablePadding: false, label: 'Manage Offers' },
+     { id: 'action', numeric: true, disablePadding: false, label: 'Action' },
 ];
 
 interface EnhancedTableProps {
@@ -128,7 +214,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
                     {headCells.map((headCell) => (
                          <TableCell
                               key={headCell.id}
-                              align={headCell.numeric ? 'center' : 'left'}
+                              align={headCell.numeric ? 'left' : 'left'}
                               padding={headCell.disablePadding ? 'none' : 'normal'}
                               sortDirection={orderBy === headCell.id ? order : false}
                               sx={{ fontWeight: 'bold', backgroundColor: '#F6F5F2' }}
@@ -180,7 +266,7 @@ function DataTableProvider(props: DataTableProviderProps) {
                          </Typography>
                     ) : (
                          <Typography variant="h6" id="tableTitle" component="div">
-                              Data Account Providers
+
                          </Typography>
                     )}
 
@@ -205,7 +291,7 @@ function DataTableProvider(props: DataTableProviderProps) {
 
 export default function DataTableRequestService() {
      const [order, setOrder] = React.useState<Order>('asc');
-     const [orderBy, setOrderBy] = React.useState<keyof Data>('service_id');
+     const [orderBy, setOrderBy] = React.useState<keyof Data>('id');
      const [selected, setSelected] = React.useState<readonly number[]>([]);
      const [page, setPage] = React.useState(0);
      const [dense, setDense] = React.useState(false);
@@ -249,12 +335,11 @@ export default function DataTableRequestService() {
      const filteredRows = rows.filter(
           (row) =>
                row.id.toString().includes(searchQuery.toLowerCase()) ||
-               row.service_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.seller_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.request_id.toString().includes(searchQuery.toLowerCase()) ||
-               row.description.toString().includes(searchQuery.toLowerCase()) ||
-               row.status.toString().includes(searchQuery.toLowerCase()) ||
-               row.price.toString().includes(searchQuery),
+               row.name.toString().includes(searchQuery.toLowerCase()) ||
+               row.category.toString().includes(searchQuery.toLowerCase()) ||
+               row.price.toString().includes(searchQuery.toLowerCase()) ||
+               row.created_at.toString().includes(searchQuery.toLowerCase()) ||
+               row.status.toString().includes(searchQuery.toLowerCase())
      );
 
 
@@ -297,16 +382,12 @@ export default function DataTableRequestService() {
                                                        >
                                                             <TableCell padding="checkbox">
                                                             </TableCell>
-                                                            <TableCell component="th" id={labelId} scope="row" padding="none">
-                                                                 {row.id}
-                                                            </TableCell>
-                                                            <TableCell align="center">{row.service_id}</TableCell>
-                                                            <TableCell align="center">{row.seller_id}</TableCell>
-                                                            <TableCell align="center">{row.request_id}</TableCell>
-                                                            <TableCell align="center">{row.price}$</TableCell>
-                                                            <TableCell align="center">{row.description}</TableCell>
-                                                            <TableCell align="center">{row.status}</TableCell>
-                                                            <TableCell align="center">{row.action}</TableCell>
+                                                            <TableCell>{row.name}</TableCell>
+                                                            <TableCell>{row.category}</TableCell>
+                                                            <TableCell style={{ fontWeight: 'bold', color: '#E31E24' }}>{row.price}$</TableCell>
+                                                            <TableCell>{row.created_at}</TableCell>
+                                                            <TableCell><StatusLabel status={row.status}/></TableCell>
+                                                            <TableCell>{row.action}</TableCell>
                                                        </TableRow>
                                                   );
                                              })

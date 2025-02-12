@@ -56,8 +56,8 @@ export const navItems: NavItem[] = [
     label: 'Offers'
   },
   {
-    title: 'Quotation',
-    href: '/admin-manage-quotation',
+    title: 'Guest Offers',
+    href: '/admin-manage-guest-offers',
     icon: 'quatation',
     label: 'Quotation'
   },

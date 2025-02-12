@@ -19,7 +19,7 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { visuallyHidden } from '@mui/utils';
 import TextField from '@mui/material/TextField';
-import { Eye, PencilLine, Trash2 } from 'lucide-react';
+import { Eye, PencilLine } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { useEffect } from 'react';
@@ -46,8 +46,15 @@ function createData(
      };
 }
 
-const ActionButtons = () => (
-     <div style={{ display: 'flex', gap: '10px' }}>
+const ActionButtons = () => {
+     const [isChecked, setIsChecked] = React.useState(false);
+
+     const handleToggle = (event) => {
+     setIsChecked(event.target.checked);
+     };
+
+     return (
+          <div style={{ display: 'flex', gap: '10px' }}>
        <button
           onClick={showModalDetail}
          style={{
@@ -79,24 +86,19 @@ const ActionButtons = () => (
        >
          <PencilLine color="white" size={20} />
        </button>
-       <button
-          onClick={showConfirmationModal}
-         style={{
-           backgroundColor: '#FF4500',
-           border: 'none',
-           borderRadius: '8px',
-           width: '40px',
-           height: '40px',
-           display: 'flex',
-           justifyContent: 'center',
-           alignItems: 'center',
-           cursor: 'pointer',
-         }}
-       >
-         <Trash2 color="white" size={20} />
-       </button>
+       <div>
+        <label>
+          <Switch
+            checked={isChecked}
+            onChange={handleToggle}
+            inputProps={{ 'aria-label': 'controlled' }}
+            color="success"
+          />
+        </label>
+      </div>
      </div>
-   );
+     )
+}
 
 const showConfirmationModal = async () => {
         const result = await Swal.fire({
@@ -144,9 +146,6 @@ const showModalDetail = () => {
     showCloseButton: true
   });
 };
-
-
-
 
 // Dummy data
 const rows = [

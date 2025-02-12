@@ -1,7 +1,7 @@
 import PageHead from "@/components/shared/page-head";
 import Profil from '../../../../public/profil.png';
 
-export default function DetailOffers() {
+export default function DetailGuestOffers() {
   return (
     <>
       <PageHead title="Detail Order Done" />

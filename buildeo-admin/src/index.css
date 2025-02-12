@@ -3,7 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 20d020283175049e328f64fea6a47e68cabf61d1
 @layer base {
   * {
     @apply border-border;
